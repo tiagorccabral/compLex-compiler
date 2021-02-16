@@ -3,6 +3,7 @@
 %}
 
 DIGIT [0-9]
+LETTER [a-zA-z]
 
 %%
 {DIGIT}+ { printf("Inteiro: %d\n", atoi(yytext)); }
