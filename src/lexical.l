@@ -31,6 +31,8 @@ MULT_OP "*"
 DIV_OP "/"
 ADD_SET_OP "add"
 ADD_IN_OP "in"
+REMOVE_SET_OP "remove"
+EXISTS_IN_SET_OP "exists"
 
 /* Logical operators */
 AND "&&"
@@ -44,6 +46,7 @@ IGT ">"
 IGTE ">="
 IDIFF "!="
 IEQ "=="
+IS_SET "is_set"
 
 /* Flux control */
 IF "if"
@@ -135,6 +138,14 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
   printf("<add in op (keyword), %s>\n", yytext);
 }
 
+{REMOVE_SET_OP} {
+  printf("<remove from Set op (keyword), %s>\n", yytext);
+}
+
+{EXISTS_IN_SET_OP} {
+  printf("<exists in Set op (keyword), %s>\n", yytext);
+}
+
 {IF} {
   printf("<if op, %s>\n", yytext);
 }
@@ -177,6 +188,10 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 {IEQ} {
   printf("<is equal then op, %s>\n", yytext);
+}
+
+{IS_SET} {
+  printf("<isSet operator op, %s>\n", yytext);
 }
 
 {READ} {
