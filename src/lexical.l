@@ -2,13 +2,21 @@
 #include <stdio.h>
 
 /* Global vars */
-int quoted_string = 0;
+int running_line_count = 1;
+int total_errors_count = 0;
+
+/* Pre-declaring functions */
+void throw_nonexistent_symbol_error(char* symbol);
+void yyerror(const char* msg);
 %}
 
 /* Others */
 COMMENT "//".*
 UNDERSCORE "_"
 QUOTES \'
+NONEXISTENT_SYM "."
+EOL \n
+WHITESPACE [ \t]+
 
 /* Constants */
 DIGIT [0-9]
@@ -60,15 +68,15 @@ READ "read"
 WRITE "write"
 WRITELN "writeln"
 
-IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
+IDENTIFIER ({LETTER})({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 %%
-{DIGIT}+ {
-  printf("<integer number, %d>\n", atoi(yytext));
+
+{EOL} {
+  running_line_count++;
 }
-{DIGIT}+[.]{DIGIT}+ { 
-  printf("<floating point number, %0.2f>\n", atof(yytext));
-}
+
+{WHITESPACE} {}
 
 {QUOTES} {
   printf("<quote, %s>\n", yytext);
@@ -76,6 +84,13 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 <STRING>{STR} {
   printf("<strig value, %s>\n", yytext);
+}
+
+{DIGIT}+ {
+  printf("<integer number, %d>\n", atoi(yytext));
+}
+{DIGIT}+[.]{DIGIT}+ { 
+  printf("<floating point number, %0.2f>\n", atof(yytext));
 }
 
 {EMPTY} {
@@ -206,7 +221,7 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
   printf("<writeLine directive, %s>\n", yytext);
 }
 
-{IDENTIFIER} { 
+<INITIAL,STRING>{IDENTIFIER} { 
   printf("<identifier, %s>\n", yytext);
 }
 
@@ -236,8 +251,21 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 {COMMENT} {}
 
-[[:space:]]+ ;
+. { throw_nonexistent_symbol_error(yytext); }
+
 %%
+
+void yyerror(const char* msg) {
+  total_errors_count++;
+  fprintf(stderr, "%s at line: %d\n", msg, running_line_count);
+}
+
+void throw_nonexistent_symbol_error(char* symbol){
+  char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
+  sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
+  yyerror(error);
+  free(error);
+}
 
 int main(int argc, char **argv) {
   if(argc > 1) {
