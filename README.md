@@ -1,4 +1,4 @@
-## Analisador léxico
+## Compilador de linguagem baseada em C
 
 ### 1 - Como rodar o flex
 
