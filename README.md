@@ -25,5 +25,5 @@ cd src
 - Rode o seguinte comando:
 
 ```bash
-./out '../examples/working.txt'
+./out '../examples/working_input1.txt'
 ```
