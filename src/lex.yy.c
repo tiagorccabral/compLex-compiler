@@ -601,7 +601,8 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "lexical.l"
-#line 2 "lexical.l"
+#define YY_NO_INPUT 1
+#line 5 "lexical.l"
 #include <stdio.h>
 
 /* Global vars */
@@ -620,7 +621,7 @@ void yyerror(const char* msg);
 /* Relational operators */
 /* Flux control */
 /* Input/Output */
-#line 624 "lex.yy.c"
+#line 625 "lex.yy.c"
 
 #define INITIAL 0
 #define STRING 1
@@ -680,8 +681,6 @@ extern int yywrap (void );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  );
-    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int );
 #endif
@@ -803,10 +802,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 73 "lexical.l"
+#line 76 "lexical.l"
 
 
-#line 810 "lex.yy.c"
+#line 809 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -892,19 +891,19 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 75 "lexical.l"
+#line 78 "lexical.l"
 {
   running_line_count++;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 79 "lexical.l"
+#line 82 "lexical.l"
 {}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 81 "lexical.l"
+#line 84 "lexical.l"
 {
   printf("<quote, %s>\n", yytext);
 }
@@ -912,314 +911,314 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 85 "lexical.l"
+#line 88 "lexical.l"
 {
   printf("<strig value, %s>\n", yytext);
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 89 "lexical.l"
+#line 92 "lexical.l"
 {
   printf("<integer number, %d>\n", atoi(yytext));
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 92 "lexical.l"
+#line 95 "lexical.l"
 { 
   printf("<floating point number, %0.2f>\n", atof(yytext));
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 96 "lexical.l"
+#line 99 "lexical.l"
 {
   printf("<emptyConst, %s>\n", yytext);
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 100 "lexical.l"
+#line 103 "lexical.l"
 {
   printf("<typeInteger, %s>\n", yytext);
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 104 "lexical.l"
+#line 107 "lexical.l"
 {
   printf("<typeFloat, %s>\n", yytext);
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 108 "lexical.l"
+#line 111 "lexical.l"
 {
   printf("<typeElem, %s>\n", yytext);
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 112 "lexical.l"
+#line 115 "lexical.l"
 {
   printf("<typeSet, %s>\n", yytext);
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 116 "lexical.l"
+#line 119 "lexical.l"
 {
   printf("<logical op AND, %s>\n", yytext);
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 120 "lexical.l"
+#line 123 "lexical.l"
 {
   printf("<logical op OR, %s>\n", yytext);
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 124 "lexical.l"
+#line 127 "lexical.l"
 {
   printf("<logical op Negation, %s>\n", yytext);
 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 128 "lexical.l"
+#line 131 "lexical.l"
 {
   printf("<assign op, %s>\n", yytext);
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 132 "lexical.l"
+#line 135 "lexical.l"
 {
   printf("<add op, %s>\n", yytext);
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 136 "lexical.l"
+#line 139 "lexical.l"
 {
   printf("<sub op, %s>\n", yytext);
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 140 "lexical.l"
+#line 143 "lexical.l"
 {
   printf("<mult op, %s>\n", yytext);
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 144 "lexical.l"
+#line 147 "lexical.l"
 {
   printf("<div op, %s>\n", yytext);
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 148 "lexical.l"
+#line 151 "lexical.l"
 {
   printf("<add to set op, %s>\n", yytext);
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 152 "lexical.l"
+#line 155 "lexical.l"
 {
   printf("<add in op (keyword), %s>\n", yytext);
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 156 "lexical.l"
+#line 159 "lexical.l"
 {
   printf("<remove from Set op (keyword), %s>\n", yytext);
 }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 160 "lexical.l"
+#line 163 "lexical.l"
 {
   printf("<exists in Set op (keyword), %s>\n", yytext);
 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 164 "lexical.l"
+#line 167 "lexical.l"
 {
   printf("<if op, %s>\n", yytext);
 }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 168 "lexical.l"
+#line 171 "lexical.l"
 {
   printf("<else op, %s>\n", yytext);
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 172 "lexical.l"
+#line 175 "lexical.l"
 {
   printf("<for op, %s>\n", yytext);
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 176 "lexical.l"
+#line 179 "lexical.l"
 {
   printf("<set forall flux control, %s>\n", yytext);
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 180 "lexical.l"
+#line 183 "lexical.l"
 {
   printf("<return op, %s>\n", yytext);
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 184 "lexical.l"
+#line 187 "lexical.l"
 {
   printf("<is less then op, %s>\n", yytext);
 }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 188 "lexical.l"
+#line 191 "lexical.l"
 {
   printf("<is less then equal op, %s>\n", yytext);
 }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 192 "lexical.l"
+#line 195 "lexical.l"
 {
   printf("<is greater then op, %s>\n", yytext);
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 196 "lexical.l"
+#line 199 "lexical.l"
 {
   printf("<is greater then equal op, %s>\n", yytext);
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 200 "lexical.l"
+#line 203 "lexical.l"
 {
   printf("<is different then op, %s>\n", yytext);
 }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 204 "lexical.l"
+#line 207 "lexical.l"
 {
   printf("<is equal then op, %s>\n", yytext);
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 208 "lexical.l"
+#line 211 "lexical.l"
 {
   printf("<isSet operator op, %s>\n", yytext);
 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 212 "lexical.l"
+#line 215 "lexical.l"
 {
   printf("<read directive, %s>\n", yytext);
 }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 216 "lexical.l"
+#line 219 "lexical.l"
 {
   printf("<write directive, %s>\n", yytext);
 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 220 "lexical.l"
+#line 223 "lexical.l"
 {
   printf("<writeLine directive, %s>\n", yytext);
 }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 224 "lexical.l"
+#line 227 "lexical.l"
 { 
   printf("<identifier, %s>\n", yytext);
 }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 228 "lexical.l"
+#line 231 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 232 "lexical.l"
+#line 235 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 236 "lexical.l"
+#line 239 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 240 "lexical.l"
+#line 243 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 244 "lexical.l"
+#line 247 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 248 "lexical.l"
+#line 251 "lexical.l"
 {
   printf("<%s>\n", yytext);
 }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 252 "lexical.l"
+#line 255 "lexical.l"
 {}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 254 "lexical.l"
+#line 257 "lexical.l"
 { throw_nonexistent_symbol_error(yytext); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 256 "lexical.l"
+#line 259 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1223 "lex.yy.c"
+#line 1222 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 	yyterminate();
@@ -1547,43 +1546,6 @@ static int yy_get_next_buffer (void)
 	yy_is_jam = (yy_current_state == 199);
 
 	return yy_is_jam ? 0 : yy_current_state;
-}
-
-    static void yyunput (int c, register char * yy_bp )
-{
-	register char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		register yy_size_t number_to_move = (yy_n_chars) + 2;
-		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		register char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
 }
 
 #ifndef YY_NO_INPUT
@@ -2217,7 +2179,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 256 "lexical.l"
+#line 259 "lexical.l"
 
 
 
