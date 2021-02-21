@@ -1,2 +1,5 @@
 # Arquivos do VSCode
 .DS_STORE
+
+# outros arquivos
+src/out.*
