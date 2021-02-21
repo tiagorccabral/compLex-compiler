@@ -6,6 +6,7 @@
 
 /* Global vars */
 int running_line_count = 1;
+int running_column_count = 1;
 int total_errors_count = 0;
 
 /* Pre-declaring functions */
@@ -26,7 +27,7 @@ DIGIT [0-9]
 LETTER [a-zA-z]
 EMPTY "EMPTY"
 %s STRING
-STR [^\"]*
+STR \"[^\"]*\"|'[^']*'
 
 /* Data types */
 T_INT "int"
@@ -76,191 +77,243 @@ IDENTIFIER ({LETTER})({LETTER}|{DIGIT}|{UNDERSCORE})*
 %%
 
 {EOL} {
+  if (running_column_count > 1) {
+    printf("<escape string>\n");
+  }
+  running_column_count = 1;
   running_line_count++;
 }
 
-{WHITESPACE} {}
+{WHITESPACE} {
+  running_column_count += yyleng;
+}
 
 {QUOTES} {
   printf("<quote, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 <STRING>{STR} {
   printf("<strig value, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {DIGIT}+ {
   printf("<integer number, %d>\n", atoi(yytext));
+  running_column_count += yyleng;
 }
 {DIGIT}+[.]{DIGIT}+ { 
   printf("<floating point number, %0.2f>\n", atof(yytext));
+  running_column_count += yyleng;
 }
 
 {EMPTY} {
   printf("<emptyConst, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {T_INT} {
   printf("<typeInteger, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {T_FLOAT} {
   printf("<typeFloat, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {T_ELEM} {
   printf("<typeElem, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {T_SET} {
   printf("<typeSet, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {AND} {
   printf("<logical op AND, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {OR} {
   printf("<logical op OR, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {NEG} {
   printf("<logical op Negation, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ASSIGN} {
   printf("<assign op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ADD_OP} {
   printf("<add op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {SUB_OP} {
   printf("<sub op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {MULT_OP} {
   printf("<mult op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {DIV_OP} {
   printf("<div op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ADD_SET_OP} {
   printf("<add to set op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ADD_IN_OP} {
   printf("<add in op (keyword), %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {REMOVE_SET_OP} {
   printf("<remove from Set op (keyword), %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {EXISTS_IN_SET_OP} {
   printf("<exists in Set op (keyword), %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IF} {
   printf("<if op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ELSE} {
   printf("<else op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {FOR} {
   printf("<for op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {SET_FORALL} {
   printf("<set forall flux control, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {RETURN} {
   printf("<return op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ILT} {
   printf("<is less then op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {ILTE} {
   printf("<is less then equal op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IGT} {
   printf("<is greater then op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IGTE} {
   printf("<is greater then equal op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IDIFF} {
   printf("<is different then op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IEQ} {
   printf("<is equal then op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {IS_SET} {
   printf("<isSet operator op, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {READ} {
   printf("<read directive, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {WRITE} {
   printf("<write directive, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {WRITELN} {
   printf("<writeLine directive, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 <INITIAL,STRING>{IDENTIFIER} { 
   printf("<identifier, %s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 "," {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 ";" {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 "(" {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 ")" {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 "{" {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 "}" {
   printf("<%s>\n", yytext);
+  running_column_count += yyleng;
 }
 
 {COMMENT} {}
 
-. { throw_nonexistent_symbol_error(yytext); }
+. { 
+  running_column_count += yyleng;
+  throw_nonexistent_symbol_error(yytext);
+}
 
 %%
 
 void yyerror(const char* msg) {
   total_errors_count++;
-  fprintf(stderr, "%s at line: %d\n", msg, running_line_count);
+  fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
 }
 
 void throw_nonexistent_symbol_error(char* symbol){
