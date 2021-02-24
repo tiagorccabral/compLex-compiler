@@ -14,6 +14,8 @@ void throw_nonexistent_symbol_error(char* symbol);
 void yyerror(const char* msg);
 %}
 
+%option noyywrap
+
 /* Others */
 COMMENT "//".*
 UNDERSCORE "_"
@@ -21,6 +23,7 @@ QUOTES \'
 NONEXISTENT_SYM "."
 EOL \n
 WHITESPACE [ \t]+
+IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 
 /* Constants */
 DIGIT [0-9]
@@ -72,14 +75,9 @@ READ "read"
 WRITE "write"
 WRITELN "writeln"
 
-IDENTIFIER ({LETTER})({LETTER}|{DIGIT}|{UNDERSCORE})*
-
 %%
 
 {EOL} {
-  if (running_column_count > 1) {
-    printf("<escape string>\n");
-  }
   running_column_count = 1;
   running_line_count++;
 }
@@ -93,7 +91,7 @@ IDENTIFIER ({LETTER})({LETTER}|{DIGIT}|{UNDERSCORE})*
   running_column_count += yyleng;
 }
 
-<STRING>{STR} {
+{STR} {
   printf("<strig value, %s>\n", yytext);
   running_column_count += yyleng;
 }
