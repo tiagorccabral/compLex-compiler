@@ -67,12 +67,12 @@
 
 <primary-expression> ::= <identifier>
                        | <constant>
-                       | <string>
                        | ( <expression> )
 
 <constant> ::= <integer-constant>
              | <character-constant>
              | <floating-constant>
+             | (EMPTY)
 
 <expression> ::= <assignment-expression>
                | <expression> , <assignment-expression>
