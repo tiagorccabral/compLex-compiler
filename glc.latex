@@ -82,7 +82,8 @@
                               | <multiplicative-expression> * <cast-expression>
                               | <multiplicative-expression> / <cast-expression>
 
-<set-primitive-expression> ::= add ( <primary-expression> in <set-primitive-expression> )
+<set-primitive-expression> ::= is_set ( <primary-expression> )
+                              | add ( <primary-expression> in <set-primitive-expression> )
                               | remove ( <primary-expression> in <set-primitive-expression> )
                               | exists ( <primary-expression> in <set-primitive-expression> )
 
