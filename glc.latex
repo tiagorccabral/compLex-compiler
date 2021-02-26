@@ -14,9 +14,32 @@
 
 <specifier-qualifier> ::= <type-specifier>
 
+<digit> ::= [0-9]
+
+<integer-type> ::= <digit>+
+
+<string-type> ::= '"'.*'"' | '.*'
+
+<float-type> ::= <digit>+'.'<digit>+
+
 <declarator> ::= {<pointer>}? <direct-declarator>
 
 <pointer> ::= * {<pointer>}?
+
+<read-specifier> ::= read ( <integer-type> )
+                    | read ( <float-type> ) 
+
+<write-specifier> ::=  write ( <integer-type> )
+                    | write ( <float-type> )
+                    | write ( <string-type> )
+
+<writeln-specifier> ::=  writeln ( <integer-type> )
+                      | writeln ( <float-type> )
+                      | writeln ( <string-type> )
+
+<in-out-declaration> ::= <read-specifier>
+                        | <write-specifier>
+                        | <writeln-specifier>
 
 <direct-declarator> ::= <identifier>
                       | ( <declarator> )
@@ -58,6 +81,10 @@
 <multiplicative-expression> ::= <cast-expression>
                               | <multiplicative-expression> * <cast-expression>
                               | <multiplicative-expression> / <cast-expression>
+
+<set-primitive-expression> ::= add ( <primary-expression> in <set-primitive-expression> )
+                              | remove ( <primary-expression> in <set-primitive-expression> )
+                              | exists ( <primary-expression> in <set-primitive-expression> )
 
 <cast-expression> ::= ( <type-name> ) <cast-expression>
 
@@ -121,10 +148,12 @@
 
 <expression-statement> ::= {<expression>}? ;
 
+<belonging-statement> ::= <expression> in <expression>
+
 <selection-statement> ::= if ( <expression> ) <statement>
                         | else <statement>
 
 <iteration-statement> ::= for ( {<expression>}? ; {<expression>}? ; {<expression>}? ) <statement>
-                        | forall ( {<expression>}? in {<expression>}? )
+                        | forall <belonging-statement>
 
 <jump-statement> ::= return {<expression>}? ;
