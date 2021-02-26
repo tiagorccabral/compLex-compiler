@@ -92,7 +92,7 @@ WRITELN "writeln"
 }
 
 {STR} {
-  printf("<strig value, %s>\n", yytext);
+  printf("<string value, %s>\n", yytext);
   running_column_count += yyleng;
 }
 

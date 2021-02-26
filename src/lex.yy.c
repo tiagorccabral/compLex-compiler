@@ -853,7 +853,7 @@ case 4:
 YY_RULE_SETUP
 #line 94 "lexical.l"
 {
-  printf("<strig value, %s>\n", yytext);
+  printf("<string value, %s>\n", yytext);
   running_column_count += yyleng;
 }
 	YY_BREAK
