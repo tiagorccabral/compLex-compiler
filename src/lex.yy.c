@@ -2190,5 +2190,8 @@ int main(int argc, char **argv) {
 
   yylex();
   fclose(yyin);
+  yylex_destroy();
+
+  return 0;
 }
 
