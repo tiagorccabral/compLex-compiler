@@ -29,8 +29,6 @@ IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
 DIGIT [0-9]
 LETTER [a-zA-z]
 EMPTY "EMPTY"
-%s STRING
-STR \"[^\"]*\"|'[^']*'
 
 /* Data types */
 T_INT "int"
@@ -41,6 +39,8 @@ T_SET "set"
 /* Data type primitives */
 INT {DIGIT}+
 FLOAT {DIGIT}+[.]{DIGIT}+
+%s STRING
+STR \"[^\"]*\"|'[^']*'
 
 /* Operations */
 ASSIGN "="

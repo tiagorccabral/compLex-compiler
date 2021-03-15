@@ -550,9 +550,9 @@ void throw_nonexistent_symbol_error(char* symbol);
 void yyerror(const char* msg);
 /* Others */
 /* Constants */
-
 /* Data types */
 /* Data type primitives */
+
 /* Operations */
 /* Logical operators */
 /* Relational operators */
