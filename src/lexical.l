@@ -38,6 +38,10 @@ T_FLOAT "float"
 T_ELEM "elem"
 T_SET "set"
 
+/* Data type primitives */
+INT {DIGIT}+
+FLOAT {DIGIT}+[.]{DIGIT}+
+
 /* Operations */
 ASSIGN "="
 ADD_OP "+"
@@ -96,11 +100,12 @@ WRITELN "writeln"
   running_column_count += yyleng;
 }
 
-{DIGIT}+ {
+{INT} {
   printf("<integer number, %d>\n", atoi(yytext));
   running_column_count += yyleng;
 }
-{DIGIT}+[.]{DIGIT}+ { 
+
+{FLOAT} { 
   printf("<floating point number, %0.2f>\n", atof(yytext));
   running_column_count += yyleng;
 }
