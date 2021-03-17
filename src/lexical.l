@@ -20,7 +20,6 @@ void yyerror(const char* msg);
 COMMENT "//".*
 UNDERSCORE "_"
 QUOTES \'
-NONEXISTENT_SYM "."
 EOL \n
 WHITESPACE [ \t]+
 IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
