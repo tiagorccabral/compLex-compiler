@@ -1,12 +1,36 @@
 ## Compilador de linguagem baseada em C
 
-### 1 - Como rodar o flex
+---
+
+### Flex & Bison - Como rodar flex e bison
+
+### Flex & Bison 1 - Mover para pasta src
+
+```bash
+cd src
+```
+
+### Flex & Bison 2 - Gerar arquivos
+
+```bash
+make
+```
+
+### Flex & Bison 3 - Rodar algum arquivo de exemplo
+
+```bash
+./out '../examples/simple_input1.txt'
+```
+
+---
+
+### Flex: 1 - Como rodar somente o flex
 
 ```bash
 flex <nome_do_arquivo.l>
 ```
 
-### 2 - Como executar arquivo gerado pelo flex (ex: lex.yy.c)
+### Flex: 2 - Como executar arquivo gerado pelo flex (ex: lex.yy.c)
 
 ```bash
 gcc -o out lex.yy.c -ll
@@ -20,7 +44,7 @@ gcc -o out lex.yy.c -ll
 cd src
 ```
 
-- Execute os passos de 1 e 2
+- Execute os passos de Flex: 1 e Flex: 2
 
 - Rode o seguinte comando:
 
