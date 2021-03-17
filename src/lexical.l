@@ -4,6 +4,8 @@
 %{
 #include <stdio.h>
 
+#include "compLex_syntatical.tab.h"
+
 /* Global vars */
 int running_line_count = 1;
 int running_column_count = 1;
@@ -11,7 +13,7 @@ int total_errors_count = 0;
 
 /* Pre-declaring functions */
 void throw_nonexistent_symbol_error(char* symbol);
-void yyerror(const char* msg);
+// void yyerror(const char* msg);
 %}
 
 %option noyywrap
@@ -117,6 +119,7 @@ WRITELN "writeln"
 {T_INT} {
   printf("<typeInteger, %s>\n", yytext);
   running_column_count += yyleng;
+  return T_INT;
 }
 
 {T_FLOAT} {
@@ -272,6 +275,7 @@ WRITELN "writeln"
 <INITIAL,STRING>{IDENTIFIER} { 
   printf("<identifier, %s>\n", yytext);
   running_column_count += yyleng;
+  return IDENTIFIER;
 }
 
 "," {
@@ -282,6 +286,7 @@ WRITELN "writeln"
 ";" {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return ';';
 }
 
 "(" {
@@ -313,29 +318,13 @@ WRITELN "writeln"
 
 %%
 
-void yyerror(const char* msg) {
-  total_errors_count++;
-  fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
-}
+// void yyerror(const char* msg) {
+//   total_errors_count++;
+//   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
+// }
 
 void throw_nonexistent_symbol_error(char* symbol){
   char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
   sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
-  yyerror(error);
   free(error);
-}
-
-int main(int argc, char **argv) {
-  if(argc > 1) {
-    yyin = fopen(argv[1], "r");
-  }
-  else {
-    yyin = stdin;
-  }
-
-  yylex();
-  fclose(yyin);
-  yylex_destroy();
-
-  return 0;
 }

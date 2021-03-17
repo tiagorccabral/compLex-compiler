@@ -540,6 +540,8 @@ char *yytext;
 #line 5 "lexical.l"
 #include <stdio.h>
 
+#include "compLex_syntatical.tab.h"
+
 /* Global vars */
 int running_line_count = 1;
 int running_column_count = 1;
@@ -547,7 +549,7 @@ int total_errors_count = 0;
 
 /* Pre-declaring functions */
 void throw_nonexistent_symbol_error(char* symbol);
-void yyerror(const char* msg);
+// void yyerror(const char* msg);
 /* Others */
 /* Constants */
 /* Data types */
@@ -558,7 +560,7 @@ void yyerror(const char* msg);
 /* Relational operators */
 /* Flux control */
 /* Input/Output */
-#line 562 "lex.yy.c"
+#line 564 "lex.yy.c"
 
 #define INITIAL 0
 #define STRING 1
@@ -739,10 +741,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 82 "lexical.l"
+#line 83 "lexical.l"
 
 
-#line 746 "lex.yy.c"
+#line 748 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -828,7 +830,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 84 "lexical.l"
+#line 85 "lexical.l"
 {
   running_column_count = 1;
   running_line_count++;
@@ -836,14 +838,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 89 "lexical.l"
+#line 90 "lexical.l"
 {
   running_column_count += yyleng;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 93 "lexical.l"
+#line 94 "lexical.l"
 {
   printf("<quote, %s>\n", yytext);
   running_column_count += yyleng;
@@ -852,7 +854,7 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 98 "lexical.l"
+#line 99 "lexical.l"
 {
   printf("<string value, %s>\n", yytext);
   running_column_count += yyleng;
@@ -860,7 +862,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 103 "lexical.l"
+#line 104 "lexical.l"
 {
   printf("<integer number, %d>\n", atoi(yytext));
   running_column_count += yyleng;
@@ -868,7 +870,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 108 "lexical.l"
+#line 109 "lexical.l"
 { 
   printf("<floating point number, %0.2f>\n", atof(yytext));
   running_column_count += yyleng;
@@ -876,7 +878,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 113 "lexical.l"
+#line 114 "lexical.l"
 {
   printf("<emptyConst, %s>\n", yytext);
   running_column_count += yyleng;
@@ -884,15 +886,16 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 118 "lexical.l"
+#line 119 "lexical.l"
 {
   printf("<typeInteger, %s>\n", yytext);
   running_column_count += yyleng;
+  return T_INT;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 123 "lexical.l"
+#line 125 "lexical.l"
 {
   printf("<typeFloat, %s>\n", yytext);
   running_column_count += yyleng;
@@ -900,7 +903,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 128 "lexical.l"
+#line 130 "lexical.l"
 {
   printf("<typeElem, %s>\n", yytext);
   running_column_count += yyleng;
@@ -908,7 +911,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 133 "lexical.l"
+#line 135 "lexical.l"
 {
   printf("<typeSet, %s>\n", yytext);
   running_column_count += yyleng;
@@ -916,7 +919,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 138 "lexical.l"
+#line 140 "lexical.l"
 {
   printf("<logical op AND, %s>\n", yytext);
   running_column_count += yyleng;
@@ -924,7 +927,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 143 "lexical.l"
+#line 145 "lexical.l"
 {
   printf("<logical op OR, %s>\n", yytext);
   running_column_count += yyleng;
@@ -932,7 +935,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 148 "lexical.l"
+#line 150 "lexical.l"
 {
   printf("<logical op Negation, %s>\n", yytext);
   running_column_count += yyleng;
@@ -940,7 +943,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 153 "lexical.l"
+#line 155 "lexical.l"
 {
   printf("<assign op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -948,7 +951,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 158 "lexical.l"
+#line 160 "lexical.l"
 {
   printf("<add op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -956,7 +959,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 163 "lexical.l"
+#line 165 "lexical.l"
 {
   printf("<sub op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -964,7 +967,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 168 "lexical.l"
+#line 170 "lexical.l"
 {
   printf("<mult op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -972,7 +975,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 173 "lexical.l"
+#line 175 "lexical.l"
 {
   printf("<div op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -980,7 +983,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 178 "lexical.l"
+#line 180 "lexical.l"
 {
   printf("<add to set op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -988,7 +991,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 183 "lexical.l"
+#line 185 "lexical.l"
 {
   printf("<add in op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
@@ -996,7 +999,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 188 "lexical.l"
+#line 190 "lexical.l"
 {
   printf("<remove from Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
@@ -1004,7 +1007,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 193 "lexical.l"
+#line 195 "lexical.l"
 {
   printf("<exists in Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
@@ -1012,7 +1015,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 198 "lexical.l"
+#line 200 "lexical.l"
 {
   printf("<if op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1020,7 +1023,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 203 "lexical.l"
+#line 205 "lexical.l"
 {
   printf("<else op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1028,7 +1031,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 208 "lexical.l"
+#line 210 "lexical.l"
 {
   printf("<for op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1036,7 +1039,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 213 "lexical.l"
+#line 215 "lexical.l"
 {
   printf("<set forall flux control, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1044,7 +1047,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 218 "lexical.l"
+#line 220 "lexical.l"
 {
   printf("<return op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1052,7 +1055,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 223 "lexical.l"
+#line 225 "lexical.l"
 {
   printf("<is less then op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1060,7 +1063,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 228 "lexical.l"
+#line 230 "lexical.l"
 {
   printf("<is less then equal op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1068,7 +1071,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 233 "lexical.l"
+#line 235 "lexical.l"
 {
   printf("<is greater then op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1076,7 +1079,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 238 "lexical.l"
+#line 240 "lexical.l"
 {
   printf("<is greater then equal op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1084,7 +1087,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 243 "lexical.l"
+#line 245 "lexical.l"
 {
   printf("<is different then op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1092,7 +1095,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 248 "lexical.l"
+#line 250 "lexical.l"
 {
   printf("<is equal then op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1100,7 +1103,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 253 "lexical.l"
+#line 255 "lexical.l"
 {
   printf("<isSet operator op, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1108,7 +1111,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 258 "lexical.l"
+#line 260 "lexical.l"
 {
   printf("<read directive, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1116,7 +1119,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 263 "lexical.l"
+#line 265 "lexical.l"
 {
   printf("<write directive, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1124,7 +1127,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 268 "lexical.l"
+#line 270 "lexical.l"
 {
   printf("<writeLine directive, %s>\n", yytext);
   running_column_count += yyleng;
@@ -1132,15 +1135,16 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 273 "lexical.l"
+#line 275 "lexical.l"
 { 
   printf("<identifier, %s>\n", yytext);
   running_column_count += yyleng;
+  return IDENTIFIER;
 }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 278 "lexical.l"
+#line 281 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
@@ -1148,15 +1152,16 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 283 "lexical.l"
+#line 286 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return ';';
 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 288 "lexical.l"
+#line 292 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
@@ -1164,7 +1169,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 293 "lexical.l"
+#line 297 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
@@ -1172,7 +1177,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 298 "lexical.l"
+#line 302 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
@@ -1180,7 +1185,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 303 "lexical.l"
+#line 307 "lexical.l"
 {
   printf("<%s>\n", yytext);
   running_column_count += yyleng;
@@ -1188,12 +1193,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 308 "lexical.l"
+#line 312 "lexical.l"
 {}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 310 "lexical.l"
+#line 314 "lexical.l"
 { 
   running_column_count += yyleng;
   throw_nonexistent_symbol_error(yytext);
@@ -1201,10 +1206,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 315 "lexical.l"
+#line 319 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 1208 "lex.yy.c"
+#line 1213 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STRING):
 	yyterminate();
@@ -2165,34 +2170,17 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 315 "lexical.l"
+#line 319 "lexical.l"
 
 
 
-void yyerror(const char* msg) {
-  total_errors_count++;
-  fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
-}
+// void yyerror(const char* msg) {
+//   total_errors_count++;
+//   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
+// }
 
 void throw_nonexistent_symbol_error(char* symbol){
   char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
   sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
-  yyerror(error);
   free(error);
 }
-
-int main(int argc, char **argv) {
-  if(argc > 1) {
-    yyin = fopen(argv[1], "r");
-  }
-  else {
-    yyin = stdin;
-  }
-
-  yylex();
-  fclose(yyin);
-  yylex_destroy();
-
-  return 0;
-}
-
