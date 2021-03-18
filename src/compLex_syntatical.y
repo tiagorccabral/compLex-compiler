@@ -25,34 +25,81 @@ parseNode* parser_tree = NULL;
   struct parseNode* node;
 }
 
-%token IDENTIFIER
+%token QUOTES
+%token IDENTIFIER ASSIGN
+%token READ WRITE WRITELN 
+%token INT FLOAT EMPTY
 %token T_INT T_FLOAT T_ELEM T_SET
 
-%type <node> variableInit
+%type <node> variableInit 
+%type <node> functionDefinition
 
 %%
 
-entryPoint: programEntries { printf("Program start\n"); }
+entryPoint: programEntries { printf("Program entry point\n"); }
 ;
 
-programEntries: variableInit {;}
-  | functions {
+programEntries: programEntries variableInit {;}
+  | variableInit {;}
+  | programEntries functionDefinition {;}
+  | functionDefinition {;}
+;
 
+functionDefinition: typeSpecifier IDENTIFIER {}
+  '(' parameters ')' compoundStatement {
+    printf("function definition \n");
   }
 ;
 
-functions: type IDENTIFIER {}
-  | '(' ')' {
-    printf("function \n");
-  }
+parameters: parameter {printf("parameter\n");}
+  | %empty {printf("empty parameters\n");}
 ;
 
-variableInit: type IDENTIFIER ';' {
-  printf("variable initialization\n");
-}
+parameter: typeSpecifier IDENTIFIER {printf("parameter and identifier\n");}
+  | parameters ',' typeSpecifier IDENTIFIER {printf("parameter, type and identifier\n");}
 ;
 
-type: T_INT {printf("integer type\n");}
+compoundStatement: '{' declaration statements '}' {printf("compount statement\n");}
+;
+
+declaration: declaration variableInit {printf("declaration\n");}
+  | %empty {printf("empty declaration\n");}
+;
+
+statements: statements statement {printf("statements, statement\n");}
+  | %empty {printf("empty statement\n");}
+;
+
+statement: expression {printf("expression\n");}
+  | inOutStatements {;}
+;
+
+inOutStatements: WRITE '(' QUOTES QUOTES ')' ';' {printf("IO: write\n");}
+  | WRITELN '(' variable ')' ';' {printf("IO: writeln\n");}
+  | READ '(' variable ')' ';' {printf("IO: read\n");}
+;
+
+expression: variable ASSIGN expression {printf("assignment Expression\n");}
+  | operationalExpression ';' {;}
+;
+
+operationalExpression: term {;}
+;
+
+term: variable {printf("variable\n");}
+  | '(' operationalExpression ')' {printf("( operationalExp )\n");}
+  | EMPTY {printf("EMPTY constant value\n");}
+  | FLOAT {printf("float value\n");}
+  | INT {printf("int value\n");}
+;
+
+variableInit: typeSpecifier IDENTIFIER ';' {printf("variable initialization\n");}
+;
+
+variable: IDENTIFIER {printf("variable\n");}
+;
+
+typeSpecifier: T_INT {printf("integer type\n");}
   | T_FLOAT {printf("float type\n");}
   | T_ELEM {printf("elem type\n");}
   | T_SET {printf("set type\n");}
@@ -82,88 +129,3 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
-// %error-verbose
-// %debug
-// %locations
-
-// %{
-//     #include <stdio.h>
-
-//     extern int yylex();
-//     int yyerror(const char *s);
-//     extern int yylex_destroy();
-//     extern FILE *yyin;
-
-
-// %}
-
-// %token TYPE_INT
-// %token TYPE_FLOAT
-// %token TYPE_SET
-// %token TYPE_ELEM
-// %token <string> ID
-// %token RETURN
-// %token SEMICOLON
-// %token CURLY_BRACKETS_OPEN
-// %token CURLY_BRACKETS_CLOSE
-// %token PARENTHESES_OPEN
-// %token PARENTHESES_CLOSE
-// %token COMMA
-// %token SINGLE_QUOTE
-// %token DOUBLE_QUOTE
-
-// %union{
-//     char* tokenname;
-//     struct node *node;
-// }
-
-// %%
-
-// start : programlist { printf("start\n"); }
-//                 | error { printf("deu ruim start\n"); }
-// ;
-
-// programlist : programlist variable
-//                 | variable { printf("programlist\n"); }
-//                 | programlist function
-//                 | function
-//                 | error { printf("deu ruim programlist\n"); }
-// ;
-
-// type: TYPE_INT | TYPE_FLOAT
-
-// variable : type ID { 
-//     printf("variable"); 
-//     printf("\t %s \n", $2);
-//     }
-//             | error { printf("deu ruim variable\n"); }
-// ;
-
-// function : type ID "(" ")"
-//             | error { printf("deu ruim function\n"); }
-// ;
-
-// %%
-
-// //  main function from: https://westes.github.io/flex/manual/Simple-Examples.html#Simple-Examples
-
-// int yyerror(const char *s) {
-//     printf("yyerror: %s\n", s);
-// }
-
-// int main(int argc, char **argv){
-    
-//     ++argv, --argc;
-    
-//     if (argc > 0)
-//         yyin = fopen( argv[0], "r" );
-//     else
-//         yyin = stdin;
-
-//     yyparse();
-//     fclose(yyin);
-//     yylex_destroy();
-
-//     return 0;
-// }

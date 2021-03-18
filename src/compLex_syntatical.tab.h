@@ -54,11 +54,19 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    IDENTIFIER = 258,              /* IDENTIFIER  */
-    T_INT = 259,                   /* T_INT  */
-    T_FLOAT = 260,                 /* T_FLOAT  */
-    T_ELEM = 261,                  /* T_ELEM  */
-    T_SET = 262                    /* T_SET  */
+    QUOTES = 258,                  /* QUOTES  */
+    IDENTIFIER = 259,              /* IDENTIFIER  */
+    ASSIGN = 260,                  /* ASSIGN  */
+    READ = 261,                    /* READ  */
+    WRITE = 262,                   /* WRITE  */
+    WRITELN = 263,                 /* WRITELN  */
+    INT = 264,                     /* INT  */
+    FLOAT = 265,                   /* FLOAT  */
+    EMPTY = 266,                   /* EMPTY  */
+    T_INT = 267,                   /* T_INT  */
+    T_FLOAT = 268,                 /* T_FLOAT  */
+    T_ELEM = 269,                  /* T_ELEM  */
+    T_SET = 270                    /* T_SET  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -72,7 +80,7 @@ union YYSTYPE
   char* str;
   struct parseNode* node;
 
-#line 76 "compLex_syntatical.tab.h"
+#line 84 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
