@@ -1,1 +1,27 @@
-int a;
+int main (int argc) {
+  int varName;
+  float ab;
+  set s;
+
+  varName = 1;
+  s = EMPTY;
+  read(varName);
+  writeln(varName);
+  write(varName);
+
+  if (varName) {
+    int a;
+  }
+
+  if (varName) {
+    write(varName);
+  } else {
+    writeln(ab);
+  }
+
+  return;
+}
+
+float square (int square) {
+  return square;
+}
