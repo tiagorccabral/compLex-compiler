@@ -13,7 +13,7 @@ int total_errors_count = 0;
 
 /* Pre-declaring functions */
 void throw_nonexistent_symbol_error(char* symbol);
-// void yyerror(const char* msg);
+void yyerror(const char* msg);
 %}
 
 %option noyywrap
@@ -94,7 +94,6 @@ WRITELN "writeln"
 {QUOTES} {
   // printf("<quote, %s>\n", yytext);
   running_column_count += yyleng;
-  return QUOTES;
 }
 
 {STR} {
@@ -168,21 +167,25 @@ WRITELN "writeln"
 {ADD_OP} {
   // printf("<add op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ADD_OP;
 }
 
 {SUB_OP} {
   // printf("<sub op, %s>\n", yytext);
   running_column_count += yyleng;
+  return SUB_OP;
 }
 
 {MULT_OP} {
   // printf("<mult op, %s>\n", yytext);
   running_column_count += yyleng;
+  return MULT_OP;
 }
 
 {DIV_OP} {
   // printf("<div op, %s>\n", yytext);
   running_column_count += yyleng;
+  return DIV_OP;
 }
 
 {ADD_SET_OP} {
@@ -208,11 +211,13 @@ WRITELN "writeln"
 {IF} {
   // printf("<if op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IF;
 }
 
 {ELSE} {
   // printf("<else op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ELSE;
 }
 
 {FOR} {
@@ -228,36 +233,43 @@ WRITELN "writeln"
 {RETURN} {
   // printf("<return op, %s>\n", yytext);
   running_column_count += yyleng;
+  return RETURN;
 }
 
 {ILT} {
   // printf("<is less then op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ILT;
 }
 
 {ILTE} {
   // printf("<is less then equal op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ILTE;
 }
 
 {IGT} {
   // printf("<is greater then op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IGT;
 }
 
 {IGTE} {
   // printf("<is greater then equal op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IGTE;
 }
 
 {IDIFF} {
   // printf("<is different then op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IDIFF;
 }
 
 {IEQ} {
   // printf("<is equal then op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IEQ;
 }
 
 {IS_SET} {
@@ -334,13 +346,14 @@ WRITELN "writeln"
 
 %%
 
-// void yyerror(const char* msg) {
-//   total_errors_count++;
-//   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
-// }
+void yyerror(const char* msg) {
+   total_errors_count++;
+   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
+}
 
 void throw_nonexistent_symbol_error(char* symbol){
   char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
   sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
+  yyerror(error);
   free(error);
 }
