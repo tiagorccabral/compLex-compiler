@@ -24,6 +24,10 @@
 
 <pointer> ::= * {<pointer>}?
 
+<inOutStatements> ::= <read-specifier>
+                        | <write-specifier>
+                        | <writeln-specifier>
+
 <read-specifier> ::= read ( <integer-type> )
                     | read ( <float-type> ) 
 
@@ -34,10 +38,6 @@
 <writeln-specifier> ::=  writeln ( <integer-type> )
                       | writeln ( <float-type> )
                       | writeln ( <string-type> )
-
-<in-out-declaration> ::= <read-specifier>
-                        | <write-specifier>
-                        | <writeln-specifier>
 
 <direct-declarator> ::= <identifier>
                       | ( <declarator> )
@@ -68,13 +68,13 @@
                           | <relational-expression> <= <shift-expression>
                           | <relational-expression> >= <shift-expression>
 
-<shift-expression> ::= <additive-expression>
-                     | <shift-expression> << <additive-expression>
-                     | <shift-expression> >> <additive-expression>
+<shift-expression> ::= <arithmeticExpression>
+                     | <shift-expression> << <arithmeticExpression>
+                     | <shift-expression> >> <arithmeticExpression>
 
-<additive-expression> ::= <multiplicative-expression>
-                        | <additive-expression> + <multiplicative-expression>
-                        | <additive-expression> - <multiplicative-expression>
+<arithmeticExpression> ::= <multiplicative-expression>
+                        | <arithmeticExpression> + <multiplicative-expression>
+                        | <arithmeticExpression> - <multiplicative-expression>
 
 <multiplicative-expression> ::= <cast-expression>
                               | <multiplicative-expression> * <cast-expression>
@@ -104,9 +104,7 @@
                | <expression> , <assignment-expression>
 
 <assignment-expression> ::= <conditional-expression>
-                          | <assignment-operator> <assignment-expression>
-
-<assignment-operator> ::= =
+                          | '=' <assignment-expression>
 
 <type-name> ::= {<typeSpecifier>}+ {<abstract-declarator>}?
 
@@ -142,8 +140,8 @@
 
 <statement> ::= <expression-statement>
               | <selection-statement>
-              | <iteration-statement>
-              | <jump-statement>
+              | <iterationStatement>
+              | <fluxControlstatement>
 
 <expression-statement> ::= {<expression>}? ;
 
@@ -152,7 +150,7 @@
 <selection-statement> ::= if ( <expression> ) <statement>
                         | else <statement>
 
-<iteration-statement> ::= for ( {<expression>}? ; {<expression>}? ; {<expression>}? ) <statement>
+<iterationStatement> ::= for ( {<expression>}? ; {<expression>}? ; {<expression>}? ) <statement>
                         | forall <belonging-statement>
 
-<jump-statement> ::= return {<expression>}? ;
+<fluxControlstatement> ::= return {<expression>}? ;
