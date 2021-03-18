@@ -54,19 +54,32 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    QUOTES = 258,                  /* QUOTES  */
-    IDENTIFIER = 259,              /* IDENTIFIER  */
-    ASSIGN = 260,                  /* ASSIGN  */
-    READ = 261,                    /* READ  */
-    WRITE = 262,                   /* WRITE  */
-    WRITELN = 263,                 /* WRITELN  */
-    INT = 264,                     /* INT  */
-    FLOAT = 265,                   /* FLOAT  */
-    EMPTY = 266,                   /* EMPTY  */
-    T_INT = 267,                   /* T_INT  */
-    T_FLOAT = 268,                 /* T_FLOAT  */
-    T_ELEM = 269,                  /* T_ELEM  */
-    T_SET = 270                    /* T_SET  */
+    IDENTIFIER = 258,              /* IDENTIFIER  */
+    ASSIGN = 259,                  /* ASSIGN  */
+    INT = 260,                     /* INT  */
+    FLOAT = 261,                   /* FLOAT  */
+    EMPTY = 262,                   /* EMPTY  */
+    T_INT = 263,                   /* T_INT  */
+    T_FLOAT = 264,                 /* T_FLOAT  */
+    T_ELEM = 265,                  /* T_ELEM  */
+    T_SET = 266,                   /* T_SET  */
+    ADD_OP = 267,                  /* ADD_OP  */
+    SUB_OP = 268,                  /* SUB_OP  */
+    MULT_OP = 269,                 /* MULT_OP  */
+    DIV_OP = 270,                  /* DIV_OP  */
+    ILT = 271,                     /* ILT  */
+    ILTE = 272,                    /* ILTE  */
+    IGT = 273,                     /* IGT  */
+    IGTE = 274,                    /* IGTE  */
+    IDIFF = 275,                   /* IDIFF  */
+    IEQ = 276,                     /* IEQ  */
+    READ = 277,                    /* READ  */
+    WRITE = 278,                   /* WRITE  */
+    WRITELN = 279,                 /* WRITELN  */
+    RETURN = 280,                  /* RETURN  */
+    IF = 281,                      /* IF  */
+    ELSE = 282,                    /* ELSE  */
+    FOR = 283                      /* FOR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -80,7 +93,7 @@ union YYSTYPE
   char* str;
   struct parseNode* node;
 
-#line 84 "compLex_syntatical.tab.h"
+#line 97 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
