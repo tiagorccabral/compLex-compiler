@@ -92,221 +92,237 @@ WRITELN "writeln"
 }
 
 {QUOTES} {
-  printf("<quote, %s>\n", yytext);
+  // printf("<quote, %s>\n", yytext);
   running_column_count += yyleng;
+  return QUOTES;
 }
 
 {STR} {
-  printf("<string value, %s>\n", yytext);
+  // printf("<string value, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {INT} {
-  printf("<integer number, %d>\n", atoi(yytext));
+  // printf("<integer number, %d>\n", atoi(yytext));
   running_column_count += yyleng;
+  return INT;
 }
 
 {FLOAT} { 
-  printf("<floating point number, %0.2f>\n", atof(yytext));
+  // printf("<floating point number, %0.2f>\n", atof(yytext));
   running_column_count += yyleng;
+  return FLOAT;
 }
 
 {EMPTY} {
-  printf("<emptyConst, %s>\n", yytext);
+  // printf("<emptyConst, %s>\n", yytext);
   running_column_count += yyleng;
+  return EMPTY;
 }
 
 {T_INT} {
-  printf("<typeInteger, %s>\n", yytext);
+  // printf("<typeInteger, %s>\n", yytext);
   running_column_count += yyleng;
   return T_INT;
 }
 
 {T_FLOAT} {
-  printf("<typeFloat, %s>\n", yytext);
+  // printf("<typeFloat, %s>\n", yytext);
   running_column_count += yyleng;
+  return T_FLOAT;
 }
 
 {T_ELEM} {
-  printf("<typeElem, %s>\n", yytext);
+  // printf("<typeElem, %s>\n", yytext);
   running_column_count += yyleng;
+  return T_ELEM;
 }
 
 {T_SET} {
-  printf("<typeSet, %s>\n", yytext);
+  // printf("<typeSet, %s>\n", yytext);
   running_column_count += yyleng;
+  return T_SET;
 }
 
 {AND} {
-  printf("<logical op AND, %s>\n", yytext);
+  // printf("<logical op AND, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {OR} {
-  printf("<logical op OR, %s>\n", yytext);
+  // printf("<logical op OR, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {NEG} {
-  printf("<logical op Negation, %s>\n", yytext);
+  // printf("<logical op Negation, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ASSIGN} {
-  printf("<assign op, %s>\n", yytext);
+  // printf("<assign op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ASSIGN;
 }
 
 {ADD_OP} {
-  printf("<add op, %s>\n", yytext);
+  // printf("<add op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {SUB_OP} {
-  printf("<sub op, %s>\n", yytext);
+  // printf("<sub op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {MULT_OP} {
-  printf("<mult op, %s>\n", yytext);
+  // printf("<mult op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {DIV_OP} {
-  printf("<div op, %s>\n", yytext);
+  // printf("<div op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ADD_SET_OP} {
-  printf("<add to set op, %s>\n", yytext);
+  // printf("<add to set op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ADD_IN_OP} {
-  printf("<add in op (keyword), %s>\n", yytext);
+  // printf("<add in op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {REMOVE_SET_OP} {
-  printf("<remove from Set op (keyword), %s>\n", yytext);
+  // printf("<remove from Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {EXISTS_IN_SET_OP} {
-  printf("<exists in Set op (keyword), %s>\n", yytext);
+  // printf("<exists in Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IF} {
-  printf("<if op, %s>\n", yytext);
+  // printf("<if op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ELSE} {
-  printf("<else op, %s>\n", yytext);
+  // printf("<else op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {FOR} {
-  printf("<for op, %s>\n", yytext);
+  // printf("<for op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {SET_FORALL} {
-  printf("<set forall flux control, %s>\n", yytext);
+  // printf("<set forall flux control, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {RETURN} {
-  printf("<return op, %s>\n", yytext);
+  // printf("<return op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ILT} {
-  printf("<is less then op, %s>\n", yytext);
+  // printf("<is less then op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {ILTE} {
-  printf("<is less then equal op, %s>\n", yytext);
+  // printf("<is less then equal op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IGT} {
-  printf("<is greater then op, %s>\n", yytext);
+  // printf("<is greater then op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IGTE} {
-  printf("<is greater then equal op, %s>\n", yytext);
+  // printf("<is greater then equal op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IDIFF} {
-  printf("<is different then op, %s>\n", yytext);
+  // printf("<is different then op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IEQ} {
-  printf("<is equal then op, %s>\n", yytext);
+  // printf("<is equal then op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {IS_SET} {
-  printf("<isSet operator op, %s>\n", yytext);
+  // printf("<isSet operator op, %s>\n", yytext);
   running_column_count += yyleng;
 }
 
 {READ} {
-  printf("<read directive, %s>\n", yytext);
+  // printf("<read directive, %s>\n", yytext);
   running_column_count += yyleng;
+  return READ;
 }
 
 {WRITE} {
-  printf("<write directive, %s>\n", yytext);
+  // printf("<write directive, %s>\n", yytext);
   running_column_count += yyleng;
+  return WRITE;
 }
 
 {WRITELN} {
-  printf("<writeLine directive, %s>\n", yytext);
+  // printf("<writeLine directive, %s>\n", yytext);
   running_column_count += yyleng;
+  return WRITELN;
 }
 
 <INITIAL,STRING>{IDENTIFIER} { 
-  printf("<identifier, %s>\n", yytext);
+  // printf("<identifier, %s>\n", yytext);
   running_column_count += yyleng;
   return IDENTIFIER;
 }
 
 "," {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return ',';
 }
 
 ";" {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
   return ';';
 }
 
 "(" {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return '(';
 }
 
 ")" {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return ')';
 }
 
 "{" {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return '{';
 }
 
 "}" {
-  printf("<%s>\n", yytext);
+  // printf("<%s>\n", yytext);
   running_column_count += yyleng;
+  return '}';
 }
 
 {COMMENT} {}
