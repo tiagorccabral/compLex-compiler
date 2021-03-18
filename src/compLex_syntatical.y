@@ -33,9 +33,11 @@ parseNode* parser_tree = NULL;
 %token INT FLOAT EMPTY
 // Data types
 %token T_INT T_FLOAT T_ELEM T_SET
-// Arithmetic Operatiors
+// Arithmetic Operators
 %token ADD_OP SUB_OP MULT_OP DIV_OP
-// Logical Operatiors
+// Set Operators
+%token ADD_SET_OP REMOVE_SET_OP EXISTS_IN_SET_OP IS_SET ADD_IN_OP
+// Logical Operators
 %token ILT ILTE IGT IGTE IDIFF IEQ
 // Input/output
 %token READ WRITE WRITELN
@@ -109,6 +111,7 @@ expression: variable ASSIGN expression {printf("assignment Expression\n");}
 
 operationalExpression: arithmeticExpression {;}
   | logicalExpression {;}
+  | setOperationalExpression {;}
   | term {;}
 ;
 
@@ -124,6 +127,12 @@ logicalExpression: operationalExpression ILT term {printf("is less than operatio
   | operationalExpression IGTE term {printf("is greater than or equal operation\n");}
   | operationalExpression IDIFF term {printf("is different than operation\n");}
   | operationalExpression IEQ term {printf("is equal to operation\n");}
+;
+
+setOperationalExpression: ADD_SET_OP '(' expression ADD_IN_OP expression ')' {printf("add to set op\n");}
+  | REMOVE_SET_OP '(' expression ADD_IN_OP expression ')' {printf("remove from set op\n");}
+  | EXISTS_IN_SET_OP '(' expression ADD_IN_OP expression ')' {printf("exists el in set op\n");}
+  | IS_SET '(' term ')' {printf("is set operator\n");}
 ;
 
 term: variable {printf("variable\n");}

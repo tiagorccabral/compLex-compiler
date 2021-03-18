@@ -191,21 +191,25 @@ WRITELN "writeln"
 {ADD_SET_OP} {
   // printf("<add to set op, %s>\n", yytext);
   running_column_count += yyleng;
+  return ADD_SET_OP;
 }
 
 {ADD_IN_OP} {
   // printf("<add in op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
+  return ADD_IN_OP;
 }
 
 {REMOVE_SET_OP} {
   // printf("<remove from Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
+  return REMOVE_SET_OP;
 }
 
 {EXISTS_IN_SET_OP} {
   // printf("<exists in Set op (keyword), %s>\n", yytext);
   running_column_count += yyleng;
+  return EXISTS_IN_SET_OP;
 }
 
 {IF} {
@@ -223,6 +227,7 @@ WRITELN "writeln"
 {FOR} {
   // printf("<for op, %s>\n", yytext);
   running_column_count += yyleng;
+  return FOR;
 }
 
 {SET_FORALL} {
@@ -275,6 +280,7 @@ WRITELN "writeln"
 {IS_SET} {
   // printf("<isSet operator op, %s>\n", yytext);
   running_column_count += yyleng;
+  return IS_SET;
 }
 
 {READ} {

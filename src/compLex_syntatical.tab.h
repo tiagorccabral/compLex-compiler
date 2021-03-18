@@ -67,19 +67,24 @@ extern int yydebug;
     SUB_OP = 268,                  /* SUB_OP  */
     MULT_OP = 269,                 /* MULT_OP  */
     DIV_OP = 270,                  /* DIV_OP  */
-    ILT = 271,                     /* ILT  */
-    ILTE = 272,                    /* ILTE  */
-    IGT = 273,                     /* IGT  */
-    IGTE = 274,                    /* IGTE  */
-    IDIFF = 275,                   /* IDIFF  */
-    IEQ = 276,                     /* IEQ  */
-    READ = 277,                    /* READ  */
-    WRITE = 278,                   /* WRITE  */
-    WRITELN = 279,                 /* WRITELN  */
-    RETURN = 280,                  /* RETURN  */
-    IF = 281,                      /* IF  */
-    ELSE = 282,                    /* ELSE  */
-    FOR = 283                      /* FOR  */
+    ADD_SET_OP = 271,              /* ADD_SET_OP  */
+    REMOVE_SET_OP = 272,           /* REMOVE_SET_OP  */
+    EXISTS_IN_SET_OP = 273,        /* EXISTS_IN_SET_OP  */
+    IS_SET = 274,                  /* IS_SET  */
+    ADD_IN_OP = 275,               /* ADD_IN_OP  */
+    ILT = 276,                     /* ILT  */
+    ILTE = 277,                    /* ILTE  */
+    IGT = 278,                     /* IGT  */
+    IGTE = 279,                    /* IGTE  */
+    IDIFF = 280,                   /* IDIFF  */
+    IEQ = 281,                     /* IEQ  */
+    READ = 282,                    /* READ  */
+    WRITE = 283,                   /* WRITE  */
+    WRITELN = 284,                 /* WRITELN  */
+    RETURN = 285,                  /* RETURN  */
+    IF = 286,                      /* IF  */
+    ELSE = 287,                    /* ELSE  */
+    FOR = 288                      /* FOR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -93,7 +98,7 @@ union YYSTYPE
   char* str;
   struct parseNode* node;
 
-#line 97 "compLex_syntatical.tab.h"
+#line 102 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
