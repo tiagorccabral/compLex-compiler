@@ -5,14 +5,12 @@
 
 <function-definition> ::= <declarator> {<declaration>}* <compound-statement>
 
-<declaration-specifier> ::= <type-specifier>
+<declaration-specifier> ::= <typeSpecifier>
 
-<type-specifier> ::= int
+<typeSpecifier> ::= int
                    | float
                    | elem
                    | set
-
-<specifier-qualifier> ::= <type-specifier>
 
 <digit> ::= [0-9]
 
@@ -110,7 +108,7 @@
 
 <assignment-operator> ::= =
 
-<type-name> ::= {<specifier-qualifier>}+ {<abstract-declarator>}?
+<type-name> ::= {<typeSpecifier>}+ {<abstract-declarator>}?
 
 <parameter-type-list> ::= <parameter-list>
                         | <parameter-list> , ...
