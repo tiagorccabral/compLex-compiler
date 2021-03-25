@@ -104,12 +104,12 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf(
 ;
 
 expression: operationalExpression ';' {;}
+  | variable_assignment {;}
 ;
 
 operationalExpression: arithmeticExpression {;}
   | logicalExpression {;}
   | setOperationalExpression {;}
-  | variable_assignment {;}
   | term {;}
 ;
 
@@ -133,11 +133,11 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
   | IS_SET '(' term ')' {printf("is set operator\n");}
 ;
 
-variable_assignment: IDENTIFIER ASSIGN operationalExpression {printf("variable assignment\n");}
+variable_assignment: IDENTIFIER ASSIGN expression {printf("variable assignment\n");}
 ;
 
-term: variable {printf("variable\n");}
-  | '(' operationalExpression ')' {printf("( operationalExp )\n");}
+term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
+  | variable {printf("variable\n");}  
   | functionCall {;}
   | EMPTY {printf("EMPTY constant value\n");}
   | FLOAT {printf("float value\n");}
