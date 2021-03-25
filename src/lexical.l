@@ -240,6 +240,7 @@ WRITELN "writeln"
 {SET_FORALL} {
   // printf("<set forall flux control, %s>\n", yytext);
   running_column_count += yyleng;
+  return SET_FORALL;
 }
 
 {RETURN} {

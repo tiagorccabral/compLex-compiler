@@ -85,7 +85,8 @@ extern int yydebug;
     RETURN = 286,                  /* RETURN  */
     IF = 287,                      /* IF  */
     ELSE = 288,                    /* ELSE  */
-    FOR = 289                      /* FOR  */
+    FOR = 289,                     /* FOR  */
+    SET_FORALL = 290               /* SET_FORALL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -99,7 +100,7 @@ union YYSTYPE
   char* str;
   struct parseNode* node;
 
-#line 103 "compLex_syntatical.tab.h"
+#line 104 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

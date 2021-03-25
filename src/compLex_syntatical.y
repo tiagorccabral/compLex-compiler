@@ -42,7 +42,7 @@ parseNode* parser_tree = NULL;
 // Input/output
 %token READ WRITE WRITELN
 // Flux control
-%token RETURN IF ELSE FOR
+%token RETURN IF ELSE FOR SET_FORALL
 
 %type <node> variableInit 
 %type <node> functionDefinition
@@ -99,17 +99,17 @@ fluxControlstatement: RETURN variable ';' {printf("return variable\n");}
 ;
 
 iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf("for loop one argument\n");}
-  | FOR '(' expression expression expression ')' compoundStatement {printf("for loop three arguments\n");}
+  | FOR '(' expression expression operationalExpression ')' compoundStatement {printf("for loop three arguments\n");}
+  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {printf("set forall loop\n");}
 ;
 
-expression: variable ASSIGN expression {printf("assignment Expression\n");}
-  | operationalExpression ';' {;}
-  | operationalExpression {;}
+expression: operationalExpression ';' {;}
 ;
 
 operationalExpression: arithmeticExpression {;}
   | logicalExpression {;}
   | setOperationalExpression {;}
+  | variable_assignment {;}
   | term {;}
 ;
 
@@ -127,10 +127,13 @@ logicalExpression: operationalExpression ILT term {printf("is less than operatio
   | operationalExpression IEQ term {printf("is equal to operation\n");}
 ;
 
-setOperationalExpression: ADD_SET_OP '(' expression ADD_IN_OP expression ')' {printf("add to set op\n");}
-  | REMOVE_SET_OP '(' expression ADD_IN_OP expression ')' {printf("remove from set op\n");}
-  | EXISTS_IN_SET_OP '(' expression ADD_IN_OP expression ')' {printf("exists el in set op\n");}
+setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("add to set op\n");}
+  | REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("remove from set op\n");}
+  | EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("exists el in set op\n");}
   | IS_SET '(' term ')' {printf("is set operator\n");}
+;
+
+variable_assignment: IDENTIFIER ASSIGN operationalExpression {printf("variable assignment\n");}
 ;
 
 term: variable {printf("variable\n");}
