@@ -2,17 +2,35 @@ int main (int argc) {
   int varName;
   float ab;
   set s;
+  int i;
 
-  varName = 1;
-  s = EMPTY;
   read(varName);
   writeln(varName);
   write(varName);
 
+  add(1 in s);
+  add(2 in s);
+  remove(2 in s);
+  exists(1 in s);
+
+  forall(x in s) {
+    write(x);
+  }
+
+  for (i=0; i<10; i=i+1) {
+    writeln(i);
+  }
+
+  for (i<10) {
+    write(s);
+    i = i+1;
+  }
 
   return;
 }
 
-float square (int square) {
-  return square;
+int squareRoot(int a) {
+  writeln(a);
+
+  return a;
 }
