@@ -10,35 +10,37 @@
 
 **Bison:** bison (GNU Bison) 3.7.4
 
+---
+
 ### Flex & Bison - Como rodar flex e bison
 
-### Flex & Bison 1 - Mover para pasta src
+### 1 - Mover para pasta src
 
 ```bash
 cd src
 ```
 
-### Flex & Bison 2 - Gerar arquivos
+### 2 - Gerar arquivos
 
 ```bash
 make
 ```
 
-### Flex & Bison 3 - Rodar algum arquivo de exemplo
+### 3 - Rodar algum arquivo de exemplo
 
 ```bash
 ./out '../examples/simple_input1.txt'
 ```
 
 ---
-
-### Flex: 1 - Como rodar somente o flex
+### Flex - Como rodar somente o flex
+### 1 - Como rodar somente o flex
 
 ```bash
 flex <nome_do_arquivo.l>
 ```
 
-### Flex: 2 - Como executar arquivo gerado pelo flex (ex: lex.yy.c)
+### 2 - Como executar arquivo gerado pelo flex (ex: lex.yy.c)
 
 ```bash
 gcc -o out lex.yy.c -ll
