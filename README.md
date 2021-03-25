@@ -2,6 +2,14 @@
 
 ---
 
+### Versões das bibliotecas/pacotes utilizados para desenvolvimento
+
+**GCC/Clang:** Apple clang version 12.0.0 (clang-1200.0.32.29)
+
+**Flex:** flex 2.5.35 Apple(flex-32)
+
+**Bison:** bison (GNU Bison) 3.7.4
+
 ### Flex & Bison - Como rodar flex e bison
 
 ### Flex & Bison 1 - Mover para pasta src
