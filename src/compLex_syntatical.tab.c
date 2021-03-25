@@ -179,9 +179,12 @@ enum yysymbol_kind_t
   YYSYMBOL_setOperationalExpression = 59,  /* setOperationalExpression  */
   YYSYMBOL_variable_assignment = 60,       /* variable_assignment  */
   YYSYMBOL_term = 61,                      /* term  */
-  YYSYMBOL_variableInit = 62,              /* variableInit  */
-  YYSYMBOL_variable = 63,                  /* variable  */
-  YYSYMBOL_typeSpecifier = 64              /* typeSpecifier  */
+  YYSYMBOL_functionCall = 62,              /* functionCall  */
+  YYSYMBOL_functionArguments = 63,         /* functionArguments  */
+  YYSYMBOL_callArguments = 64,             /* callArguments  */
+  YYSYMBOL_variableInit = 65,              /* variableInit  */
+  YYSYMBOL_variable = 66,                  /* variable  */
+  YYSYMBOL_typeSpecifier = 67              /* typeSpecifier  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -491,16 +494,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   277
+#define YYLAST   295
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  42
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  23
+#define YYNNTS  26
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  63
+#define YYNRULES  69
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  145
+#define YYNSTATES  153
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   290
@@ -558,8 +561,8 @@ static const yytype_uint8 yyrline[] =
       86,    87,    90,    91,    92,    95,    96,    97,    98,   101,
      102,   103,   106,   109,   110,   111,   112,   113,   116,   117,
      118,   119,   122,   123,   124,   125,   126,   127,   130,   131,
-     132,   133,   136,   139,   140,   141,   142,   143,   146,   149,
-     152,   153,   154,   155
+     132,   133,   136,   139,   140,   141,   142,   143,   144,   147,
+     150,   151,   154,   155,   158,   161,   164,   165,   166,   167
 };
 #endif
 
@@ -587,7 +590,8 @@ static const char *const yytname[] =
   "fluxControlstatement", "iterationStatement", "expression",
   "operationalExpression", "arithmeticExpression", "logicalExpression",
   "setOperationalExpression", "variable_assignment", "term",
-  "variableInit", "variable", "typeSpecifier", YY_NULLPTR
+  "functionCall", "functionArguments", "callArguments", "variableInit",
+  "variable", "typeSpecifier", YY_NULLPTR
 };
 
 static const char *
@@ -610,7 +614,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-64)
+#define YYPACT_NINF (-50)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -624,21 +628,22 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      14,   -64,   -64,   -64,   -64,     3,    14,   -64,   -64,     8,
-     -64,   -64,   -64,   -31,   -30,    14,   -64,    14,    46,   -64,
-      10,    48,   -24,    14,   -64,   -24,   -64,   -64,    44,   -64,
-      14,   -64,     1,   -64,    49,    12,   -64,   -64,   -64,    15,
-      21,    25,    27,    29,    33,    35,    -1,    37,    39,    51,
-      36,   -64,   -64,   -64,   -64,   -64,   -64,    95,   -64,   -64,
-     -64,   -64,   -64,   -64,    53,    36,    42,    42,    42,    42,
-      92,    92,    92,   -64,   -64,    55,    36,    36,    42,   115,
-      42,    42,    42,    42,    42,    42,    42,    42,    42,    42,
-     -64,   250,    77,    79,    80,    65,    67,    68,    69,   -64,
-     131,    36,    66,    91,   -64,   -64,   -64,   -64,   -64,   -64,
-     -64,   -64,   -64,   -64,   -64,    36,    36,    36,   -64,    72,
-      82,    83,   -24,    36,   -24,    36,   147,   163,   179,   -64,
-     -64,   -64,    93,   195,   -64,   211,   -64,   -64,   -64,   -24,
-     -24,   -24,   -64,   -64,   -64
+      30,   -50,   -50,   -50,   -50,     4,    30,   -50,   -50,    27,
+     -50,   -50,   -50,   -29,   -30,    30,   -50,    30,    13,   -50,
+      10,    15,    -6,    30,   -50,    -6,   -50,   -50,    42,   -50,
+      30,   -50,    29,   -50,    52,    18,   -50,   -50,   -50,    20,
+      31,    32,    34,    35,    41,    43,     2,    44,    53,    54,
+      79,   -50,   -50,   -50,   -50,   -50,   -50,   114,   -50,   -50,
+     -50,   -50,   -50,   -50,   -50,    25,    79,    79,     8,     8,
+       8,     8,    85,    85,    85,   -50,   -50,    79,    79,     8,
+     134,     8,     8,     8,     8,     8,     8,     8,     8,     8,
+       8,   -50,   268,   268,    55,    56,    57,    74,    80,    81,
+      63,   -50,    66,    68,    75,   150,    79,    94,    90,   -50,
+     -50,   -50,   -50,   -50,   -50,   -50,   -50,   -50,   -50,   -50,
+     -50,    79,    79,    79,    79,   -50,    72,    73,    84,    -6,
+      79,    -6,    79,   268,   166,   182,   198,   -50,   -50,   -50,
+      93,   214,   -50,   230,   -50,   -50,   -50,    -6,    -6,    -6,
+     -50,   -50,   -50
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -646,29 +651,30 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    60,    61,    62,    63,     0,     2,     6,     4,     0,
-       1,     5,     3,     0,     0,    10,    58,    10,     0,     9,
+       0,    66,    67,    68,    69,     0,     2,     6,     4,     0,
+       1,     5,     3,     0,     0,    10,    64,    10,     0,     9,
        0,     0,     0,     0,    11,     0,    15,     7,     0,     8,
-      17,    12,     0,    14,     0,    59,    57,    56,    55,     0,
+      17,    12,     0,    14,     0,    65,    58,    57,    56,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,    13,    16,    19,    20,    21,    18,     0,    33,    34,
-      35,    36,    37,    53,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    59,    26,     0,     0,     0,     0,     0,
+      35,    36,    37,    55,    53,     0,     0,    61,     0,     0,
+       0,     0,     0,     0,     0,    26,    25,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      32,    52,     0,     0,     0,     0,     0,     0,     0,    25,
-       0,     0,     0,     0,    54,    38,    39,    40,    41,    42,
-      43,    44,    45,    46,    47,     0,     0,     0,    51,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    24,
-      22,    23,    27,     0,    29,     0,    48,    49,    50,     0,
-       0,     0,    28,    30,    31
+       0,    32,    52,    63,     0,    60,    65,     0,     0,     0,
+       0,    65,     0,     0,     0,     0,     0,     0,     0,    54,
+      38,    39,    40,    41,    42,    43,    44,    45,    46,    47,
+      59,     0,     0,     0,     0,    51,     0,     0,     0,     0,
+       0,     0,     0,    62,     0,     0,     0,    24,    22,    23,
+      27,     0,    29,     0,    48,    49,    50,     0,     0,     0,
+      28,    30,    31
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -64,   -64,   -64,   119,   110,   -64,   -25,   -64,   -64,   -64,
-     -64,   -64,   -64,   -63,   -49,   -64,   -64,   -64,   -64,   173,
-      16,   -12,    47
+     -50,   -50,   -50,   126,   116,   -50,   -25,   -50,   -50,   -50,
+     -50,   -50,   -50,   -44,   -49,   -50,   -50,   -50,   -50,   190,
+     -50,   -50,   -50,    -3,   -48,    61
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -676,7 +682,7 @@ static const yytype_int8 yydefgoto[] =
 {
       -1,     5,     6,     7,    18,    19,    27,    30,    32,    52,
       53,    54,    55,    56,    57,    58,    59,    60,    61,    62,
-       8,    63,     9
+      63,    94,    95,     8,    64,     9
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -684,87 +690,92 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      29,    79,    73,    10,    35,    15,    17,    36,    37,    38,
-      16,    13,    14,    24,   101,    26,    91,    65,    39,    40,
-      41,    42,    12,     1,     2,     3,     4,   100,   102,    43,
-      44,    45,    46,    47,    75,    48,    49,    50,   123,    35,
-      74,    51,    36,    37,    38,    73,    33,    31,    36,    37,
-      38,    66,    64,    39,    40,    41,    42,    67,    96,    97,
-      98,    68,    20,    69,    20,    70,   126,   127,   128,    71,
-      28,    72,    50,    76,   133,    77,   135,    34,    50,    80,
-      81,    82,    83,    22,    23,    25,    23,    78,    84,    85,
-      86,    87,    88,    89,    16,    73,    99,   132,   115,   134,
-     116,   117,   118,   124,   119,   120,   121,    90,    80,    81,
-      82,    83,   125,   129,   142,   143,   144,    84,    85,    86,
-      87,    88,    89,   130,   131,    11,   139,    21,    80,    81,
-      82,    83,     0,     0,     0,     0,    90,    84,    85,    86,
-      87,    88,    89,     0,    80,    81,    82,    83,     0,     0,
-       0,     0,   104,    84,    85,    86,    87,    88,    89,     0,
-      80,    81,    82,    83,     0,     0,     0,     0,   122,    84,
-      85,    86,    87,    88,    89,     0,    80,    81,    82,    83,
-       0,     0,     0,     0,   136,    84,    85,    86,    87,    88,
-      89,     0,    80,    81,    82,    83,     0,     0,     0,     0,
-     137,    84,    85,    86,    87,    88,    89,     0,    80,    81,
-      82,    83,     0,     0,     0,     0,   138,    84,    85,    86,
-      87,    88,    89,     0,    80,    81,    82,    83,     0,     0,
-       0,     0,   140,    84,    85,    86,    87,    88,    89,    92,
-      93,    94,    95,     0,     0,     0,     0,     0,   141,     0,
-       0,   103,     0,   105,   106,   107,   108,   109,   110,   111,
-     112,   113,   114,    80,    81,    82,    83,     0,     0,     0,
-       0,     0,    84,    85,    86,    87,    88,    89
+      29,    80,    76,    12,    10,    35,    17,    15,    36,    37,
+      38,    96,    16,    24,    36,    37,    38,    92,    93,    39,
+      40,    41,    42,    66,   102,   103,   104,    33,   105,   107,
+      13,    14,    35,    26,   106,    36,    37,    38,    50,     1,
+       2,     3,     4,    75,    50,    31,    39,    40,    41,    42,
+      22,    23,    25,    23,    67,    65,    68,    43,    44,    45,
+      46,    47,   130,    48,    49,    50,    16,    69,    70,    51,
+      71,    72,   133,   134,   135,   136,    20,    73,    20,    74,
+      77,   141,    35,   143,    28,    36,    37,    38,   101,    78,
+      79,    34,   120,    67,   121,   122,    39,    40,    41,    42,
+     125,   123,   124,   126,   140,   127,   142,    81,    82,    83,
+      84,   132,   128,   137,   138,    50,    85,    86,    87,    88,
+      89,    90,   150,   151,   152,   139,   147,    81,    82,    83,
+      84,   131,    11,    21,     0,    91,    85,    86,    87,    88,
+      89,    90,     0,     0,     0,     0,     0,    81,    82,    83,
+      84,     0,     0,     0,     0,    91,    85,    86,    87,    88,
+      89,    90,     0,    81,    82,    83,    84,     0,     0,     0,
+       0,   109,    85,    86,    87,    88,    89,    90,     0,    81,
+      82,    83,    84,     0,     0,     0,     0,   129,    85,    86,
+      87,    88,    89,    90,     0,    81,    82,    83,    84,     0,
+       0,     0,     0,   144,    85,    86,    87,    88,    89,    90,
+       0,    81,    82,    83,    84,     0,     0,     0,     0,   145,
+      85,    86,    87,    88,    89,    90,     0,    81,    82,    83,
+      84,     0,     0,     0,     0,   146,    85,    86,    87,    88,
+      89,    90,     0,    81,    82,    83,    84,     0,     0,     0,
+       0,   148,    85,    86,    87,    88,    89,    90,    97,    98,
+      99,   100,     0,     0,     0,     0,     0,   149,     0,   108,
+       0,   110,   111,   112,   113,   114,   115,   116,   117,   118,
+     119,    81,    82,    83,    84,     0,     0,     0,     0,     0,
+      85,    86,    87,    88,    89,    90
 };
 
 static const yytype_int16 yycheck[] =
 {
-      25,    50,     3,     0,     3,    36,    36,     6,     7,     8,
-      41,     3,     4,     3,    77,    39,    65,     5,    17,    18,
-      19,    20,     6,     9,    10,    11,    12,    76,    77,    28,
-      29,    30,    31,    32,    46,    34,    35,    36,   101,     3,
-      41,    40,     6,     7,     8,     3,    30,     3,     6,     7,
-       8,    36,     3,    17,    18,    19,    20,    36,    70,    71,
-      72,    36,    15,    36,    17,    36,   115,   116,   117,    36,
-      23,    36,    36,    36,   123,    36,   125,    30,    36,    13,
-      14,    15,    16,    37,    38,    37,    38,    36,    22,    23,
-      24,    25,    26,    27,    41,     3,    41,   122,    21,   124,
-      21,    21,    37,    37,    37,    37,    37,    41,    13,    14,
-      15,    16,    21,    41,   139,   140,   141,    22,    23,    24,
-      25,    26,    27,    41,    41,     6,    33,    17,    13,    14,
-      15,    16,    -1,    -1,    -1,    -1,    41,    22,    23,    24,
-      25,    26,    27,    -1,    13,    14,    15,    16,    -1,    -1,
-      -1,    -1,    37,    22,    23,    24,    25,    26,    27,    -1,
-      13,    14,    15,    16,    -1,    -1,    -1,    -1,    37,    22,
-      23,    24,    25,    26,    27,    -1,    13,    14,    15,    16,
-      -1,    -1,    -1,    -1,    37,    22,    23,    24,    25,    26,
-      27,    -1,    13,    14,    15,    16,    -1,    -1,    -1,    -1,
-      37,    22,    23,    24,    25,    26,    27,    -1,    13,    14,
-      15,    16,    -1,    -1,    -1,    -1,    37,    22,    23,    24,
-      25,    26,    27,    -1,    13,    14,    15,    16,    -1,    -1,
-      -1,    -1,    37,    22,    23,    24,    25,    26,    27,    66,
-      67,    68,    69,    -1,    -1,    -1,    -1,    -1,    37,    -1,
-      -1,    78,    -1,    80,    81,    82,    83,    84,    85,    86,
-      87,    88,    89,    13,    14,    15,    16,    -1,    -1,    -1,
-      -1,    -1,    22,    23,    24,    25,    26,    27
+      25,    50,    46,     6,     0,     3,    36,    36,     6,     7,
+       8,     3,    41,     3,     6,     7,     8,    66,    67,    17,
+      18,    19,    20,     5,    72,    73,    74,    30,    77,    78,
+       3,     4,     3,    39,    78,     6,     7,     8,    36,     9,
+      10,    11,    12,    41,    36,     3,    17,    18,    19,    20,
+      37,    38,    37,    38,    36,     3,    36,    28,    29,    30,
+      31,    32,   106,    34,    35,    36,    41,    36,    36,    40,
+      36,    36,   121,   122,   123,   124,    15,    36,    17,    36,
+      36,   130,     3,   132,    23,     6,     7,     8,     3,    36,
+      36,    30,    37,    36,    38,    21,    17,    18,    19,    20,
+      37,    21,    21,    37,   129,    37,   131,    13,    14,    15,
+      16,    21,    37,    41,    41,    36,    22,    23,    24,    25,
+      26,    27,   147,   148,   149,    41,    33,    13,    14,    15,
+      16,    37,     6,    17,    -1,    41,    22,    23,    24,    25,
+      26,    27,    -1,    -1,    -1,    -1,    -1,    13,    14,    15,
+      16,    -1,    -1,    -1,    -1,    41,    22,    23,    24,    25,
+      26,    27,    -1,    13,    14,    15,    16,    -1,    -1,    -1,
+      -1,    37,    22,    23,    24,    25,    26,    27,    -1,    13,
+      14,    15,    16,    -1,    -1,    -1,    -1,    37,    22,    23,
+      24,    25,    26,    27,    -1,    13,    14,    15,    16,    -1,
+      -1,    -1,    -1,    37,    22,    23,    24,    25,    26,    27,
+      -1,    13,    14,    15,    16,    -1,    -1,    -1,    -1,    37,
+      22,    23,    24,    25,    26,    27,    -1,    13,    14,    15,
+      16,    -1,    -1,    -1,    -1,    37,    22,    23,    24,    25,
+      26,    27,    -1,    13,    14,    15,    16,    -1,    -1,    -1,
+      -1,    37,    22,    23,    24,    25,    26,    27,    68,    69,
+      70,    71,    -1,    -1,    -1,    -1,    -1,    37,    -1,    79,
+      -1,    81,    82,    83,    84,    85,    86,    87,    88,    89,
+      90,    13,    14,    15,    16,    -1,    -1,    -1,    -1,    -1,
+      22,    23,    24,    25,    26,    27
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     9,    10,    11,    12,    43,    44,    45,    62,    64,
-       0,    45,    62,     3,     4,    36,    41,    36,    46,    47,
-      64,    46,    37,    38,     3,    37,    39,    48,    64,    48,
-      49,     3,    50,    62,    64,     3,     6,     7,     8,    17,
+       0,     9,    10,    11,    12,    43,    44,    45,    65,    67,
+       0,    45,    65,     3,     4,    36,    41,    36,    46,    47,
+      67,    46,    37,    38,     3,    37,    39,    48,    67,    48,
+      49,     3,    50,    65,    67,     3,     6,     7,     8,    17,
       18,    19,    20,    28,    29,    30,    31,    32,    34,    35,
       36,    40,    51,    52,    53,    54,    55,    56,    57,    58,
-      59,    60,    61,    63,     3,     5,    36,    36,    36,    36,
-      36,    36,    36,     3,    41,    63,    36,    36,    36,    56,
-      13,    14,    15,    16,    22,    23,    24,    25,    26,    27,
-      41,    56,    61,    61,    61,    61,    63,    63,    63,    41,
-      56,    55,    56,    61,    37,    61,    61,    61,    61,    61,
-      61,    61,    61,    61,    61,    21,    21,    21,    37,    37,
-      37,    37,    37,    55,    37,    21,    56,    56,    56,    41,
-      41,    41,    48,    56,    48,    56,    37,    37,    37,    33,
-      37,    37,    48,    48,    48
+      59,    60,    61,    62,    66,     3,     5,    36,    36,    36,
+      36,    36,    36,    36,    36,    41,    55,    36,    36,    36,
+      56,    13,    14,    15,    16,    22,    23,    24,    25,    26,
+      27,    41,    56,    56,    63,    64,     3,    61,    61,    61,
+      61,     3,    66,    66,    66,    56,    55,    56,    61,    37,
+      61,    61,    61,    61,    61,    61,    61,    61,    61,    61,
+      37,    38,    21,    21,    21,    37,    37,    37,    37,    37,
+      55,    37,    21,    56,    56,    56,    56,    41,    41,    41,
+      48,    56,    48,    56,    37,    37,    37,    33,    37,    37,
+      48,    48,    48
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -775,8 +786,8 @@ static const yytype_int8 yyr1[] =
       51,    51,    52,    52,    52,    53,    53,    53,    53,    54,
       54,    54,    55,    56,    56,    56,    56,    56,    57,    57,
       57,    57,    58,    58,    58,    58,    58,    58,    59,    59,
-      59,    59,    60,    61,    61,    61,    61,    61,    62,    63,
-      64,    64,    64,    64
+      59,    59,    60,    61,    61,    61,    61,    61,    61,    62,
+      63,    63,    64,    64,    65,    66,    67,    67,    67,    67
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -784,11 +795,11 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     1,     2,     1,     6,     6,     1,
        0,     2,     4,     4,     2,     0,     2,     0,     1,     1,
-       1,     1,     5,     5,     5,     3,     2,     5,     7,     5,
+       1,     1,     5,     5,     5,     2,     2,     5,     7,     5,
        7,     7,     2,     1,     1,     1,     1,     1,     3,     3,
        3,     3,     3,     3,     3,     3,     3,     3,     6,     6,
-       6,     4,     3,     1,     3,     1,     1,     1,     3,     1,
-       1,     1,     1,     1
+       6,     4,     3,     1,     3,     1,     1,     1,     1,     4,
+       1,     0,     3,     1,     3,     1,     1,     1,     1,     1
 };
 
 
@@ -1258,377 +1269,413 @@ yyreduce:
   case 2: /* entryPoint: programEntries  */
 #line 52 "compLex_syntatical.y"
                            { printf("Program entry point\n"); }
-#line 1262 "compLex_syntatical.tab.c"
+#line 1273 "compLex_syntatical.tab.c"
     break;
 
   case 3: /* programEntries: programEntries variableInit  */
 #line 55 "compLex_syntatical.y"
                                             {;}
-#line 1268 "compLex_syntatical.tab.c"
+#line 1279 "compLex_syntatical.tab.c"
     break;
 
   case 4: /* programEntries: variableInit  */
 #line 56 "compLex_syntatical.y"
                  {;}
-#line 1274 "compLex_syntatical.tab.c"
+#line 1285 "compLex_syntatical.tab.c"
     break;
 
   case 5: /* programEntries: programEntries functionDefinition  */
 #line 57 "compLex_syntatical.y"
                                       {;}
-#line 1280 "compLex_syntatical.tab.c"
+#line 1291 "compLex_syntatical.tab.c"
     break;
 
   case 6: /* programEntries: functionDefinition  */
 #line 58 "compLex_syntatical.y"
                        {;}
-#line 1286 "compLex_syntatical.tab.c"
+#line 1297 "compLex_syntatical.tab.c"
     break;
 
   case 7: /* functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement  */
 #line 61 "compLex_syntatical.y"
                                                                                   {printf("function definition \n");}
-#line 1292 "compLex_syntatical.tab.c"
+#line 1303 "compLex_syntatical.tab.c"
     break;
 
   case 8: /* functionDefinition: typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement  */
 #line 62 "compLex_syntatical.y"
                                                                  {printf("main function definition \n");}
-#line 1298 "compLex_syntatical.tab.c"
+#line 1309 "compLex_syntatical.tab.c"
     break;
 
   case 9: /* parameters: parameter  */
 #line 65 "compLex_syntatical.y"
                       {printf("parameter\n");}
-#line 1304 "compLex_syntatical.tab.c"
+#line 1315 "compLex_syntatical.tab.c"
     break;
 
   case 10: /* parameters: %empty  */
 #line 66 "compLex_syntatical.y"
            {printf("empty parameters\n");}
-#line 1310 "compLex_syntatical.tab.c"
+#line 1321 "compLex_syntatical.tab.c"
     break;
 
   case 11: /* parameter: typeSpecifier IDENTIFIER  */
 #line 69 "compLex_syntatical.y"
                                     {printf("parameter and identifier\n");}
-#line 1316 "compLex_syntatical.tab.c"
+#line 1327 "compLex_syntatical.tab.c"
     break;
 
   case 12: /* parameter: parameters ',' typeSpecifier IDENTIFIER  */
 #line 70 "compLex_syntatical.y"
                                             {printf("parameter, type and identifier\n");}
-#line 1322 "compLex_syntatical.tab.c"
+#line 1333 "compLex_syntatical.tab.c"
     break;
 
   case 13: /* compoundStatement: '{' declaration statements '}'  */
 #line 73 "compLex_syntatical.y"
                                                   {printf("compount statement\n");}
-#line 1328 "compLex_syntatical.tab.c"
+#line 1339 "compLex_syntatical.tab.c"
     break;
 
   case 14: /* declaration: declaration variableInit  */
 #line 76 "compLex_syntatical.y"
                                       {printf("declaration\n");}
-#line 1334 "compLex_syntatical.tab.c"
+#line 1345 "compLex_syntatical.tab.c"
     break;
 
   case 15: /* declaration: %empty  */
 #line 77 "compLex_syntatical.y"
            {printf("empty declaration\n");}
-#line 1340 "compLex_syntatical.tab.c"
+#line 1351 "compLex_syntatical.tab.c"
     break;
 
   case 16: /* statements: statements statement  */
 #line 80 "compLex_syntatical.y"
                                  {printf("statements, statement\n");}
-#line 1346 "compLex_syntatical.tab.c"
+#line 1357 "compLex_syntatical.tab.c"
     break;
 
   case 17: /* statements: %empty  */
 #line 81 "compLex_syntatical.y"
            {printf("empty statement\n");}
-#line 1352 "compLex_syntatical.tab.c"
+#line 1363 "compLex_syntatical.tab.c"
     break;
 
   case 18: /* statement: expression  */
 #line 84 "compLex_syntatical.y"
                       {printf("expression\n");}
-#line 1358 "compLex_syntatical.tab.c"
+#line 1369 "compLex_syntatical.tab.c"
     break;
 
   case 19: /* statement: inOutStatement  */
 #line 85 "compLex_syntatical.y"
                    {;}
-#line 1364 "compLex_syntatical.tab.c"
+#line 1375 "compLex_syntatical.tab.c"
     break;
 
   case 20: /* statement: fluxControlstatement  */
 #line 86 "compLex_syntatical.y"
                          {;}
-#line 1370 "compLex_syntatical.tab.c"
+#line 1381 "compLex_syntatical.tab.c"
     break;
 
   case 21: /* statement: iterationStatement  */
 #line 87 "compLex_syntatical.y"
                        {;}
-#line 1376 "compLex_syntatical.tab.c"
+#line 1387 "compLex_syntatical.tab.c"
     break;
 
   case 22: /* inOutStatement: WRITE '(' variable ')' ';'  */
 #line 90 "compLex_syntatical.y"
                                            {printf("IO: write identifier\n");}
-#line 1382 "compLex_syntatical.tab.c"
+#line 1393 "compLex_syntatical.tab.c"
     break;
 
   case 23: /* inOutStatement: WRITELN '(' variable ')' ';'  */
 #line 91 "compLex_syntatical.y"
                                  {printf("IO: writeln identifier\n");}
-#line 1388 "compLex_syntatical.tab.c"
+#line 1399 "compLex_syntatical.tab.c"
     break;
 
   case 24: /* inOutStatement: READ '(' variable ')' ';'  */
 #line 92 "compLex_syntatical.y"
                               {printf("IO: read identifier\n");}
-#line 1394 "compLex_syntatical.tab.c"
+#line 1405 "compLex_syntatical.tab.c"
     break;
 
-  case 25: /* fluxControlstatement: RETURN variable ';'  */
+  case 25: /* fluxControlstatement: RETURN expression  */
 #line 95 "compLex_syntatical.y"
-                                          {printf("return variable\n");}
-#line 1400 "compLex_syntatical.tab.c"
+                                        {printf("return variable\n");}
+#line 1411 "compLex_syntatical.tab.c"
     break;
 
   case 26: /* fluxControlstatement: RETURN ';'  */
 #line 96 "compLex_syntatical.y"
                {printf("return null\n");}
-#line 1406 "compLex_syntatical.tab.c"
+#line 1417 "compLex_syntatical.tab.c"
     break;
 
   case 27: /* fluxControlstatement: IF '(' operationalExpression ')' compoundStatement  */
 #line 97 "compLex_syntatical.y"
                                                        {printf("if statement\n");}
-#line 1412 "compLex_syntatical.tab.c"
+#line 1423 "compLex_syntatical.tab.c"
     break;
 
   case 28: /* fluxControlstatement: IF '(' operationalExpression ')' compoundStatement ELSE compoundStatement  */
 #line 98 "compLex_syntatical.y"
                                                                                {printf("if/else statement\n");}
-#line 1418 "compLex_syntatical.tab.c"
+#line 1429 "compLex_syntatical.tab.c"
     break;
 
   case 29: /* iterationStatement: FOR '(' operationalExpression ')' compoundStatement  */
 #line 101 "compLex_syntatical.y"
                                                                         {printf("for loop one argument\n");}
-#line 1424 "compLex_syntatical.tab.c"
+#line 1435 "compLex_syntatical.tab.c"
     break;
 
   case 30: /* iterationStatement: FOR '(' expression expression operationalExpression ')' compoundStatement  */
 #line 102 "compLex_syntatical.y"
                                                                               {printf("for loop three arguments\n");}
-#line 1430 "compLex_syntatical.tab.c"
+#line 1441 "compLex_syntatical.tab.c"
     break;
 
   case 31: /* iterationStatement: SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement  */
 #line 103 "compLex_syntatical.y"
                                                                               {printf("set forall loop\n");}
-#line 1436 "compLex_syntatical.tab.c"
+#line 1447 "compLex_syntatical.tab.c"
     break;
 
   case 32: /* expression: operationalExpression ';'  */
 #line 106 "compLex_syntatical.y"
                                       {;}
-#line 1442 "compLex_syntatical.tab.c"
+#line 1453 "compLex_syntatical.tab.c"
     break;
 
   case 33: /* operationalExpression: arithmeticExpression  */
 #line 109 "compLex_syntatical.y"
                                             {;}
-#line 1448 "compLex_syntatical.tab.c"
+#line 1459 "compLex_syntatical.tab.c"
     break;
 
   case 34: /* operationalExpression: logicalExpression  */
 #line 110 "compLex_syntatical.y"
                       {;}
-#line 1454 "compLex_syntatical.tab.c"
+#line 1465 "compLex_syntatical.tab.c"
     break;
 
   case 35: /* operationalExpression: setOperationalExpression  */
 #line 111 "compLex_syntatical.y"
                              {;}
-#line 1460 "compLex_syntatical.tab.c"
+#line 1471 "compLex_syntatical.tab.c"
     break;
 
   case 36: /* operationalExpression: variable_assignment  */
 #line 112 "compLex_syntatical.y"
                         {;}
-#line 1466 "compLex_syntatical.tab.c"
+#line 1477 "compLex_syntatical.tab.c"
     break;
 
   case 37: /* operationalExpression: term  */
 #line 113 "compLex_syntatical.y"
          {;}
-#line 1472 "compLex_syntatical.tab.c"
+#line 1483 "compLex_syntatical.tab.c"
     break;
 
   case 38: /* arithmeticExpression: operationalExpression ADD_OP term  */
 #line 116 "compLex_syntatical.y"
                                                         {printf("add operation\n");}
-#line 1478 "compLex_syntatical.tab.c"
+#line 1489 "compLex_syntatical.tab.c"
     break;
 
   case 39: /* arithmeticExpression: operationalExpression SUB_OP term  */
 #line 117 "compLex_syntatical.y"
                                       {printf("subtraction operation\n");}
-#line 1484 "compLex_syntatical.tab.c"
+#line 1495 "compLex_syntatical.tab.c"
     break;
 
   case 40: /* arithmeticExpression: operationalExpression MULT_OP term  */
 #line 118 "compLex_syntatical.y"
                                        {printf("multiplication operation\n");}
-#line 1490 "compLex_syntatical.tab.c"
+#line 1501 "compLex_syntatical.tab.c"
     break;
 
   case 41: /* arithmeticExpression: operationalExpression DIV_OP term  */
 #line 119 "compLex_syntatical.y"
                                       {printf("division operation\n");}
-#line 1496 "compLex_syntatical.tab.c"
+#line 1507 "compLex_syntatical.tab.c"
     break;
 
   case 42: /* logicalExpression: operationalExpression ILT term  */
 #line 122 "compLex_syntatical.y"
                                                   {printf("is less than operation\n");}
-#line 1502 "compLex_syntatical.tab.c"
+#line 1513 "compLex_syntatical.tab.c"
     break;
 
   case 43: /* logicalExpression: operationalExpression ILTE term  */
 #line 123 "compLex_syntatical.y"
                                     {printf("is less or equal operation\n");}
-#line 1508 "compLex_syntatical.tab.c"
+#line 1519 "compLex_syntatical.tab.c"
     break;
 
   case 44: /* logicalExpression: operationalExpression IGT term  */
 #line 124 "compLex_syntatical.y"
                                    {printf("is greater than operation\n");}
-#line 1514 "compLex_syntatical.tab.c"
+#line 1525 "compLex_syntatical.tab.c"
     break;
 
   case 45: /* logicalExpression: operationalExpression IGTE term  */
 #line 125 "compLex_syntatical.y"
                                     {printf("is greater than or equal operation\n");}
-#line 1520 "compLex_syntatical.tab.c"
+#line 1531 "compLex_syntatical.tab.c"
     break;
 
   case 46: /* logicalExpression: operationalExpression IDIFF term  */
 #line 126 "compLex_syntatical.y"
                                      {printf("is different than operation\n");}
-#line 1526 "compLex_syntatical.tab.c"
+#line 1537 "compLex_syntatical.tab.c"
     break;
 
   case 47: /* logicalExpression: operationalExpression IEQ term  */
 #line 127 "compLex_syntatical.y"
                                    {printf("is equal to operation\n");}
-#line 1532 "compLex_syntatical.tab.c"
+#line 1543 "compLex_syntatical.tab.c"
     break;
 
   case 48: /* setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
 #line 130 "compLex_syntatical.y"
                                                                                   {printf("add to set op\n");}
-#line 1538 "compLex_syntatical.tab.c"
+#line 1549 "compLex_syntatical.tab.c"
     break;
 
   case 49: /* setOperationalExpression: REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
 #line 131 "compLex_syntatical.y"
                                                                {printf("remove from set op\n");}
-#line 1544 "compLex_syntatical.tab.c"
+#line 1555 "compLex_syntatical.tab.c"
     break;
 
   case 50: /* setOperationalExpression: EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
 #line 132 "compLex_syntatical.y"
                                                                   {printf("exists el in set op\n");}
-#line 1550 "compLex_syntatical.tab.c"
+#line 1561 "compLex_syntatical.tab.c"
     break;
 
   case 51: /* setOperationalExpression: IS_SET '(' term ')'  */
 #line 133 "compLex_syntatical.y"
                         {printf("is set operator\n");}
-#line 1556 "compLex_syntatical.tab.c"
+#line 1567 "compLex_syntatical.tab.c"
     break;
 
   case 52: /* variable_assignment: IDENTIFIER ASSIGN operationalExpression  */
 #line 136 "compLex_syntatical.y"
                                                              {printf("variable assignment\n");}
-#line 1562 "compLex_syntatical.tab.c"
+#line 1573 "compLex_syntatical.tab.c"
     break;
 
   case 53: /* term: variable  */
 #line 139 "compLex_syntatical.y"
                {printf("variable\n");}
-#line 1568 "compLex_syntatical.tab.c"
+#line 1579 "compLex_syntatical.tab.c"
     break;
 
   case 54: /* term: '(' operationalExpression ')'  */
 #line 140 "compLex_syntatical.y"
                                   {printf("( operationalExp )\n");}
-#line 1574 "compLex_syntatical.tab.c"
+#line 1585 "compLex_syntatical.tab.c"
     break;
 
-  case 55: /* term: EMPTY  */
+  case 55: /* term: functionCall  */
 #line 141 "compLex_syntatical.y"
-          {printf("EMPTY constant value\n");}
-#line 1580 "compLex_syntatical.tab.c"
+                 {;}
+#line 1591 "compLex_syntatical.tab.c"
     break;
 
-  case 56: /* term: FLOAT  */
+  case 56: /* term: EMPTY  */
 #line 142 "compLex_syntatical.y"
-          {printf("float value\n");}
-#line 1586 "compLex_syntatical.tab.c"
+          {printf("EMPTY constant value\n");}
+#line 1597 "compLex_syntatical.tab.c"
     break;
 
-  case 57: /* term: INT  */
+  case 57: /* term: FLOAT  */
 #line 143 "compLex_syntatical.y"
+          {printf("float value\n");}
+#line 1603 "compLex_syntatical.tab.c"
+    break;
+
+  case 58: /* term: INT  */
+#line 144 "compLex_syntatical.y"
         {printf("int value\n");}
-#line 1592 "compLex_syntatical.tab.c"
+#line 1609 "compLex_syntatical.tab.c"
     break;
 
-  case 58: /* variableInit: typeSpecifier IDENTIFIER ';'  */
-#line 146 "compLex_syntatical.y"
-                                           {printf("variable initialization\n");}
-#line 1598 "compLex_syntatical.tab.c"
+  case 59: /* functionCall: IDENTIFIER '(' functionArguments ')'  */
+#line 147 "compLex_syntatical.y"
+                                                   {printf("function call\n");}
+#line 1615 "compLex_syntatical.tab.c"
     break;
 
-  case 59: /* variable: IDENTIFIER  */
-#line 149 "compLex_syntatical.y"
-                     {printf("variable\n");}
-#line 1604 "compLex_syntatical.tab.c"
+  case 60: /* functionArguments: callArguments  */
+#line 150 "compLex_syntatical.y"
+                                 {;}
+#line 1621 "compLex_syntatical.tab.c"
     break;
 
-  case 60: /* typeSpecifier: T_INT  */
-#line 152 "compLex_syntatical.y"
-                     {printf("integer type\n");}
-#line 1610 "compLex_syntatical.tab.c"
+  case 61: /* functionArguments: %empty  */
+#line 151 "compLex_syntatical.y"
+           {printf("empty function argument\n");}
+#line 1627 "compLex_syntatical.tab.c"
     break;
 
-  case 61: /* typeSpecifier: T_FLOAT  */
-#line 153 "compLex_syntatical.y"
-            {printf("float type\n");}
-#line 1616 "compLex_syntatical.tab.c"
-    break;
-
-  case 62: /* typeSpecifier: T_ELEM  */
+  case 62: /* callArguments: callArguments ',' operationalExpression  */
 #line 154 "compLex_syntatical.y"
-           {printf("elem type\n");}
-#line 1622 "compLex_syntatical.tab.c"
+                                                       {printf("function arguments , term\n");}
+#line 1633 "compLex_syntatical.tab.c"
     break;
 
-  case 63: /* typeSpecifier: T_SET  */
+  case 63: /* callArguments: operationalExpression  */
 #line 155 "compLex_syntatical.y"
+                          {printf("function term argument\n");}
+#line 1639 "compLex_syntatical.tab.c"
+    break;
+
+  case 64: /* variableInit: typeSpecifier IDENTIFIER ';'  */
+#line 158 "compLex_syntatical.y"
+                                           {printf("variable initialization\n");}
+#line 1645 "compLex_syntatical.tab.c"
+    break;
+
+  case 65: /* variable: IDENTIFIER  */
+#line 161 "compLex_syntatical.y"
+                     {printf("variable\n");}
+#line 1651 "compLex_syntatical.tab.c"
+    break;
+
+  case 66: /* typeSpecifier: T_INT  */
+#line 164 "compLex_syntatical.y"
+                     {printf("integer type\n");}
+#line 1657 "compLex_syntatical.tab.c"
+    break;
+
+  case 67: /* typeSpecifier: T_FLOAT  */
+#line 165 "compLex_syntatical.y"
+            {printf("float type\n");}
+#line 1663 "compLex_syntatical.tab.c"
+    break;
+
+  case 68: /* typeSpecifier: T_ELEM  */
+#line 166 "compLex_syntatical.y"
+           {printf("elem type\n");}
+#line 1669 "compLex_syntatical.tab.c"
+    break;
+
+  case 69: /* typeSpecifier: T_SET  */
+#line 167 "compLex_syntatical.y"
           {printf("set type\n");}
-#line 1628 "compLex_syntatical.tab.c"
+#line 1675 "compLex_syntatical.tab.c"
     break;
 
 
-#line 1632 "compLex_syntatical.tab.c"
+#line 1679 "compLex_syntatical.tab.c"
 
       default: break;
     }
@@ -1822,7 +1869,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 158 "compLex_syntatical.y"
+#line 170 "compLex_syntatical.y"
 
 
 int main(int argc, char **argv) {

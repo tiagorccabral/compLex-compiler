@@ -92,7 +92,7 @@ inOutStatement: WRITE '(' variable ')' ';' {printf("IO: write identifier\n");}
   | READ '(' variable ')' ';' {printf("IO: read identifier\n");}
 ;
 
-fluxControlstatement: RETURN variable ';' {printf("return variable\n");}
+fluxControlstatement: RETURN expression {printf("return variable\n");}
   | RETURN ';' {printf("return null\n");}
   | IF '(' operationalExpression ')' compoundStatement {printf("if statement\n");}
   | IF '(' operationalExpression ')' compoundStatement  ELSE compoundStatement {printf("if/else statement\n");}
@@ -138,9 +138,21 @@ variable_assignment: IDENTIFIER ASSIGN operationalExpression {printf("variable a
 
 term: variable {printf("variable\n");}
   | '(' operationalExpression ')' {printf("( operationalExp )\n");}
+  | functionCall {;}
   | EMPTY {printf("EMPTY constant value\n");}
   | FLOAT {printf("float value\n");}
   | INT {printf("int value\n");}
+;
+
+functionCall: IDENTIFIER '(' functionArguments ')' {printf("function call\n");}
+;
+
+functionArguments: callArguments {;}
+  | %empty {printf("empty function argument\n");}
+;
+
+callArguments: callArguments ',' operationalExpression {printf("function arguments , term\n");}
+  | operationalExpression {printf("function term argument\n");}
 ;
 
 variableInit: typeSpecifier IDENTIFIER ';' {printf("variable initialization\n");}
