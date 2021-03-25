@@ -55,36 +55,37 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     IDENTIFIER = 258,              /* IDENTIFIER  */
-    ASSIGN = 259,                  /* ASSIGN  */
-    INT = 260,                     /* INT  */
-    FLOAT = 261,                   /* FLOAT  */
-    EMPTY = 262,                   /* EMPTY  */
-    T_INT = 263,                   /* T_INT  */
-    T_FLOAT = 264,                 /* T_FLOAT  */
-    T_ELEM = 265,                  /* T_ELEM  */
-    T_SET = 266,                   /* T_SET  */
-    ADD_OP = 267,                  /* ADD_OP  */
-    SUB_OP = 268,                  /* SUB_OP  */
-    MULT_OP = 269,                 /* MULT_OP  */
-    DIV_OP = 270,                  /* DIV_OP  */
-    ADD_SET_OP = 271,              /* ADD_SET_OP  */
-    REMOVE_SET_OP = 272,           /* REMOVE_SET_OP  */
-    EXISTS_IN_SET_OP = 273,        /* EXISTS_IN_SET_OP  */
-    IS_SET = 274,                  /* IS_SET  */
-    ADD_IN_OP = 275,               /* ADD_IN_OP  */
-    ILT = 276,                     /* ILT  */
-    ILTE = 277,                    /* ILTE  */
-    IGT = 278,                     /* IGT  */
-    IGTE = 279,                    /* IGTE  */
-    IDIFF = 280,                   /* IDIFF  */
-    IEQ = 281,                     /* IEQ  */
-    READ = 282,                    /* READ  */
-    WRITE = 283,                   /* WRITE  */
-    WRITELN = 284,                 /* WRITELN  */
-    RETURN = 285,                  /* RETURN  */
-    IF = 286,                      /* IF  */
-    ELSE = 287,                    /* ELSE  */
-    FOR = 288                      /* FOR  */
+    MAIN_FUNC = 259,               /* MAIN_FUNC  */
+    ASSIGN = 260,                  /* ASSIGN  */
+    INT = 261,                     /* INT  */
+    FLOAT = 262,                   /* FLOAT  */
+    EMPTY = 263,                   /* EMPTY  */
+    T_INT = 264,                   /* T_INT  */
+    T_FLOAT = 265,                 /* T_FLOAT  */
+    T_ELEM = 266,                  /* T_ELEM  */
+    T_SET = 267,                   /* T_SET  */
+    ADD_OP = 268,                  /* ADD_OP  */
+    SUB_OP = 269,                  /* SUB_OP  */
+    MULT_OP = 270,                 /* MULT_OP  */
+    DIV_OP = 271,                  /* DIV_OP  */
+    ADD_SET_OP = 272,              /* ADD_SET_OP  */
+    REMOVE_SET_OP = 273,           /* REMOVE_SET_OP  */
+    EXISTS_IN_SET_OP = 274,        /* EXISTS_IN_SET_OP  */
+    IS_SET = 275,                  /* IS_SET  */
+    ADD_IN_OP = 276,               /* ADD_IN_OP  */
+    ILT = 277,                     /* ILT  */
+    ILTE = 278,                    /* ILTE  */
+    IGT = 279,                     /* IGT  */
+    IGTE = 280,                    /* IGTE  */
+    IDIFF = 281,                   /* IDIFF  */
+    IEQ = 282,                     /* IEQ  */
+    READ = 283,                    /* READ  */
+    WRITE = 284,                   /* WRITE  */
+    WRITELN = 285,                 /* WRITELN  */
+    RETURN = 286,                  /* RETURN  */
+    IF = 287,                      /* IF  */
+    ELSE = 288,                    /* ELSE  */
+    FOR = 289                      /* FOR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -98,7 +99,7 @@ union YYSTYPE
   char* str;
   struct parseNode* node;
 
-#line 102 "compLex_syntatical.tab.h"
+#line 103 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

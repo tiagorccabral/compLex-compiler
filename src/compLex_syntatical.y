@@ -26,7 +26,7 @@ parseNode* parser_tree = NULL;
 }
 
 // Others
-%token IDENTIFIER
+%token IDENTIFIER MAIN_FUNC
 // Operations
 %token ASSIGN
 // Data types primitives / values
@@ -58,10 +58,8 @@ programEntries: programEntries variableInit {;}
   | functionDefinition {;}
 ;
 
-functionDefinition: typeSpecifier IDENTIFIER {}
-  '(' parameters ')' compoundStatement {
-    printf("function definition \n");
-  }
+functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {printf("function definition \n");}
+  | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {printf("main function definition \n");}
 ;
 
 parameters: parameter {printf("parameter\n");}

@@ -25,6 +25,7 @@ QUOTES \'
 EOL \n
 WHITESPACE [ \t]+
 IDENTIFIER {LETTER}({LETTER}|{DIGIT}|{UNDERSCORE})*
+MAIN_FUNC "main"
 
 /* Constants */
 DIGIT [0-9]
@@ -111,6 +112,12 @@ WRITELN "writeln"
   // printf("<floating point number, %0.2f>\n", atof(yytext));
   running_column_count += yyleng;
   return FLOAT;
+}
+
+{MAIN_FUNC} { 
+  // printf("<main keyword, %s>\n", yytext);
+  running_column_count += yyleng;
+  return MAIN_FUNC;
 }
 
 {EMPTY} {

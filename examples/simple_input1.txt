@@ -9,15 +9,6 @@ int main (int argc) {
   writeln(varName);
   write(varName);
 
-  if (varName) {
-    int a;
-  }
-
-  if (varName) {
-    write(varName);
-  } else {
-    writeln(ab);
-  }
 
   return;
 }
