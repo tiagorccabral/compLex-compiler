@@ -1578,7 +1578,7 @@ yyreduce:
 
   case 53: /* forIncrement: IDENTIFIER ASSIGN arithmeticExpression  */
 #line 139 "compLex_syntatical.y"
-                                                     {printf("variable assignment\n");}
+                                                     {printf("for loop increment\n");}
 #line 1583 "compLex_syntatical.tab.c"
     break;
 

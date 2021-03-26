@@ -136,7 +136,7 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
 variableAssignment: IDENTIFIER ASSIGN expression {printf("variable assignment\n");}
 ;
 
-forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("variable assignment\n");}
+forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("for loop increment\n");}
 ;
 
 term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
