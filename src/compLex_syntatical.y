@@ -99,12 +99,12 @@ fluxControlstatement: RETURN expression {printf("return variable\n");}
 ;
 
 iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf("for loop one argument\n");}
-  | FOR '(' expression expression operationalExpression ')' compoundStatement {printf("for loop three arguments\n");}
+  | FOR '(' expression expression forIncrement ')' compoundStatement {printf("for loop three arguments\n");}
   | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {printf("set forall loop\n");}
 ;
 
 expression: operationalExpression ';' {;}
-  | variable_assignment {;}
+  | variableAssignment {;}
 ;
 
 operationalExpression: arithmeticExpression {;}
@@ -133,7 +133,10 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
   | IS_SET '(' term ')' {printf("is set operator\n");}
 ;
 
-variable_assignment: IDENTIFIER ASSIGN expression {printf("variable assignment\n");}
+variableAssignment: IDENTIFIER ASSIGN expression {printf("variable assignment\n");}
+;
+
+forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("variable assignment\n");}
 ;
 
 term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
