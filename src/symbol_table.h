@@ -26,11 +26,8 @@ typedef struct symbolParam {
 
 /* adds one entry (symbol node struct) to symbol table */
 void add_symbol_node(symbolParam symbol) {
-  printf("ENTROU %d\n", symbol.symbolID);
-  printf("ENTROU %s\n", symbol.name);
   struct symbolNode *symbolPointer;
   char sType = symbol.symbolType;
-  printf("ENTROU ENUM %c\n", sType);
   /* attempts to find entry on symbol table */
   HASH_FIND_INT(symbolTable, &symbol.symbolID, symbolPointer);
   if (symbolPointer == NULL) {
@@ -40,17 +37,17 @@ void add_symbol_node(symbolParam symbol) {
     symbolPointer -> name = symbol.name;
     HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
   } else {
-    printf("inserido symbolID: %d\n", symbol.symbolID);
+    printf("symbol %s already declared!\n", symbol.name);
   }
 }
 
 void print_symbols() {
   symbolNode *s;
 
-  printf("\n============== Symbols table ==============\n\n");
+  printf("\n================== Symbols table ==================\n\n");
   printf("Symbol ID     Symbol Name              Symbol Type\n\n");
   for (s = symbolTable; s != NULL; s = s -> hh.next) {
     printf("   %-5d\t %-15s\t %5c\n", s -> symbolID, s -> name, s -> type);
   }
-  printf("===========================================\n");
+  printf("===================================================\n");
 }
