@@ -22,7 +22,7 @@ typedef struct symbolParam {
   int symbolID;
   int symbolType;
   char *name;
-} symbolParam;
+} symbolParam; /* used as a param on add_symbol_node function */
 
 /* adds one entry (symbol node struct) to symbol table */
 void add_symbol_node(symbolParam symbol) {
@@ -42,7 +42,7 @@ void add_symbol_node(symbolParam symbol) {
 }
 
 void print_symbols() {
-  symbolNode *s;
+  struct symbolNode *s;
 
   printf("\n================== Symbols table ==================\n\n");
   printf("Symbol ID     Symbol Name              Symbol Type\n\n");
@@ -50,4 +50,13 @@ void print_symbols() {
     printf("   %-5d\t %-15s\t %5c\n", s -> symbolID, s -> name, s -> type);
   }
   printf("===================================================\n");
+}
+
+/* Clear symbol table mem allocation */
+void free_symbols_table(){
+  symbolNode *s, *tmp;
+  HASH_ITER(hh, symbolTable, s, tmp) {
+    HASH_DEL(symbolTable, s);
+    free(s);
+  }
 }

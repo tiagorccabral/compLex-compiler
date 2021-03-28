@@ -1,3 +1,5 @@
+%define parse.error verbose
+%define parse.trace
 %locations
 
 %{
@@ -12,6 +14,11 @@ extern int yylex();
 extern void yyerror(const char *msg);
 extern int yylex_destroy();
 extern FILE *yyin;
+
+// Symbles table functions
+extern void add_symbol_node();
+extern void print_symbols();
+extern void free_symbols_table();
 
 typedef struct parseNode {
   struct parseNode* rightBranch;
@@ -225,6 +232,8 @@ int main(int argc, char **argv) {
   yylex_destroy();
 
   print_symbols();
+
+  free_symbols_table();
 
   return 0;
 }

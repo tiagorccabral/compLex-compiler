@@ -39,7 +39,7 @@
 # define YY_YY_COMPLEX_SYNTATICAL_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -95,7 +95,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 30 "compLex_syntatical.y"
+#line 37 "compLex_syntatical.y"
 
   char* str;
   struct parseNode* node;
