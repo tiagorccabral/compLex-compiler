@@ -88,8 +88,18 @@ parameters: parameter {printf("parameter\n");}
   | %empty {printf("empty parameters\n");}
 ;
 
-parameter: typeSpecifier IDENTIFIER {printf("parameter and identifier\n");}
-  | parameters ',' typeSpecifier IDENTIFIER {printf("parameter, type and identifier\n");}
+parameter: typeSpecifier IDENTIFIER {
+  symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
+  add_symbol_node(symbol);
+  globalCounterOfSymbols++;
+  printf("parameter and identifier\n");
+}
+  | parameters ',' typeSpecifier IDENTIFIER {
+    symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("parameter, type and identifier\n");
+  }
 ;
 
 compoundStatement: '{' declaration statements '}' {printf("compount statement\n");}
