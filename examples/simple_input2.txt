@@ -34,6 +34,6 @@ int main () {
   }
 }
 
-int squareRootToPower(int a) {
-  return a*a;
+int squareRootToPower(int num, int save) {
+  return save*num;
 }
