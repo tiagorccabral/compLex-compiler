@@ -117,6 +117,7 @@ WRITELN "writeln"
 {MAIN_FUNC} { 
   // printf("<main keyword, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return MAIN_FUNC;
 }
 
@@ -312,6 +313,7 @@ WRITELN "writeln"
 <INITIAL,STRING>{IDENTIFIER} { 
   // printf("<identifier, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IDENTIFIER;
 }
 

@@ -33,3 +33,7 @@ int main () {
     a = 1;
   }
 }
+
+int squareRootToPower(int a) {
+  return a*a;
+}

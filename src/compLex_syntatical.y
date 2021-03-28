@@ -1,8 +1,12 @@
+%locations
+
 %{
 
 // Required libs declarations
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "symbol_table.h"
 
 extern int yylex();
 extern void yyerror(const char *msg);
@@ -18,6 +22,9 @@ typedef struct parseNode {
 
 parseNode* parser_tree = NULL;
 
+/* Global variables */
+int globalCounterOfSymbols = 1;
+
 %}
 
 %union {
@@ -26,7 +33,7 @@ parseNode* parser_tree = NULL;
 }
 
 // Others
-%token IDENTIFIER MAIN_FUNC
+%token<str> IDENTIFIER MAIN_FUNC
 // Operations
 %token ASSIGN
 // Data types primitives / values
@@ -44,8 +51,13 @@ parseNode* parser_tree = NULL;
 // Flux control
 %token RETURN IF ELSE FOR SET_FORALL
 
-%type <node> variableInit 
-%type <node> functionDefinition
+// Parsing entry point start
+%start entryPoint
+
+// Types definitions
+%type <node> compoundStatement
+%type <node> variableInit typeSpecifier
+%type <node> functionDefinition parameters
 
 %%
 
@@ -58,8 +70,18 @@ programEntries: programEntries variableInit {;}
   | functionDefinition {;}
 ;
 
-functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {printf("function definition \n");}
-  | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {printf("main function definition \n");}
+functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
+  symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+  add_symbol_node(symbol);
+  globalCounterOfSymbols++;
+  printf("function definition \n");
+}
+  | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
+      symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+      add_symbol_node(symbol);
+      globalCounterOfSymbols++;
+      printf("main function definition \n");
+    }
 ;
 
 parameters: parameter {printf("parameter\n");}
@@ -158,7 +180,12 @@ callArguments: callArguments ',' operationalExpression {printf("function argumen
   | operationalExpression {printf("function term argument\n");}
 ;
 
-variableInit: typeSpecifier IDENTIFIER ';' {printf("variable initialization\n");}
+variableInit: typeSpecifier IDENTIFIER ';' {
+  symbolParam symbol = { globalCounterOfSymbols, enumVariable, $2 };
+  add_symbol_node(symbol);
+  globalCounterOfSymbols++;
+  printf("variable initialization %s\n", $2);
+}
 ;
 
 variable: IDENTIFIER {printf("variable\n");}
@@ -186,6 +213,8 @@ int main(int argc, char **argv) {
   yyparse();
   fclose(yyin);
   yylex_destroy();
+
+  print_symbols();
 
   return 0;
 }
