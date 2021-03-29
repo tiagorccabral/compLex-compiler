@@ -1,5 +1,5 @@
 %define parse.error verbose
-%debug
+%define parse.trace
 %locations
 
 %{
