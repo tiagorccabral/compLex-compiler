@@ -2224,14 +2224,8 @@ void yyfree (void * ptr )
 
 
 
-void yyerror(const char* msg) {
-   total_errors_count++;
-   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
-}
-
 void throw_nonexistent_symbol_error(char* symbol){
   char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
   sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
-  yyerror(error);
   free(error);
 }

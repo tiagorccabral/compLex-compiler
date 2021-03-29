@@ -1,5 +1,5 @@
 %define parse.error verbose
-%define parse.trace
+%debug
 %locations
 
 %{
@@ -11,14 +11,19 @@
 #include "symbol_table.h"
 
 extern int yylex();
-extern void yyerror(const char *msg);
 extern int yylex_destroy();
 extern FILE *yyin;
+
+extern int running_line_count;
+extern int running_column_count;
+extern int total_errors_count;
 
 // Symbles table functions
 extern void add_symbol_node();
 extern void print_symbols();
 extern void free_symbols_table();
+
+void yyerror(const char *msg);
 
 typedef struct parseNode {
   struct parseNode* rightBranch;
@@ -75,6 +80,7 @@ programEntries: programEntries variableInit {;}
   | variableInit {;}
   | programEntries functionDefinition {;}
   | functionDefinition {;}
+  | error {;}
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
@@ -93,6 +99,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
 
 parameters: parameter {printf("parameter\n");}
   | %empty {printf("empty parameters\n");}
+  | error {;}
 ;
 
 parameter: typeSpecifier IDENTIFIER {
@@ -118,6 +125,7 @@ declaration: declaration variableInit {printf("declaration\n");}
 
 statements: statements statement {printf("statements, statement\n");}
   | %empty {printf("empty statement\n");}
+  | error {;}
 ;
 
 statement: expression {printf("expression\n");}
@@ -231,9 +239,17 @@ int main(int argc, char **argv) {
   fclose(yyin);
   yylex_destroy();
 
+  printf("\nReported amount of parse errors: %d\n", yynerrs);
+
   print_symbols();
 
   free_symbols_table();
 
   return 0;
+}
+
+
+void yyerror(const char* msg) {
+  total_errors_count++;
+  fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
 }

@@ -1,5 +1,7 @@
 int main () {
-  int a;
+  ints a;
 
   a <- 1;
+
+  a#2;
 }
