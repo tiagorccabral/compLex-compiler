@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "symbol_table.h"
+#include "parser_ast.h"
 
 extern int yylex();
 extern int yylex_destroy();
@@ -19,21 +20,15 @@ extern int running_line_count;
 extern int running_column_count;
 extern int total_errors_count;
 
-// Symbles table functions
+// Symbols table functions
 extern void add_symbol_node();
 extern void print_symbols();
 extern void free_symbols_table();
 
+// AST functions
+extern parserNode* add_new_node();
+
 void yyerror(const char *msg);
-
-typedef struct parseNode {
-  struct parseNode* rightBranch;
-  struct parseNode* leftBranch;
-  char* value;
-  char* type;
-} parseNode;
-
-parseNode* parser_tree = NULL;
 
 /* Global variables */
 int globalCounterOfSymbols = 1;
