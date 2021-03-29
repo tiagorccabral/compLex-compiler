@@ -13,6 +13,7 @@
 extern int yylex();
 extern int yylex_destroy();
 extern FILE *yyin;
+extern int yynerrs;
 
 extern int running_line_count;
 extern int running_column_count;
@@ -237,13 +238,16 @@ int main(int argc, char **argv) {
 
   yyparse();
   fclose(yyin);
-  yylex_destroy();
 
-  printf("\nReported amount of parse errors: %d\n", yynerrs);
+  int parseErrors = yynerrs;
+
+  printf("\nReported amount of parse errors: %d\n", parseErrors);
 
   print_symbols();
 
   free_symbols_table();
+
+  yylex_destroy();
 
   return 0;
 }

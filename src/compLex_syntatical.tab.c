@@ -79,6 +79,7 @@
 extern int yylex();
 extern int yylex_destroy();
 extern FILE *yyin;
+extern int yynerrs;
 
 extern int running_line_count;
 extern int running_column_count;
@@ -104,7 +105,7 @@ parseNode* parser_tree = NULL;
 int globalCounterOfSymbols = 1;
 
 
-#line 108 "compLex_syntatical.tab.c"
+#line 109 "compLex_syntatical.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -575,14 +576,14 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    76,    76,    79,    80,    81,    82,    83,    86,    92,
-     100,   101,   102,   105,   111,   119,   122,   123,   126,   127,
-     128,   131,   132,   133,   134,   137,   138,   139,   142,   143,
-     144,   145,   148,   149,   150,   153,   154,   157,   158,   159,
-     160,   163,   164,   165,   166,   169,   170,   171,   172,   173,
-     174,   177,   178,   179,   180,   183,   186,   189,   190,   191,
-     192,   193,   194,   197,   200,   201,   204,   205,   208,   216,
-     219,   220,   221,   222
+       0,    77,    77,    80,    81,    82,    83,    84,    87,    93,
+     101,   102,   103,   106,   112,   120,   123,   124,   127,   128,
+     129,   132,   133,   134,   135,   138,   139,   140,   143,   144,
+     145,   146,   149,   150,   151,   154,   155,   158,   159,   160,
+     161,   164,   165,   166,   167,   170,   171,   172,   173,   174,
+     175,   178,   179,   180,   181,   184,   187,   190,   191,   192,
+     193,   194,   195,   198,   201,   202,   205,   206,   209,   217,
+     220,   221,   222,   223
 };
 #endif
 
@@ -1663,464 +1664,464 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* entryPoint: programEntries  */
-#line 76 "compLex_syntatical.y"
+#line 77 "compLex_syntatical.y"
                            { printf("Program entry point\n"); }
-#line 1669 "compLex_syntatical.tab.c"
+#line 1670 "compLex_syntatical.tab.c"
     break;
 
   case 3: /* programEntries: programEntries variableInit  */
-#line 79 "compLex_syntatical.y"
+#line 80 "compLex_syntatical.y"
                                             {;}
-#line 1675 "compLex_syntatical.tab.c"
+#line 1676 "compLex_syntatical.tab.c"
     break;
 
   case 4: /* programEntries: variableInit  */
-#line 80 "compLex_syntatical.y"
+#line 81 "compLex_syntatical.y"
                  {;}
-#line 1681 "compLex_syntatical.tab.c"
+#line 1682 "compLex_syntatical.tab.c"
     break;
 
   case 5: /* programEntries: programEntries functionDefinition  */
-#line 81 "compLex_syntatical.y"
+#line 82 "compLex_syntatical.y"
                                       {;}
-#line 1687 "compLex_syntatical.tab.c"
+#line 1688 "compLex_syntatical.tab.c"
     break;
 
   case 6: /* programEntries: functionDefinition  */
-#line 82 "compLex_syntatical.y"
+#line 83 "compLex_syntatical.y"
                        {;}
-#line 1693 "compLex_syntatical.tab.c"
+#line 1694 "compLex_syntatical.tab.c"
     break;
 
   case 7: /* programEntries: error  */
-#line 83 "compLex_syntatical.y"
+#line 84 "compLex_syntatical.y"
           {;}
-#line 1699 "compLex_syntatical.tab.c"
+#line 1700 "compLex_syntatical.tab.c"
     break;
 
   case 8: /* functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement  */
-#line 86 "compLex_syntatical.y"
+#line 87 "compLex_syntatical.y"
                                                                                   {
   symbolParam symbol = { globalCounterOfSymbols, enumFunction, (yyvsp[-4].str) };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   printf("function definition \n");
 }
-#line 1710 "compLex_syntatical.tab.c"
+#line 1711 "compLex_syntatical.tab.c"
     break;
 
   case 9: /* functionDefinition: typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement  */
-#line 92 "compLex_syntatical.y"
+#line 93 "compLex_syntatical.y"
                                                                  {
       symbolParam symbol = { globalCounterOfSymbols, enumFunction, (yyvsp[-4].str) };
       add_symbol_node(symbol);
       globalCounterOfSymbols++;
       printf("main function definition \n");
     }
-#line 1721 "compLex_syntatical.tab.c"
+#line 1722 "compLex_syntatical.tab.c"
     break;
 
   case 10: /* parameters: parameter  */
-#line 100 "compLex_syntatical.y"
+#line 101 "compLex_syntatical.y"
                       {printf("parameter\n");}
-#line 1727 "compLex_syntatical.tab.c"
+#line 1728 "compLex_syntatical.tab.c"
     break;
 
   case 11: /* parameters: %empty  */
-#line 101 "compLex_syntatical.y"
+#line 102 "compLex_syntatical.y"
            {printf("empty parameters\n");}
-#line 1733 "compLex_syntatical.tab.c"
+#line 1734 "compLex_syntatical.tab.c"
     break;
 
   case 12: /* parameters: error  */
-#line 102 "compLex_syntatical.y"
+#line 103 "compLex_syntatical.y"
           {;}
-#line 1739 "compLex_syntatical.tab.c"
+#line 1740 "compLex_syntatical.tab.c"
     break;
 
   case 13: /* parameter: typeSpecifier IDENTIFIER  */
-#line 105 "compLex_syntatical.y"
+#line 106 "compLex_syntatical.y"
                                     {
   symbolParam symbol = { globalCounterOfSymbols, enumParameter, (yyvsp[0].str) };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   printf("parameter and identifier\n");
 }
-#line 1750 "compLex_syntatical.tab.c"
+#line 1751 "compLex_syntatical.tab.c"
     break;
 
   case 14: /* parameter: parameters ',' typeSpecifier IDENTIFIER  */
-#line 111 "compLex_syntatical.y"
+#line 112 "compLex_syntatical.y"
                                             {
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, (yyvsp[0].str) };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     printf("parameter, type and identifier\n");
   }
-#line 1761 "compLex_syntatical.tab.c"
+#line 1762 "compLex_syntatical.tab.c"
     break;
 
   case 15: /* compoundStatement: '{' declaration statements '}'  */
-#line 119 "compLex_syntatical.y"
+#line 120 "compLex_syntatical.y"
                                                   {printf("compount statement\n");}
-#line 1767 "compLex_syntatical.tab.c"
+#line 1768 "compLex_syntatical.tab.c"
     break;
 
   case 16: /* declaration: declaration variableInit  */
-#line 122 "compLex_syntatical.y"
+#line 123 "compLex_syntatical.y"
                                       {printf("declaration\n");}
-#line 1773 "compLex_syntatical.tab.c"
+#line 1774 "compLex_syntatical.tab.c"
     break;
 
   case 17: /* declaration: %empty  */
-#line 123 "compLex_syntatical.y"
+#line 124 "compLex_syntatical.y"
            {printf("empty declaration\n");}
-#line 1779 "compLex_syntatical.tab.c"
+#line 1780 "compLex_syntatical.tab.c"
     break;
 
   case 18: /* statements: statements statement  */
-#line 126 "compLex_syntatical.y"
+#line 127 "compLex_syntatical.y"
                                  {printf("statements, statement\n");}
-#line 1785 "compLex_syntatical.tab.c"
+#line 1786 "compLex_syntatical.tab.c"
     break;
 
   case 19: /* statements: %empty  */
-#line 127 "compLex_syntatical.y"
+#line 128 "compLex_syntatical.y"
            {printf("empty statement\n");}
-#line 1791 "compLex_syntatical.tab.c"
+#line 1792 "compLex_syntatical.tab.c"
     break;
 
   case 20: /* statements: error  */
-#line 128 "compLex_syntatical.y"
+#line 129 "compLex_syntatical.y"
           {;}
-#line 1797 "compLex_syntatical.tab.c"
+#line 1798 "compLex_syntatical.tab.c"
     break;
 
   case 21: /* statement: expression  */
-#line 131 "compLex_syntatical.y"
+#line 132 "compLex_syntatical.y"
                       {printf("expression\n");}
-#line 1803 "compLex_syntatical.tab.c"
+#line 1804 "compLex_syntatical.tab.c"
     break;
 
   case 22: /* statement: inOutStatement  */
-#line 132 "compLex_syntatical.y"
+#line 133 "compLex_syntatical.y"
                    {;}
-#line 1809 "compLex_syntatical.tab.c"
+#line 1810 "compLex_syntatical.tab.c"
     break;
 
   case 23: /* statement: fluxControlstatement  */
-#line 133 "compLex_syntatical.y"
+#line 134 "compLex_syntatical.y"
                          {;}
-#line 1815 "compLex_syntatical.tab.c"
+#line 1816 "compLex_syntatical.tab.c"
     break;
 
   case 24: /* statement: iterationStatement  */
-#line 134 "compLex_syntatical.y"
+#line 135 "compLex_syntatical.y"
                        {;}
-#line 1821 "compLex_syntatical.tab.c"
+#line 1822 "compLex_syntatical.tab.c"
     break;
 
   case 25: /* inOutStatement: WRITE '(' variable ')' ';'  */
-#line 137 "compLex_syntatical.y"
+#line 138 "compLex_syntatical.y"
                                            {printf("IO: write identifier\n");}
-#line 1827 "compLex_syntatical.tab.c"
+#line 1828 "compLex_syntatical.tab.c"
     break;
 
   case 26: /* inOutStatement: WRITELN '(' variable ')' ';'  */
-#line 138 "compLex_syntatical.y"
+#line 139 "compLex_syntatical.y"
                                  {printf("IO: writeln identifier\n");}
-#line 1833 "compLex_syntatical.tab.c"
+#line 1834 "compLex_syntatical.tab.c"
     break;
 
   case 27: /* inOutStatement: READ '(' variable ')' ';'  */
-#line 139 "compLex_syntatical.y"
+#line 140 "compLex_syntatical.y"
                               {printf("IO: read identifier\n");}
-#line 1839 "compLex_syntatical.tab.c"
+#line 1840 "compLex_syntatical.tab.c"
     break;
 
   case 28: /* fluxControlstatement: RETURN expression  */
-#line 142 "compLex_syntatical.y"
+#line 143 "compLex_syntatical.y"
                                         {printf("return variable\n");}
-#line 1845 "compLex_syntatical.tab.c"
+#line 1846 "compLex_syntatical.tab.c"
     break;
 
   case 29: /* fluxControlstatement: RETURN ';'  */
-#line 143 "compLex_syntatical.y"
+#line 144 "compLex_syntatical.y"
                {printf("return null\n");}
-#line 1851 "compLex_syntatical.tab.c"
+#line 1852 "compLex_syntatical.tab.c"
     break;
 
   case 30: /* fluxControlstatement: IF '(' operationalExpression ')' compoundStatement  */
-#line 144 "compLex_syntatical.y"
+#line 145 "compLex_syntatical.y"
                                                        {printf("if statement\n");}
-#line 1857 "compLex_syntatical.tab.c"
+#line 1858 "compLex_syntatical.tab.c"
     break;
 
   case 31: /* fluxControlstatement: IF '(' operationalExpression ')' compoundStatement ELSE compoundStatement  */
-#line 145 "compLex_syntatical.y"
+#line 146 "compLex_syntatical.y"
                                                                                {printf("if/else statement\n");}
-#line 1863 "compLex_syntatical.tab.c"
+#line 1864 "compLex_syntatical.tab.c"
     break;
 
   case 32: /* iterationStatement: FOR '(' operationalExpression ')' compoundStatement  */
-#line 148 "compLex_syntatical.y"
+#line 149 "compLex_syntatical.y"
                                                                         {printf("for loop one argument\n");}
-#line 1869 "compLex_syntatical.tab.c"
+#line 1870 "compLex_syntatical.tab.c"
     break;
 
   case 33: /* iterationStatement: FOR '(' expression expression forIncrement ')' compoundStatement  */
-#line 149 "compLex_syntatical.y"
+#line 150 "compLex_syntatical.y"
                                                                      {printf("for loop three arguments\n");}
-#line 1875 "compLex_syntatical.tab.c"
+#line 1876 "compLex_syntatical.tab.c"
     break;
 
   case 34: /* iterationStatement: SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement  */
-#line 150 "compLex_syntatical.y"
+#line 151 "compLex_syntatical.y"
                                                                               {printf("set forall loop\n");}
-#line 1881 "compLex_syntatical.tab.c"
+#line 1882 "compLex_syntatical.tab.c"
     break;
 
   case 35: /* expression: operationalExpression ';'  */
-#line 153 "compLex_syntatical.y"
+#line 154 "compLex_syntatical.y"
                                       {;}
-#line 1887 "compLex_syntatical.tab.c"
+#line 1888 "compLex_syntatical.tab.c"
     break;
 
   case 36: /* expression: variableAssignment  */
-#line 154 "compLex_syntatical.y"
+#line 155 "compLex_syntatical.y"
                        {;}
-#line 1893 "compLex_syntatical.tab.c"
+#line 1894 "compLex_syntatical.tab.c"
     break;
 
   case 37: /* operationalExpression: arithmeticExpression  */
-#line 157 "compLex_syntatical.y"
+#line 158 "compLex_syntatical.y"
                                             {;}
-#line 1899 "compLex_syntatical.tab.c"
+#line 1900 "compLex_syntatical.tab.c"
     break;
 
   case 38: /* operationalExpression: logicalExpression  */
-#line 158 "compLex_syntatical.y"
+#line 159 "compLex_syntatical.y"
                       {;}
-#line 1905 "compLex_syntatical.tab.c"
+#line 1906 "compLex_syntatical.tab.c"
     break;
 
   case 39: /* operationalExpression: setOperationalExpression  */
-#line 159 "compLex_syntatical.y"
+#line 160 "compLex_syntatical.y"
                              {;}
-#line 1911 "compLex_syntatical.tab.c"
+#line 1912 "compLex_syntatical.tab.c"
     break;
 
   case 40: /* operationalExpression: term  */
-#line 160 "compLex_syntatical.y"
+#line 161 "compLex_syntatical.y"
          {;}
-#line 1917 "compLex_syntatical.tab.c"
+#line 1918 "compLex_syntatical.tab.c"
     break;
 
   case 41: /* arithmeticExpression: operationalExpression ADD_OP term  */
-#line 163 "compLex_syntatical.y"
+#line 164 "compLex_syntatical.y"
                                                         {printf("add operation\n");}
-#line 1923 "compLex_syntatical.tab.c"
+#line 1924 "compLex_syntatical.tab.c"
     break;
 
   case 42: /* arithmeticExpression: operationalExpression SUB_OP term  */
-#line 164 "compLex_syntatical.y"
+#line 165 "compLex_syntatical.y"
                                       {printf("subtraction operation\n");}
-#line 1929 "compLex_syntatical.tab.c"
+#line 1930 "compLex_syntatical.tab.c"
     break;
 
   case 43: /* arithmeticExpression: operationalExpression MULT_OP term  */
-#line 165 "compLex_syntatical.y"
+#line 166 "compLex_syntatical.y"
                                        {printf("multiplication operation\n");}
-#line 1935 "compLex_syntatical.tab.c"
+#line 1936 "compLex_syntatical.tab.c"
     break;
 
   case 44: /* arithmeticExpression: operationalExpression DIV_OP term  */
-#line 166 "compLex_syntatical.y"
+#line 167 "compLex_syntatical.y"
                                       {printf("division operation\n");}
-#line 1941 "compLex_syntatical.tab.c"
+#line 1942 "compLex_syntatical.tab.c"
     break;
 
   case 45: /* logicalExpression: operationalExpression ILT term  */
-#line 169 "compLex_syntatical.y"
+#line 170 "compLex_syntatical.y"
                                                   {printf("is less than operation\n");}
-#line 1947 "compLex_syntatical.tab.c"
+#line 1948 "compLex_syntatical.tab.c"
     break;
 
   case 46: /* logicalExpression: operationalExpression ILTE term  */
-#line 170 "compLex_syntatical.y"
+#line 171 "compLex_syntatical.y"
                                     {printf("is less or equal operation\n");}
-#line 1953 "compLex_syntatical.tab.c"
+#line 1954 "compLex_syntatical.tab.c"
     break;
 
   case 47: /* logicalExpression: operationalExpression IGT term  */
-#line 171 "compLex_syntatical.y"
+#line 172 "compLex_syntatical.y"
                                    {printf("is greater than operation\n");}
-#line 1959 "compLex_syntatical.tab.c"
+#line 1960 "compLex_syntatical.tab.c"
     break;
 
   case 48: /* logicalExpression: operationalExpression IGTE term  */
-#line 172 "compLex_syntatical.y"
+#line 173 "compLex_syntatical.y"
                                     {printf("is greater than or equal operation\n");}
-#line 1965 "compLex_syntatical.tab.c"
+#line 1966 "compLex_syntatical.tab.c"
     break;
 
   case 49: /* logicalExpression: operationalExpression IDIFF term  */
-#line 173 "compLex_syntatical.y"
+#line 174 "compLex_syntatical.y"
                                      {printf("is different than operation\n");}
-#line 1971 "compLex_syntatical.tab.c"
+#line 1972 "compLex_syntatical.tab.c"
     break;
 
   case 50: /* logicalExpression: operationalExpression IEQ term  */
-#line 174 "compLex_syntatical.y"
+#line 175 "compLex_syntatical.y"
                                    {printf("is equal to operation\n");}
-#line 1977 "compLex_syntatical.tab.c"
+#line 1978 "compLex_syntatical.tab.c"
     break;
 
   case 51: /* setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
-#line 177 "compLex_syntatical.y"
+#line 178 "compLex_syntatical.y"
                                                                                   {printf("add to set op\n");}
-#line 1983 "compLex_syntatical.tab.c"
+#line 1984 "compLex_syntatical.tab.c"
     break;
 
   case 52: /* setOperationalExpression: REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
-#line 178 "compLex_syntatical.y"
+#line 179 "compLex_syntatical.y"
                                                                {printf("remove from set op\n");}
-#line 1989 "compLex_syntatical.tab.c"
+#line 1990 "compLex_syntatical.tab.c"
     break;
 
   case 53: /* setOperationalExpression: EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')'  */
-#line 179 "compLex_syntatical.y"
+#line 180 "compLex_syntatical.y"
                                                                   {printf("exists el in set op\n");}
-#line 1995 "compLex_syntatical.tab.c"
+#line 1996 "compLex_syntatical.tab.c"
     break;
 
   case 54: /* setOperationalExpression: IS_SET '(' term ')'  */
-#line 180 "compLex_syntatical.y"
+#line 181 "compLex_syntatical.y"
                         {printf("is set operator\n");}
-#line 2001 "compLex_syntatical.tab.c"
+#line 2002 "compLex_syntatical.tab.c"
     break;
 
   case 55: /* variableAssignment: IDENTIFIER ASSIGN expression  */
-#line 183 "compLex_syntatical.y"
+#line 184 "compLex_syntatical.y"
                                                  {printf("variable assignment\n");}
-#line 2007 "compLex_syntatical.tab.c"
+#line 2008 "compLex_syntatical.tab.c"
     break;
 
   case 56: /* forIncrement: IDENTIFIER ASSIGN arithmeticExpression  */
-#line 186 "compLex_syntatical.y"
+#line 187 "compLex_syntatical.y"
                                                      {printf("for loop increment\n");}
-#line 2013 "compLex_syntatical.tab.c"
+#line 2014 "compLex_syntatical.tab.c"
     break;
 
   case 57: /* term: '(' operationalExpression ')'  */
-#line 189 "compLex_syntatical.y"
+#line 190 "compLex_syntatical.y"
                                     {printf("( operationalExp )\n");}
-#line 2019 "compLex_syntatical.tab.c"
+#line 2020 "compLex_syntatical.tab.c"
     break;
 
   case 58: /* term: variable  */
-#line 190 "compLex_syntatical.y"
+#line 191 "compLex_syntatical.y"
              {printf("variable\n");}
-#line 2025 "compLex_syntatical.tab.c"
+#line 2026 "compLex_syntatical.tab.c"
     break;
 
   case 59: /* term: functionCall  */
-#line 191 "compLex_syntatical.y"
+#line 192 "compLex_syntatical.y"
                  {;}
-#line 2031 "compLex_syntatical.tab.c"
+#line 2032 "compLex_syntatical.tab.c"
     break;
 
   case 60: /* term: EMPTY  */
-#line 192 "compLex_syntatical.y"
+#line 193 "compLex_syntatical.y"
           {printf("EMPTY constant value\n");}
-#line 2037 "compLex_syntatical.tab.c"
+#line 2038 "compLex_syntatical.tab.c"
     break;
 
   case 61: /* term: FLOAT  */
-#line 193 "compLex_syntatical.y"
+#line 194 "compLex_syntatical.y"
           {printf("float value\n");}
-#line 2043 "compLex_syntatical.tab.c"
+#line 2044 "compLex_syntatical.tab.c"
     break;
 
   case 62: /* term: INT  */
-#line 194 "compLex_syntatical.y"
+#line 195 "compLex_syntatical.y"
         {printf("int value\n");}
-#line 2049 "compLex_syntatical.tab.c"
+#line 2050 "compLex_syntatical.tab.c"
     break;
 
   case 63: /* functionCall: IDENTIFIER '(' functionArguments ')'  */
-#line 197 "compLex_syntatical.y"
+#line 198 "compLex_syntatical.y"
                                                    {printf("function call\n");}
-#line 2055 "compLex_syntatical.tab.c"
+#line 2056 "compLex_syntatical.tab.c"
     break;
 
   case 64: /* functionArguments: callArguments  */
-#line 200 "compLex_syntatical.y"
+#line 201 "compLex_syntatical.y"
                                  {;}
-#line 2061 "compLex_syntatical.tab.c"
+#line 2062 "compLex_syntatical.tab.c"
     break;
 
   case 65: /* functionArguments: %empty  */
-#line 201 "compLex_syntatical.y"
+#line 202 "compLex_syntatical.y"
            {printf("empty function argument\n");}
-#line 2067 "compLex_syntatical.tab.c"
+#line 2068 "compLex_syntatical.tab.c"
     break;
 
   case 66: /* callArguments: callArguments ',' operationalExpression  */
-#line 204 "compLex_syntatical.y"
+#line 205 "compLex_syntatical.y"
                                                        {printf("function arguments , term\n");}
-#line 2073 "compLex_syntatical.tab.c"
+#line 2074 "compLex_syntatical.tab.c"
     break;
 
   case 67: /* callArguments: operationalExpression  */
-#line 205 "compLex_syntatical.y"
+#line 206 "compLex_syntatical.y"
                           {printf("function term argument\n");}
-#line 2079 "compLex_syntatical.tab.c"
+#line 2080 "compLex_syntatical.tab.c"
     break;
 
   case 68: /* variableInit: typeSpecifier IDENTIFIER ';'  */
-#line 208 "compLex_syntatical.y"
+#line 209 "compLex_syntatical.y"
                                            {
   symbolParam symbol = { globalCounterOfSymbols, enumVariable, (yyvsp[-1].str) };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   printf("variable initialization %s\n", (yyvsp[-1].str));
 }
-#line 2090 "compLex_syntatical.tab.c"
+#line 2091 "compLex_syntatical.tab.c"
     break;
 
   case 69: /* variable: IDENTIFIER  */
-#line 216 "compLex_syntatical.y"
+#line 217 "compLex_syntatical.y"
                      {printf("variable\n");}
-#line 2096 "compLex_syntatical.tab.c"
+#line 2097 "compLex_syntatical.tab.c"
     break;
 
   case 70: /* typeSpecifier: T_INT  */
-#line 219 "compLex_syntatical.y"
+#line 220 "compLex_syntatical.y"
                      {printf("integer type\n");}
-#line 2102 "compLex_syntatical.tab.c"
+#line 2103 "compLex_syntatical.tab.c"
     break;
 
   case 71: /* typeSpecifier: T_FLOAT  */
-#line 220 "compLex_syntatical.y"
+#line 221 "compLex_syntatical.y"
             {printf("float type\n");}
-#line 2108 "compLex_syntatical.tab.c"
+#line 2109 "compLex_syntatical.tab.c"
     break;
 
   case 72: /* typeSpecifier: T_ELEM  */
-#line 221 "compLex_syntatical.y"
+#line 222 "compLex_syntatical.y"
            {printf("elem type\n");}
-#line 2114 "compLex_syntatical.tab.c"
+#line 2115 "compLex_syntatical.tab.c"
     break;
 
   case 73: /* typeSpecifier: T_SET  */
-#line 222 "compLex_syntatical.y"
+#line 223 "compLex_syntatical.y"
           {printf("set type\n");}
-#line 2120 "compLex_syntatical.tab.c"
+#line 2121 "compLex_syntatical.tab.c"
     break;
 
 
-#line 2124 "compLex_syntatical.tab.c"
+#line 2125 "compLex_syntatical.tab.c"
 
       default: break;
     }
@@ -2350,7 +2351,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 225 "compLex_syntatical.y"
+#line 226 "compLex_syntatical.y"
 
 
 int main(int argc, char **argv) {
@@ -2366,13 +2367,16 @@ int main(int argc, char **argv) {
 
   yyparse();
   fclose(yyin);
-  yylex_destroy();
 
-  printf("\nReported amount of parse errors: %d\n", yynerrs);
+  int parseErrors = yynerrs;
+
+  printf("\nReported amount of parse errors: %d\n", parseErrors);
 
   print_symbols();
 
   free_symbols_table();
+
+  yylex_destroy();
 
   return 0;
 }

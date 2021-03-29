@@ -43,16 +43,18 @@ void add_symbol_node(symbolParam symbol) {
 
 void print_symbols() {
   struct symbolNode *s;
+  struct symbolNode *nullC = NULL;
 
   printf("\n================== Symbols table ==================\n\n");
   printf("Symbol ID     Symbol Name              Symbol Type\n\n");
-  for (s = symbolTable; s != NULL; s = s -> hh.next) {
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     printf("   %-5d\t %-15s\t %5c\n", s -> symbolID, s -> name, s -> type);
   }
   printf("===================================================\n");
 }
 
 /* Clear symbol table mem allocation */
+/* https://troydhanson.github.io/uthash/userguide.html#_delete_item */
 void free_symbols_table(){
   symbolNode *s, *tmp;
   HASH_ITER(hh, symbolTable, s, tmp) {
