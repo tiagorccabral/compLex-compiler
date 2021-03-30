@@ -66,7 +66,8 @@ int globalCounterOfSymbols = 1;
 
 // Types definitions
 %type <node> programEntries compoundStatement declaration statements statement
-%type <node> expression inOutStatement fluxControlstatement iterationStatement
+%type <node> inOutStatement fluxControlstatement iterationStatement
+%type <node> expression operationalExpression setOperationalExpression
 %type <node> variableAssignment
 %type <node> variable variableInit typeSpecifier term
 %type <node> functionDefinition parameters parameter
@@ -81,13 +82,13 @@ entryPoint: programEntries {
 
 programEntries: programEntries variableInit {
   astParam astP = {
-    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
+    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
   };
   $$ = add_ast_node(astP);
   }
   | variableInit {$$=$1;}
   | programEntries functionDefinition {
-    astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES FUNCTION_DEFINITION" };
+    astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES FUNCTION_DEFINITION" };
     $$ = add_ast_node(astP);
   }
   | functionDefinition {$$=$1;}
@@ -96,7 +97,7 @@ programEntries: programEntries variableInit {
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
   astParam astP = {
-    .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLefRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+    .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
   };
   $$ = add_ast_node(astP);
   symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
@@ -106,7 +107,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
   }
   | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
       astParam astP = { 
-        .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLefRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+        .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
       };
       $$ = add_ast_node(astP);
       symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
@@ -143,7 +144,7 @@ parameter: typeSpecifier IDENTIFIER {
 
 compoundStatement: '{' declaration statements '}' {
   astParam astP = {
-    .leftBranch = $2, .rightBranch = $3, .nodeType = enumLefRightBranch, .astNodeClass="COMPOUND_STATEMENT"
+    .leftBranch = $2, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="COMPOUND_STATEMENT"
   };
   $$ = add_ast_node(astP);
   printf("compount statement\n");
@@ -152,7 +153,7 @@ compoundStatement: '{' declaration statements '}' {
 
 declaration: declaration variableInit {
   astParam astP = {
-    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="DECLARATION"
+    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
   };
   $$ = add_ast_node(astP);
   printf("declaration\n");
@@ -165,7 +166,7 @@ declaration: declaration variableInit {
 
 statements: statements statement {
     astParam astP = {
-      .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="STATEMENTS"
+      .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="STATEMENTS"
     };
     $$ = add_ast_node(astP);
     printf("statements, statement\n");
@@ -214,13 +215,13 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf(
   | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {printf("set forall loop\n");}
 ;
 
-expression: operationalExpression ';' {;}
+expression: operationalExpression ';' {$$=$1;}
   | variableAssignment {$$=$1;}
 ;
 
 operationalExpression: arithmeticExpression {;}
   | logicalExpression {;}
-  | setOperationalExpression {;}
+  | setOperationalExpression {$$=$1;}
   | term {;}
 ;
 

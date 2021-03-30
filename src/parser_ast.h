@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 enum astNodeType {
-  enumLefRightBranch,         // value && type == NULL
-  enumLefRightMiddleBranch,   // value && type == NULL
+  enumLeftRightBranch,         // value && type == NULL
+  enumLeftRightMiddleBranch,   // value && type == NULL
   enumRightBranch,            // left branch && value && type == NULL
   enumValueLeftBranch,        // right branch == NULL
   enumValueTypeOnly,          // right && left branch == NULL
@@ -35,7 +35,7 @@ parserNode* add_ast_node(astParam astParam) {
 
   printf("astParam: %d\n", astParam.nodeType);
   switch (astParam.nodeType) {
-    case enumLefRightMiddleBranch:
+    case enumLeftRightMiddleBranch:
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = astParam.middleBranch;
       node->rightBranch = astParam.rightBranch;
@@ -44,7 +44,7 @@ parserNode* add_ast_node(astParam astParam) {
       node->type = astParam.type;
       printf("left right and middle enum ast node class: %s\n", node->astNodeClass);
       break;
-    case enumLefRightBranch:
+    case enumLeftRightBranch:
       node->leftBranch = astParam.leftBranch;
       node->middleBranch = NULL;
       node->rightBranch = astParam.rightBranch;
