@@ -81,10 +81,10 @@ entryPoint: programEntries {
 ;
 
 programEntries: programEntries variableInit {
-  astParam astP = {
-    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
-  };
-  $$ = add_ast_node(astP);
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
+    };
+    $$ = add_ast_node(astP);
   }
   | variableInit {$$=$1;}
   | programEntries functionDefinition {
@@ -96,14 +96,14 @@ programEntries: programEntries variableInit {
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
-  astParam astP = {
-    .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
-  };
-  $$ = add_ast_node(astP);
-  symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
-  add_symbol_node(symbol);
-  globalCounterOfSymbols++;
-  printf("function definition \n");
+    astParam astP = {
+      .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+    };
+    $$ = add_ast_node(astP);
+    symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("function definition \n");
   }
   | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
       astParam astP = { 
@@ -129,10 +129,10 @@ parameters: parameter {
 ;
 
 parameter: typeSpecifier IDENTIFIER {
-  symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
-  add_symbol_node(symbol);
-  globalCounterOfSymbols++;
-  printf("parameter and identifier\n");
+    symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("parameter and identifier\n");
   }
   | parameters ',' typeSpecifier IDENTIFIER {
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
@@ -152,12 +152,12 @@ compoundStatement: '{' declaration statements '}' {
 ;
 
 declaration: declaration variableInit {
-  astParam astP = {
-    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
-  };
-  $$ = add_ast_node(astP);
-  printf("declaration\n");
-}
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
+    };
+    $$ = add_ast_node(astP);
+    printf("declaration\n");
+  }
   | %empty {
     $$ = NULL;
     printf("empty declaration\n");
@@ -304,9 +304,9 @@ variable: IDENTIFIER {
 ;
 
 typeSpecifier: T_INT {
-  astParam astP = { .type = "T_INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
-  $$ = add_ast_node(astP);
-  printf("integer type\n");
+    astParam astP = { .type = "T_INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+    $$ = add_ast_node(astP);
+    printf("integer type\n");
   }
   | T_FLOAT {
     astParam astP = { .type = "T_FLOAT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };

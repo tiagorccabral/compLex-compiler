@@ -1672,10 +1672,10 @@ yyreduce:
   case 3: /* programEntries: programEntries variableInit  */
 #line 83 "compLex_syntatical.y"
                                             {
-  astParam astP = {
-    .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
-  };
-  (yyval.node) = add_ast_node(astP);
+    astParam astP = {
+      .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
+    };
+    (yyval.node) = add_ast_node(astP);
   }
 #line 1681 "compLex_syntatical.tab.c"
     break;
@@ -1710,14 +1710,14 @@ yyreduce:
   case 8: /* functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement  */
 #line 98 "compLex_syntatical.y"
                                                                                   {
-  astParam astP = {
-    .leftBranch = (yyvsp[-5].node), .middleBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type= "IDENTIFIER", .value=(yyvsp[-4].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
-  };
-  (yyval.node) = add_ast_node(astP);
-  symbolParam symbol = { globalCounterOfSymbols, enumFunction, (yyvsp[-4].str) };
-  add_symbol_node(symbol);
-  globalCounterOfSymbols++;
-  printf("function definition \n");
+    astParam astP = {
+      .leftBranch = (yyvsp[-5].node), .middleBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type= "IDENTIFIER", .value=(yyvsp[-4].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+    };
+    (yyval.node) = add_ast_node(astP);
+    symbolParam symbol = { globalCounterOfSymbols, enumFunction, (yyvsp[-4].str) };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("function definition \n");
   }
 #line 1723 "compLex_syntatical.tab.c"
     break;
@@ -1764,10 +1764,10 @@ yyreduce:
   case 13: /* parameter: typeSpecifier IDENTIFIER  */
 #line 131 "compLex_syntatical.y"
                                     {
-  symbolParam symbol = { globalCounterOfSymbols, enumParameter, (yyvsp[0].str) };
-  add_symbol_node(symbol);
-  globalCounterOfSymbols++;
-  printf("parameter and identifier\n");
+    symbolParam symbol = { globalCounterOfSymbols, enumParameter, (yyvsp[0].str) };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("parameter and identifier\n");
   }
 #line 1773 "compLex_syntatical.tab.c"
     break;
@@ -1798,12 +1798,12 @@ yyreduce:
   case 16: /* declaration: declaration variableInit  */
 #line 154 "compLex_syntatical.y"
                                       {
-  astParam astP = {
-    .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
-  };
-  (yyval.node) = add_ast_node(astP);
-  printf("declaration\n");
-}
+    astParam astP = {
+      .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
+    };
+    (yyval.node) = add_ast_node(astP);
+    printf("declaration\n");
+  }
 #line 1808 "compLex_syntatical.tab.c"
     break;
 
@@ -2182,9 +2182,9 @@ yyreduce:
   case 70: /* typeSpecifier: T_INT  */
 #line 306 "compLex_syntatical.y"
                      {
-  astParam astP = { .type = "T_INT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
-  (yyval.node) = add_ast_node(astP);
-  printf("integer type\n");
+    astParam astP = { .type = "T_INT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+    (yyval.node) = add_ast_node(astP);
+    printf("integer type\n");
   }
 #line 2190 "compLex_syntatical.tab.c"
     break;
@@ -2477,7 +2477,7 @@ int main(int argc, char **argv) {
   free_symbols_table();
 
   printf("\n=================== Parser AST ====================\n\n");
-  print_parser_ast(parser_ast);
+  // print_parser_ast(parser_ast);
 
   yylex_destroy();
 
