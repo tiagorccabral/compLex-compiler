@@ -45,11 +45,11 @@ int globalCounterOfSymbols = 1;
 // Others
 %token<str> IDENTIFIER MAIN_FUNC
 // Operations
-%token ASSIGN
+%token<str> ASSIGN
 // Data types primitives / values
-%token INT FLOAT EMPTY
+%token<str> INT FLOAT EMPTY
 // Data types
-%token T_INT T_FLOAT T_ELEM T_SET
+%token<str> T_INT T_FLOAT T_ELEM T_SET
 // Arithmetic Operators
 %token ADD_OP SUB_OP MULT_OP DIV_OP
 // Set Operators
@@ -57,7 +57,7 @@ int globalCounterOfSymbols = 1;
 // Logical Operators
 %token ILT ILTE IGT IGTE IDIFF IEQ
 // Input/output
-%token READ WRITE WRITELN
+%token<str> READ WRITE WRITELN
 // Flux control
 %token RETURN IF ELSE FOR SET_FORALL
 
@@ -65,9 +65,11 @@ int globalCounterOfSymbols = 1;
 %start entryPoint
 
 // Types definitions
-%type <node> programEntries compoundStatement
-%type <node> variableInit typeSpecifier
-%type <node> functionDefinition parameters
+%type <node> programEntries compoundStatement declaration statements statement
+%type <node> expression inOutStatement fluxControlstatement iterationStatement
+%type <node> variableAssignment
+%type <node> variable variableInit typeSpecifier term
+%type <node> functionDefinition parameters parameter
 
 %%
 
@@ -78,14 +80,14 @@ entryPoint: programEntries {
 ;
 
 programEntries: programEntries variableInit {
-  astParam astP = { 
-    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES"
+  astParam astP = {
+    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES VARIABLE_INIT"
   };
   $$ = add_ast_node(astP);
-}
+  }
   | variableInit {$$=$1;}
   | programEntries functionDefinition {
-    astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES" };
+    astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES FUNCTION_DEFINITION" };
     $$ = add_ast_node(astP);
   }
   | functionDefinition {$$=$1;}
@@ -93,12 +95,20 @@ programEntries: programEntries variableInit {
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
+  astParam astP = {
+    .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLefRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+  };
+  $$ = add_ast_node(astP);
   symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   printf("function definition \n");
-}
+  }
   | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
+      astParam astP = { 
+        .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLefRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+      };
+      $$ = add_ast_node(astP);
       symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
       add_symbol_node(symbol);
       globalCounterOfSymbols++;
@@ -106,8 +116,14 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     }
 ;
 
-parameters: parameter {printf("parameter\n");}
-  | %empty {printf("empty parameters\n");}
+parameters: parameter {
+    $$ = $1;
+    printf("parameter\n");
+  }
+  | %empty {
+    $$ = NULL;
+    printf("empty parameters\n");
+  }
   | error {;}
 ;
 
@@ -116,7 +132,7 @@ parameter: typeSpecifier IDENTIFIER {
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   printf("parameter and identifier\n");
-}
+  }
   | parameters ',' typeSpecifier IDENTIFIER {
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
     add_symbol_node(symbol);
@@ -125,27 +141,66 @@ parameter: typeSpecifier IDENTIFIER {
   }
 ;
 
-compoundStatement: '{' declaration statements '}' {printf("compount statement\n");}
+compoundStatement: '{' declaration statements '}' {
+  astParam astP = {
+    .leftBranch = $2, .rightBranch = $3, .nodeType = enumLefRightBranch, .astNodeClass="COMPOUND_STATEMENT"
+  };
+  $$ = add_ast_node(astP);
+  printf("compount statement\n");
+}
 ;
 
-declaration: declaration variableInit {printf("declaration\n");}
-  | %empty {printf("empty declaration\n");}
+declaration: declaration variableInit {
+  astParam astP = {
+    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="DECLARATION"
+  };
+  $$ = add_ast_node(astP);
+  printf("declaration\n");
+}
+  | %empty {
+    $$ = NULL;
+    printf("empty declaration\n");
+  }
 ;
 
-statements: statements statement {printf("statements, statement\n");}
-  | %empty {printf("empty statement\n");}
+statements: statements statement {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="STATEMENTS"
+    };
+    $$ = add_ast_node(astP);
+    printf("statements, statement\n");
+  }
+  | %empty {
+    $$ = NULL;
+    printf("empty statement\n");
+  }
   | error {;}
 ;
 
-statement: expression {printf("expression\n");}
-  | inOutStatement {;}
-  | fluxControlstatement {;}
-  | iterationStatement {;}
+statement: expression {
+    $$ = $1;
+    printf("expression\n");
+  }
+  | inOutStatement {$$ = $1;}
+  | fluxControlstatement {$$ = $1;}
+  | iterationStatement {$$ = $1;}
 ;
 
-inOutStatement: WRITE '(' variable ')' ';' {printf("IO: write identifier\n");}
-  | WRITELN '(' variable ')' ';' {printf("IO: writeln identifier\n");}
-  | READ '(' variable ')' ';' {printf("IO: read identifier\n");}
+inOutStatement: WRITE '(' variable ')' ';' {
+    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
+    $$ = add_ast_node(astP);
+    printf("IO: write identifier\n");
+  }
+  | WRITELN '(' variable ')' ';' {
+    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
+    $$ = add_ast_node(astP);
+    printf("IO: writeln identifier\n");
+  }
+  | READ '(' variable ')' ';' {
+    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
+    $$ = add_ast_node(astP);
+    printf("IO: read identifier\n");
+  }
 ;
 
 fluxControlstatement: RETURN expression {printf("return variable\n");}
@@ -160,7 +215,7 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf(
 ;
 
 expression: operationalExpression ';' {;}
-  | variableAssignment {;}
+  | variableAssignment {$$=$1;}
 ;
 
 operationalExpression: arithmeticExpression {;}
@@ -189,7 +244,11 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
   | IS_SET '(' term ')' {printf("is set operator\n");}
 ;
 
-variableAssignment: IDENTIFIER ASSIGN expression {printf("variable assignment\n");}
+variableAssignment: IDENTIFIER ASSIGN expression {
+    astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
+    $$ = add_ast_node(astP);
+    printf("variable assignment\n");
+  }
 ;
 
 forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("for loop increment\n");}
@@ -198,9 +257,21 @@ forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("for loop increment
 term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
   | variable {printf("variable\n");}  
   | functionCall {;}
-  | EMPTY {printf("EMPTY constant value\n");}
-  | FLOAT {printf("float value\n");}
-  | INT {printf("int value\n");}
+  | EMPTY {
+    astParam astP = { .type = "EMPTY", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
+    $$ = add_ast_node(astP);
+    printf("EMPTY constant value\n");
+  }
+  | FLOAT {
+    astParam astP = { .type = "FLOAT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
+    $$ = add_ast_node(astP);
+    printf("float value\n");
+  }
+  | INT {
+    astParam astP = { .type = "INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
+    $$ = add_ast_node(astP);
+    printf("int value\n");
+  }
 ;
 
 functionCall: IDENTIFIER '(' functionArguments ')' {printf("function call\n");}
@@ -215,7 +286,7 @@ callArguments: callArguments ',' operationalExpression {printf("function argumen
 ;
 
 variableInit: typeSpecifier IDENTIFIER ';' {
-  astParam astP = { .leftBranch = $1, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
+  astParam astP = { .leftBranch = $1, .type="IDENTIFIER", .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   $$ = add_ast_node(astP);
   symbolParam symbol = { globalCounterOfSymbols, enumVariable, $2 };
   add_symbol_node(symbol);
@@ -224,13 +295,33 @@ variableInit: typeSpecifier IDENTIFIER ';' {
 }
 ;
 
-variable: IDENTIFIER {printf("variable\n");}
+variable: IDENTIFIER {
+  astParam astP = { .type = "IDENTIFIER", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="IDENTIFIER" };
+  $$ = add_ast_node(astP);
+  printf("variable\n");
+}
 ;
 
-typeSpecifier: T_INT {printf("integer type\n");}
-  | T_FLOAT {printf("float type\n");}
-  | T_ELEM {printf("elem type\n");}
-  | T_SET {printf("set type\n");}
+typeSpecifier: T_INT {
+  astParam astP = { .type = "T_INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+  $$ = add_ast_node(astP);
+  printf("integer type\n");
+  }
+  | T_FLOAT {
+    astParam astP = { .type = "T_FLOAT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+    $$ = add_ast_node(astP);
+    printf("float type\n");
+  }
+  | T_ELEM {
+    astParam astP = { .type = "T_ELEM", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+    $$ = add_ast_node(astP);
+    printf("elem type\n");
+  }
+  | T_SET {
+    astParam astP = { .type = "T_SET", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
+    $$ = add_ast_node(astP);
+    printf("set type\n");
+  }
 ;
 
 %%
@@ -243,6 +334,8 @@ int main(int argc, char **argv) {
     yyin = stdin;
   }
 
+  parser_ast = NULL;
+
   printf("\n----------------\n");
   printf("\nSyntatical analisys start\n\n");
 
@@ -254,8 +347,10 @@ int main(int argc, char **argv) {
   printf("\nReported amount of parse errors: %d\n", parseErrors);
 
   print_symbols();
-
   free_symbols_table();
+
+  printf("\n=================== Parser AST ====================\n\n");
+  // print_parser_ast(parser_ast);
 
   yylex_destroy();
 

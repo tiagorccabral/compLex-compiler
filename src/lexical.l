@@ -105,12 +105,14 @@ WRITELN "writeln"
 {INT} {
   // printf("<integer number, %d>\n", atoi(yytext));
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return INT;
 }
 
 {FLOAT} { 
   // printf("<floating point number, %0.2f>\n", atof(yytext));
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return FLOAT;
 }
 
@@ -124,30 +126,35 @@ WRITELN "writeln"
 {EMPTY} {
   // printf("<emptyConst, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return EMPTY;
 }
 
 {T_INT} {
   // printf("<typeInteger, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return T_INT;
 }
 
 {T_FLOAT} {
   // printf("<typeFloat, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return T_FLOAT;
 }
 
 {T_ELEM} {
   // printf("<typeElem, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return T_ELEM;
 }
 
 {T_SET} {
   // printf("<typeSet, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return T_SET;
 }
 
@@ -295,18 +302,21 @@ WRITELN "writeln"
 {READ} {
   // printf("<read directive, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return READ;
 }
 
 {WRITE} {
   // printf("<write directive, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return WRITE;
 }
 
 {WRITELN} {
   // printf("<writeLine directive, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return WRITELN;
 }
 
