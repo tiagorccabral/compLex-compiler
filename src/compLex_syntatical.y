@@ -28,6 +28,8 @@ extern void free_symbols_table();
 // AST functions
 extern parserNode* add_new_node();
 
+parserNode* parser_ast = NULL;
+
 void yyerror(const char *msg);
 
 /* Global variables */
@@ -37,7 +39,7 @@ int globalCounterOfSymbols = 1;
 
 %union {
   char* str;
-  struct parseNode* node;
+  struct parserNode* node;
 }
 
 // Others
@@ -63,19 +65,30 @@ int globalCounterOfSymbols = 1;
 %start entryPoint
 
 // Types definitions
-%type <node> compoundStatement
+%type <node> programEntries compoundStatement
 %type <node> variableInit typeSpecifier
 %type <node> functionDefinition parameters
 
 %%
 
-entryPoint: programEntries { printf("Program entry point\n"); }
+entryPoint: programEntries {
+  parser_ast = $1;
+  printf("Program entry point\n"); 
+}
 ;
 
-programEntries: programEntries variableInit {;}
-  | variableInit {;}
-  | programEntries functionDefinition {;}
-  | functionDefinition {;}
+programEntries: programEntries variableInit {
+  astParam astP = { 
+    .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES"
+  };
+  $$ = add_ast_node(astP);
+}
+  | variableInit {$$=$1;}
+  | programEntries functionDefinition {
+    astParam astP = { .leftBranch = $1, .rightBranch = $2, .nodeType = enumLefRightBranch, .astNodeClass="PROGRAM_ENTRIES" };
+    $$ = add_ast_node(astP);
+  }
+  | functionDefinition {$$=$1;}
   | error {;}
 ;
 
@@ -202,6 +215,8 @@ callArguments: callArguments ',' operationalExpression {printf("function argumen
 ;
 
 variableInit: typeSpecifier IDENTIFIER ';' {
+  astParam astP = { .leftBranch = $1, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
+  $$ = add_ast_node(astP);
   symbolParam symbol = { globalCounterOfSymbols, enumVariable, $2 };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
