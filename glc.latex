@@ -1,156 +1,138 @@
-<translation-unit> ::= {<external-declaration>}*
+<entryPoint> ::= <programEntries>
 
-<external-declaration> ::= <function-definition>
-                         | <declaration>
+<programEntries> ::= <programEntries> <variableInit>
+                  |  <variableInit>
+                  |  <programEntries> <functionDefinition>
+                  |  <functionDefinition>
 
-<function-definition> ::= <declarator> {<declaration>}* <compound-statement>
+<functionDefinition> ::= <typeSpecifier> IDENTIFIER '(' <parameters> ')' <compoundStatement>
+                      |  <typeSpecifier> MAIN_FUNC '(' <parameters> ')' <compoundStatement>
 
-<declaration-specifier> ::= <typeSpecifier>
+<parameters> ::= <parameter>
+              | ɛ
 
-<typeSpecifier> ::= int
-                   | float
-                   | elem
-                   | set
+<parameter> ::= <typeSpecifier> IDENTIFIER
+              | <parameters> ',' <typeSpecifier> IDENTIFIER
 
-<digit> ::= [0-9]
+<compoundStatement> ::= '{' <declaration> <statements> '}'
 
-<integer-type> ::= <digit>+
+<declaration> ::= <declaration> <variableInit>
+                | ɛ
 
-<string-type> ::= '"'.*'"' | '.*'
+<statements> ::= <statements> <statement>
+              | ɛ
 
-<float-type> ::= <digit>+'.'<digit>+
-
-<declarator> ::= {<pointer>}? <direct-declarator>
-
-<pointer> ::= * {<pointer>}?
-
-<inOutStatements> ::= <read-specifier>
-                        | <write-specifier>
-                        | <writeln-specifier>
-
-<read-specifier> ::= read ( <integer-type> )
-                    | read ( <float-type> ) 
-
-<write-specifier> ::=  write ( <integer-type> )
-                    | write ( <float-type> )
-                    | write ( <string-type> )
-
-<writeln-specifier> ::=  writeln ( <integer-type> )
-                      | writeln ( <float-type> )
-                      | writeln ( <string-type> )
-
-<direct-declarator> ::= <identifier>
-                      | ( <declarator> )
-                      | <direct-declarator> [ {<constant-expression>}? ]
-                      | <direct-declarator> ( <parameter-type-list> )
-                      | <direct-declarator> ( {<identifier>}* )
-
-<constant-expression> ::= <conditional-expression>
-
-<conditional-expression> ::= <logical-or-expression>
-
-<logical-or-expression> ::= <logical-and-expression>
-                          | <logical-or-expression> || <logical-and-expression>
-
-<logical-and-expression> ::= <inclusive-or-expression>
-                           | <logical-and-expression> && <inclusive-or-expression>
-
-<and-expression> ::= <equality-expression>
-                   | <and-expression> & <equality-expression>
-
-<equality-expression> ::= <relational-expression>
-                        | <equality-expression> == <relational-expression>
-                        | <equality-expression> != <relational-expression>
-
-<relational-expression> ::= <shift-expression>
-                          | <relational-expression> < <shift-expression>
-                          | <relational-expression> > <shift-expression>
-                          | <relational-expression> <= <shift-expression>
-                          | <relational-expression> >= <shift-expression>
-
-<shift-expression> ::= <arithmeticExpression>
-                     | <shift-expression> << <arithmeticExpression>
-                     | <shift-expression> >> <arithmeticExpression>
-
-<arithmeticExpression> ::= <multiplicative-expression>
-                        | <arithmeticExpression> + <multiplicative-expression>
-                        | <arithmeticExpression> - <multiplicative-expression>
-
-<multiplicative-expression> ::= <cast-expression>
-                              | <multiplicative-expression> * <cast-expression>
-                              | <multiplicative-expression> / <cast-expression>
-
-<set-primitive-expression> ::= is_set ( <primary-expression> )
-                              | add ( <primary-expression> in <set-primitive-expression> )
-                              | remove ( <primary-expression> in <set-primitive-expression> )
-                              | exists ( <primary-expression> in <set-primitive-expression> )
-
-<cast-expression> ::= ( <type-name> ) <cast-expression>
-
-<postfix-expression> ::= <primary-expression>
-                       | <postfix-expression> [ <expression> ]
-                       | <postfix-expression> ( {<assignment-expression>}* )
-
-<primary-expression> ::= <identifier>
-                       | <constant>
-                       | ( <expression> )
-
-<constant> ::= <integer-constant>
-             | <character-constant>
-             | <floating-constant>
-             | (EMPTY)
-
-<expression> ::= <assignment-expression>
-               | <expression> , <assignment-expression>
-
-<assignment-expression> ::= <conditional-expression>
-                          | '=' <assignment-expression>
-
-<type-name> ::= {<typeSpecifier>}+ {<abstract-declarator>}?
-
-<parameter-type-list> ::= <parameter-list>
-                        | <parameter-list> , ...
-
-<parameter-list> ::= <parameter-declaration>
-                   | <parameter-list> , <parameter-declaration>
-
-<parameter-declaration> ::= {<declaration-specifier>}+ <declarator>
-                          | {<declaration-specifier>}+ <abstract-declarator>
-                          | {<declaration-specifier>}+
-
-<abstract-declarator> ::= <pointer>
-                        | <pointer> <direct-abstract-declarator>
-                        | <direct-abstract-declarator>
-
-<direct-abstract-declarator> ::=  ( <abstract-declarator> )
-                               | {<direct-abstract-declarator>}? [ {<constant-expression>}? ]
-                               | {<direct-abstract-declarator>}? ( {<parameter-type-list>}? )
-
-<declaration> ::=  {<declaration-specifier>}+ {<init-declarator>}* ;
-
-<init-declarator> ::= <declarator>
-                    | <declarator> = <initializer>
-
-<initializer> ::= <assignment-expression>
-                | { <initializer-list> }
-                | { <initializer-list> , }
-
-<initializer-list> ::= <initializer>
-                     | <initializer-list> , <initializer>
-
-<statement> ::= <expression-statement>
-              | <selection-statement>
-              | <iterationStatement>
+<statement> ::= <expression>
+              | <inOutStatement>
               | <fluxControlstatement>
+              | <iterationStatement>
 
-<expression-statement> ::= {<expression>}? ;
+<inOutStatement> ::= WRITE '(' <variable> ')' ';'
+                  | WRITELN '(' <variable> ')' ';'
+                  | READ '(' <variable> ')' ';'
 
-<belonging-statement> ::= <expression> in <expression>
+<fluxControlstatement> ::= RETURN <expression>
+                        | RETURN ';'
+                        | IF '(' <operationalExpression> ')' <compoundStatement> ';'
+                        | IF '(' <operationalExpression> ')' <compoundStatement> ELSE <compoundStatement> ';'
 
-<selection-statement> ::= if ( <expression> ) <statement>
-                        | else <statement>
+<iterationStatement> ::= FOR '(' <operationalExpression> ')' <compoundStatement>
+                      | FOR '(' <expression> <expression> <forIncrement> ')' <compoundStatement>
+                      | SET_FORALL '(' <term> ADD_IN_OP <operationalExp> ')'
 
-<iterationStatement> ::= for ( {<expression>}? ; {<expression>}? ; {<expression>}? ) <statement>
-                        | forall <belonging-statement>
+<expression> ::= <operationalExpression>
+              | <variableAssignment>
 
-<fluxControlstatement> ::= return {<expression>}? ;
+<operationalExpression> ::= <arithmeticExpression>
+                          | <logicalExpression>
+                          | <setOperationalExpression>
+                          | <term>
+
+<arithmeticExpression> ::= <operationalExpression> ADD_OP <term>
+                        | <operationalExpression> SUB_OP <term>
+                        | <operationalExpression> MULT_OP <term>
+                        | <operationalExpression> DIV_OP <term>
+
+<logicalExpression> ::= <operationalExpression> ILT <term>
+                    | <operationalExpression> ILTE <term>
+                    | <operationalExpression> IGT <term>
+                    | <operationalExpression> IGTE <term>
+                    | <operationalExpression> IDIFF <term>
+                    | <operationalExpression> IEQ <term>
+
+<setOperationalExpression> ::= ADD_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
+                            | REMOVE_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
+                            | EXISTS_IN_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
+                            | IS_SET '(' <term> ')'
+
+<variableAssignment> ::= IDENTIFIER ASSIGN <expression>
+
+<forIncrement> ::= IDENTIFIER ASSIGN <arithmeticExpression>
+
+<term> ::= '(' <operationalExpression> ')'
+        | <variable>
+        | <functionCall>
+        | EMPTY
+        | FLOAT
+        | INT
+
+<functionCall> ::= IDENTIFIER '(' <functionArguments> ')'
+
+<functionArguments> ::= <callArguments>
+                      | ɛ
+
+<callArguments> ::= <callArguments> ',' <operationalExpression>
+                  | <operationalExpression>
+
+<variableInit> ::= <typeSpecifier> IDENTIFIER ';'
+
+<variable> ::= IDENTIFIER
+
+<typeSpecifier> ::= T_INT
+                | T_FLOAT
+                | T_ELEM
+                | T_SET
+
+IDENTIFIER ::= LETTER(LETTER|DIGIT|UNDERSCORE)*
+
+DIGIT ::= [0-9]
+LETTER ::= [a-zA-z]
+
+EMPTY ::= 'EMPTY'
+INT ::= {DIGIT}+
+FLOAT ::= {DIGIT}+[.]{DIGIT}+
+
+ASSIGN ::= '='
+ADD_OP ::= '+'
+SUB_OP ::= '-'
+MULT_OP ::= '*'
+DIV_OP ::= '/'
+ADD_SET_OP ::= 'add'
+ADD_IN_OP ::= 'in'
+REMOVE_SET_OP ::= 'remove'
+EXISTS_IN_SET_OP ::= 'exists'
+
+ILT ::= '<'
+ILTE ::= '<='
+IGT ::= '>'
+IGTE ::= '>='
+IDIFF ::= '!='
+IEQ ::= '=='
+IS_SET ::= 'is_set'
+
+IF ::= 'if'
+ELSE ::= 'else'
+FOR ::= 'for'
+SET_FORALL ::= 'forall'
+RETURN ::= 'return'
+
+READ ::= 'read'
+WRITE ::= 'write'
+WRITELN ::= 'writeln'
+
+MAIN_FUNC ::= 'main'
+
+T_INT ::= 'int'
+T_INT ::= 'float'
+T_INT ::= 'elem'
+T_INT ::= 'set'
