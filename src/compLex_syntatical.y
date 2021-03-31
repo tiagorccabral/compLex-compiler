@@ -51,7 +51,7 @@ int globalCounterOfSymbols = 1;
 // Data types
 %token<str> T_INT T_FLOAT T_ELEM T_SET
 // Arithmetic Operators
-%token ADD_OP SUB_OP MULT_OP DIV_OP
+%token <str> ADD_OP SUB_OP MULT_OP DIV_OP
 // Set Operators
 %token<str> ADD_SET_OP REMOVE_SET_OP EXISTS_IN_SET_OP IS_SET ADD_IN_OP
 // Logical Operators
@@ -136,12 +136,18 @@ parameters: parameter {
 ;
 
 parameter: typeSpecifier IDENTIFIER {
+    astParam astP = { .leftBranch = $1, .type=$2, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
+    $$ = add_ast_node(astP);
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     printf("parameter and identifier\n");
   }
   | parameters ',' typeSpecifier IDENTIFIER {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
+    };
+    $$ = add_ast_node(astP);
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
