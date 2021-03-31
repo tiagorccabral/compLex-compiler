@@ -87,8 +87,14 @@ parserNode* add_ast_node(astParam astParam) {
   return node;
 }
 
-void print_parser_ast(parserNode *node) {
+void print_parser_ast(parserNode *node, int level) {
   if (node) {
+    int aux = level;
+    while(aux > 0) {
+      printf("%s", "-");
+      aux--;
+    }
+    printf("> ");
     if (node->type != NULL) {
       printf("type: %s - ", node -> type);
     }
@@ -98,10 +104,10 @@ void print_parser_ast(parserNode *node) {
     if (node->astNodeClass != NULL) {
       printf("class: %s \n", node -> astNodeClass);
     }
-    print_parser_ast(node -> leftBranch);
-    print_parser_ast(node -> middle1Branch);
-    print_parser_ast(node -> middle2Branch);
-    print_parser_ast(node -> rightBranch);
+    print_parser_ast(node -> leftBranch, level + 1);
+    print_parser_ast(node -> middle1Branch, level + 1);
+    print_parser_ast(node -> middle2Branch, level + 1);
+    print_parser_ast(node -> rightBranch, level + 1);
   }
 }
 
