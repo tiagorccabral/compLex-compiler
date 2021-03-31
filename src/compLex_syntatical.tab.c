@@ -2638,7 +2638,6 @@ int main(int argc, char **argv) {
 
   printf("\n=================== Parser AST ====================\n\n");
   print_parser_ast(parser_ast);
-
   free_parser_ast(parser_ast);
 
   yylex_destroy();

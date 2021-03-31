@@ -121,4 +121,5 @@ void free_parser_ast(parserNode *node) {
   if (node -> rightBranch) {
     free_parser_ast(node->rightBranch);
   }
+  free(node);
 }
