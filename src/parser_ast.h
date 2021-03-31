@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 enum astNodeType {
-  enumLeftRightBranch,         // value && type == NULL
+  enumLeftRightMiddle1And2Branch,   // value && type == NULL
   enumLeftRightMiddleBranch,   // value && type == NULL
-  enumRightBranch,            // left branch && value && type == NULL
+  enumLeftRightBranch,         // value && type == NULL
   enumValueLeftBranch,        // right branch == NULL
   enumValueTypeOnly,          // right && left branch == NULL
 }; /* definition of ast Node type */
@@ -13,7 +13,8 @@ enum astNodeType {
 typedef struct parserNode {
   struct parserNode* rightBranch;
   struct parserNode* leftBranch;
-  struct parserNode* middleBranch;
+  struct parserNode* middle1Branch;
+  struct parserNode* middle2Branch;
   char* value;
   char* type;
   char* astNodeClass;
@@ -23,7 +24,8 @@ typedef struct parserNode {
 typedef struct astParam {
   struct parserNode* rightBranch;
   struct parserNode* leftBranch;
-  struct parserNode* middleBranch;
+  struct parserNode* middle1Branch;
+  struct parserNode* middle2Branch;
   char* value;
   char* type;
   char* astNodeClass;
@@ -33,47 +35,51 @@ typedef struct astParam {
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
 
-  printf("astParam: %d\n", astParam.nodeType);
   switch (astParam.nodeType) {
-    case enumLeftRightMiddleBranch:
+    case enumLeftRightMiddle1And2Branch:
       node->leftBranch = astParam.leftBranch;
-      node->middleBranch = astParam.middleBranch;
+      node->middle1Branch = astParam.middle1Branch;
+      node->middle2Branch = astParam.middle2Branch;
       node->rightBranch = astParam.rightBranch;
       node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
-      printf("left right and middle enum ast node class: %s\n", node->astNodeClass);
+      break;
+    case enumLeftRightMiddleBranch:
+      node->leftBranch = astParam.leftBranch;
+      node->middle1Branch = astParam.middle1Branch;
+      node->middle2Branch = NULL;
+      node->rightBranch = astParam.rightBranch;
+      node->astNodeClass = astParam.astNodeClass;
+      node->value = astParam.value;
+      node->type = astParam.type;
       break;
     case enumLeftRightBranch:
       node->leftBranch = astParam.leftBranch;
-      node->middleBranch = NULL;
+      node->middle1Branch = NULL;
+      node->middle2Branch = NULL;
       node->rightBranch = astParam.rightBranch;
       node->astNodeClass = astParam.astNodeClass;
       node->value = NULL;
       node->type = NULL;
-      printf("left right enum ast node class: %s\n", node->astNodeClass);
-      break;
-    case enumRightBranch:
-      node->astNodeClass = astParam.astNodeClass;
-      printf("right enum \n");
       break;
     case enumValueLeftBranch:
       node->leftBranch = astParam.leftBranch;
-      node->middleBranch = NULL;
+      node->middle1Branch = NULL;
+      node->middle2Branch = NULL;
       node->rightBranch = NULL;
       node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
-      printf("value left enum \n");
       break;
     case enumValueTypeOnly:
       node->leftBranch = NULL;
-      node->middleBranch = NULL;
+      node->middle1Branch = NULL;
+      node->middle2Branch = NULL;
       node->rightBranch = NULL;
       node->astNodeClass = astParam.astNodeClass;
       node->value = astParam.value;
       node->type = astParam.type;
-      printf("value type enum \n");
       break;
     default:
       break;
@@ -93,7 +99,8 @@ void print_parser_ast(parserNode *node) {
       printf("class: %s \n", node -> astNodeClass);
     }
     print_parser_ast(node -> leftBranch);
-    print_parser_ast(node -> middleBranch);
+    print_parser_ast(node -> middle1Branch);
+    print_parser_ast(node -> middle2Branch);
     print_parser_ast(node -> rightBranch);
   }
 }

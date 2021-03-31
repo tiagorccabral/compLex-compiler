@@ -176,30 +176,35 @@ WRITELN "writeln"
 {ASSIGN} {
   // printf("<assign op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return ASSIGN;
 }
 
 {ADD_OP} {
   // printf("<add op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return ADD_OP;
 }
 
 {SUB_OP} {
   // printf("<sub op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return SUB_OP;
 }
 
 {MULT_OP} {
   // printf("<mult op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return MULT_OP;
 }
 
 {DIV_OP} {
   // printf("<div op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return DIV_OP;
 }
 
@@ -230,72 +235,84 @@ WRITELN "writeln"
 {IF} {
   // printf("<if op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IF;
 }
 
 {ELSE} {
   // printf("<else op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return ELSE;
 }
 
 {FOR} {
   // printf("<for op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return FOR;
 }
 
 {SET_FORALL} {
   // printf("<set forall flux control, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return SET_FORALL;
 }
 
 {RETURN} {
   // printf("<return op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return RETURN;
 }
 
 {ILT} {
   // printf("<is less then op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return ILT;
 }
 
 {ILTE} {
   // printf("<is less then equal op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return ILTE;
 }
 
 {IGT} {
   // printf("<is greater then op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IGT;
 }
 
 {IGTE} {
   // printf("<is greater then equal op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IGTE;
 }
 
 {IDIFF} {
   // printf("<is different then op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IDIFF;
 }
 
 {IEQ} {
   // printf("<is equal then op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IEQ;
 }
 
 {IS_SET} {
   // printf("<isSet operator op, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
   return IS_SET;
 }
 

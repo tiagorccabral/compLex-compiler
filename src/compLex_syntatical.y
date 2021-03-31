@@ -53,21 +53,22 @@ int globalCounterOfSymbols = 1;
 // Arithmetic Operators
 %token ADD_OP SUB_OP MULT_OP DIV_OP
 // Set Operators
-%token ADD_SET_OP REMOVE_SET_OP EXISTS_IN_SET_OP IS_SET ADD_IN_OP
+%token<str> ADD_SET_OP REMOVE_SET_OP EXISTS_IN_SET_OP IS_SET ADD_IN_OP
 // Logical Operators
-%token ILT ILTE IGT IGTE IDIFF IEQ
+%token<str> ILT ILTE IGT IGTE IDIFF IEQ
 // Input/output
 %token<str> READ WRITE WRITELN
 // Flux control
-%token RETURN IF ELSE FOR SET_FORALL
+%token<str> RETURN IF ELSE FOR SET_FORALL
 
 // Parsing entry point start
 %start entryPoint
 
 // Types definitions
 %type <node> programEntries compoundStatement declaration statements statement
-%type <node> inOutStatement fluxControlstatement iterationStatement
+%type <node> inOutStatement fluxControlstatement iterationStatement forIncrement
 %type <node> expression operationalExpression setOperationalExpression
+%type <node> arithmeticExpression logicalExpression
 %type <node> variableAssignment
 %type <node> variable variableInit typeSpecifier term
 %type <node> functionDefinition parameters parameter
@@ -97,7 +98,7 @@ programEntries: programEntries variableInit {
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
     astParam astP = {
-      .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+      .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
     symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
@@ -106,15 +107,15 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     printf("function definition \n");
   }
   | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
-      astParam astP = { 
-        .leftBranch = $1, .middleBranch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
-      };
-      $$ = add_ast_node(astP);
-      symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
-      add_symbol_node(symbol);
-      globalCounterOfSymbols++;
-      printf("main function definition \n");
-    }
+    astParam astP = { 
+      .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+    };
+    $$ = add_ast_node(astP);
+    symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    printf("main function definition \n");
+  }
 ;
 
 parameters: parameter {
@@ -178,10 +179,7 @@ statements: statements statement {
   | error {;}
 ;
 
-statement: expression {
-    $$ = $1;
-    printf("expression\n");
-  }
+statement: expression {$$ = $1;}
   | inOutStatement {$$ = $1;}
   | fluxControlstatement {$$ = $1;}
   | iterationStatement {$$ = $1;}
@@ -204,45 +202,165 @@ inOutStatement: WRITE '(' variable ')' ';' {
   }
 ;
 
-fluxControlstatement: RETURN expression {printf("return variable\n");}
-  | RETURN ';' {printf("return null\n");}
-  | IF '(' operationalExpression ')' compoundStatement {printf("if statement\n");}
-  | IF '(' operationalExpression ')' compoundStatement  ELSE compoundStatement {printf("if/else statement\n");}
+fluxControlstatement: RETURN expression {
+    astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
+    $$ = add_ast_node(astP);
+    printf("return expression\n");
+  }
+  | RETURN ';' {
+    astParam astP = { .type = "RETURN", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_NULL" };
+    $$ = add_ast_node(astP);
+    printf("return null\n");
+  }
+  | IF '(' operationalExpression ')' compoundStatement {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF"
+    };
+    $$ = add_ast_node(astP);
+    printf("if statement\n");
+  }
+  | IF '(' operationalExpression ')' compoundStatement  ELSE compoundStatement {
+    astParam astP = {
+      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
+    };
+    $$ = add_ast_node(astP);
+    printf("if/else statement\n");
+  }
 ;
 
-iterationStatement: FOR '(' operationalExpression ')' compoundStatement {printf("for loop one argument\n");}
-  | FOR '(' expression expression forIncrement ')' compoundStatement {printf("for loop three arguments\n");}
-  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {printf("set forall loop\n");}
+iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
+    };
+    $$ = add_ast_node(astP);
+    printf("for loop one argument\n");
+  }
+  | FOR '(' expression expression forIncrement ')' compoundStatement {
+    astParam astP = {
+      .leftBranch = $3, .middle1Branch=$4, .middle2Branch=$5, .rightBranch = $7, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
+    };
+    $$ = add_ast_node(astP);
+    printf("for loop three arguments\n");
+  }
+  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {
+    astParam astP = {
+      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
+    };
+    $$ = add_ast_node(astP);
+    printf("set forall loop\n");
+  }
 ;
 
 expression: operationalExpression ';' {$$=$1;}
   | variableAssignment {$$=$1;}
 ;
 
-operationalExpression: arithmeticExpression {;}
-  | logicalExpression {;}
+operationalExpression: arithmeticExpression {$$=$1;}
+  | logicalExpression {$$=$1;}
   | setOperationalExpression {$$=$1;}
-  | term {;}
+  | term {$$=$1;}
 ;
 
-arithmeticExpression: operationalExpression ADD_OP term {printf("add operation\n");}
-  | operationalExpression SUB_OP term {printf("subtraction operation\n");}
-  | operationalExpression MULT_OP term {printf("multiplication operation\n");}
-  | operationalExpression DIV_OP term {printf("division operation\n");}
+arithmeticExpression: operationalExpression ADD_OP term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("add operation\n");
+  }
+  | operationalExpression SUB_OP term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("subtraction operation\n");
+  }
+  | operationalExpression MULT_OP term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("multiplication operation\n");
+  }
+  | operationalExpression DIV_OP term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("division operation\n");
+  }
 ;
 
-logicalExpression: operationalExpression ILT term {printf("is less than operation\n");}
-  | operationalExpression ILTE term {printf("is less or equal operation\n");}
-  | operationalExpression IGT term {printf("is greater than operation\n");}
-  | operationalExpression IGTE term {printf("is greater than or equal operation\n");}
-  | operationalExpression IDIFF term {printf("is different than operation\n");}
-  | operationalExpression IEQ term {printf("is equal to operation\n");}
+logicalExpression: operationalExpression ILT term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
+    };
+    $$ = add_ast_node(astP);
+    printf("is less than operation\n");
+  }
+  | operationalExpression ILTE term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
+    };
+    $$ = add_ast_node(astP);
+    printf("is less or equal operation\n");
+  }
+  | operationalExpression IGT term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
+    };
+    $$ = add_ast_node(astP);
+    printf("is greater than operation\n");
+  }
+  | operationalExpression IGTE term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
+    };
+    $$ = add_ast_node(astP);
+    printf("is greater than or equal operation\n");
+  }
+  | operationalExpression IDIFF term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
+    };
+    $$ = add_ast_node(astP);
+    printf("is different than operation\n");
+  }
+  | operationalExpression IEQ term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL_THAN"
+    };
+    $$ = add_ast_node(astP);
+    printf("is equal to operation\n");
+  }
 ;
 
-setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("add to set op\n");}
-  | REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("remove from set op\n");}
-  | EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')' {printf("exists el in set op\n");}
-  | IS_SET '(' term ')' {printf("is set operator\n");}
+setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("add to set op\n");
+  }
+  | REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION REMOVE_SET_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("remove from set op\n");
+  }
+  | EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION EXISTS_IN_SET_OP"
+    };
+    $$ = add_ast_node(astP);
+    printf("exists el in set op\n");
+  }
+  | IS_SET '(' term ')' {
+    astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION IS_SET" };
+    $$ = add_ast_node(astP);
+    printf("is set operator\n");
+  }
 ;
 
 variableAssignment: IDENTIFIER ASSIGN expression {
@@ -252,7 +370,11 @@ variableAssignment: IDENTIFIER ASSIGN expression {
   }
 ;
 
-forIncrement: IDENTIFIER ASSIGN arithmeticExpression {printf("for loop increment\n");}
+forIncrement: IDENTIFIER ASSIGN arithmeticExpression {
+  astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FOR_INCREMENT" };
+  $$ = add_ast_node(astP);
+  printf("for loop increment\n");
+}
 ;
 
 term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
@@ -351,7 +473,7 @@ int main(int argc, char **argv) {
   free_symbols_table();
 
   printf("\n=================== Parser AST ====================\n\n");
-  // print_parser_ast(parser_ast);
+  print_parser_ast(parser_ast);
 
   yylex_destroy();
 
