@@ -71,7 +71,7 @@ int globalCounterOfSymbols = 1;
 %type <node> arithmeticExpression logicalExpression
 %type <node> variableAssignment
 %type <node> variable variableInit typeSpecifier term
-%type <node> functionDefinition parameters parameter
+%type <node> functionDefinition functionCall functionArguments callArguments parameters parameter
 
 %%
 
@@ -93,7 +93,10 @@ programEntries: programEntries variableInit {
     $$ = add_ast_node(astP);
   }
   | functionDefinition {$$=$1;}
-  | error {;}
+  | error {
+      astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
+      $$ = add_ast_node(astP);
+  }
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
@@ -126,7 +129,10 @@ parameters: parameter {
     $$ = NULL;
     printf("empty parameters\n");
   }
-  | error {;}
+  | error {
+    astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
+    $$ = add_ast_node(astP);
+  }
 ;
 
 parameter: typeSpecifier IDENTIFIER {
@@ -176,7 +182,10 @@ statements: statements statement {
     $$ = NULL;
     printf("empty statement\n");
   }
-  | error {;}
+  | error {
+    astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
+    $$ = add_ast_node(astP);
+  }
 ;
 
 statement: expression {$$ = $1;}
@@ -377,9 +386,15 @@ forIncrement: IDENTIFIER ASSIGN arithmeticExpression {
 }
 ;
 
-term: '(' operationalExpression ')' {printf("( operationalExp )\n");} 
-  | variable {printf("variable\n");}  
-  | functionCall {;}
+term: '(' operationalExpression ')' {
+    $$=$2;
+    printf("( operationalExp )\n");
+  }
+  | variable {
+    $$=$1;
+    printf("variable\n");
+  }
+  | functionCall {$$=$1;}
   | EMPTY {
     astParam astP = { .type = "EMPTY", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     $$ = add_ast_node(astP);
@@ -397,15 +412,31 @@ term: '(' operationalExpression ')' {printf("( operationalExp )\n");}
   }
 ;
 
-functionCall: IDENTIFIER '(' functionArguments ')' {printf("function call\n");}
+functionCall: IDENTIFIER '(' functionArguments ')' {
+  astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
+  $$ = add_ast_node(astP);
+  printf("function call\n");
+}
 ;
 
-functionArguments: callArguments {;}
-  | %empty {printf("empty function argument\n");}
+functionArguments: callArguments {$$=$1;}
+  | %empty {
+    $$ = NULL;
+    printf("empty function argument\n");
+  }
 ;
 
-callArguments: callArguments ',' operationalExpression {printf("function arguments , term\n");}
-  | operationalExpression {printf("function term argument\n");}
+callArguments: callArguments ',' operationalExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
+    };
+    $$ = add_ast_node(astP);
+    printf("function arguments , term\n");
+  }
+  | operationalExpression {
+    $$ = $1;
+    printf("function term argument\n");
+  }
 ;
 
 variableInit: typeSpecifier IDENTIFIER ';' {
