@@ -1,4 +1,4 @@
-int main (int argc, int argv) {
+int main (int argc) {
   int varName;
   float ab;
   set s;
@@ -13,8 +13,10 @@ int main (int argc, int argv) {
   remove(2 in s);
   exists(1 in s);
 
-  forall(x in s) {
-    write(x);
+  if (i>10) {
+    write(i);
+  } else {
+    writeln(ab);
   }
 
   for (i=0; i<10; i=i+1) {
@@ -26,11 +28,24 @@ int main (int argc, int argv) {
     i = i+1;
   }
 
-  return;
+  a = 1;
+  b = 2;
+  a = a + b;
+  a = a - b;
+  a = a * b;
+  a = a / b;
+
+  a < b;
+  a <= b;
+  a > b;
+  a >= b;
+  a != b;
+  a == b;
+
+  return i;
+
 }
 
-int squareRoot(int a) {
-  writeln(a);
-
-  return a;
+int squareRoot() {
+  return;
 }
