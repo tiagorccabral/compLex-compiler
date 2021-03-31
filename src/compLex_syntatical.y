@@ -10,6 +10,9 @@
 
 #include "symbol_table.h"
 #include "parser_ast.h"
+#include "utils.h"
+
+#define DEBUG 0 // controls debug msgs, see utils.h
 
 extern int yylex();
 extern int yylex_destroy();
@@ -29,6 +32,9 @@ extern void free_symbols_table();
 extern parserNode* add_new_node();
 extern void print_parser_ast(parserNode *node, int level);
 extern void free_parser_ast(parserNode *node);
+
+// Utils functions
+extern void print_parser_msg(char* msg, int debug);
 
 parserNode* parser_ast = NULL;
 
@@ -79,7 +85,7 @@ int globalCounterOfSymbols = 1;
 
 entryPoint: programEntries {
   parser_ast = $1;
-  printf("Program entry point\n"); 
+  print_parser_msg("Program entry point\n", DEBUG);
 }
 ;
 
@@ -109,7 +115,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
-    printf("function definition \n");
+    print_parser_msg("Function definition \n", DEBUG);
   }
   | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
     astParam astP = { 
@@ -119,17 +125,17 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
-    printf("main function definition \n");
+    print_parser_msg("Main function definition \n", DEBUG);
   }
 ;
 
 parameters: parameter {
     $$ = $1;
-    printf("parameter\n");
+    print_parser_msg("Parameter\n", DEBUG);
   }
   | %empty {
     $$ = NULL;
-    printf("empty parameters\n");
+    print_parser_msg("Empty parameters\n", DEBUG);
   }
   | error {
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
@@ -143,7 +149,7 @@ parameter: typeSpecifier IDENTIFIER {
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
-    printf("parameter and identifier\n");
+    print_parser_msg("Parameter and identifier\n", DEBUG);
   }
   | parameters ',' typeSpecifier IDENTIFIER {
     astParam astP = {
@@ -153,7 +159,7 @@ parameter: typeSpecifier IDENTIFIER {
     symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
-    printf("parameter, type and identifier\n");
+    print_parser_msg("Parameter, type and identifier\n", DEBUG);
   }
 ;
 
@@ -162,7 +168,7 @@ compoundStatement: '{' declaration statements '}' {
     .leftBranch = $2, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="COMPOUND_STATEMENT"
   };
   $$ = add_ast_node(astP);
-  printf("compount statement\n");
+  print_parser_msg("Compound statement\n", DEBUG);
 }
 ;
 
@@ -171,11 +177,11 @@ declaration: declaration variableInit {
       .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="DECLARATION"
     };
     $$ = add_ast_node(astP);
-    printf("declaration\n");
+    print_parser_msg("Declaration\n", DEBUG);
   }
   | %empty {
     $$ = NULL;
-    printf("empty declaration\n");
+    print_parser_msg("Empty declaration\n", DEBUG);
   }
 ;
 
@@ -184,11 +190,11 @@ statements: statements statement {
       .leftBranch = $1, .rightBranch = $2, .nodeType = enumLeftRightBranch, .astNodeClass="STATEMENTS"
     };
     $$ = add_ast_node(astP);
-    printf("statements, statement\n");
+    print_parser_msg("Statements, statement\n", DEBUG);
   }
   | %empty {
     $$ = NULL;
-    printf("empty statement\n");
+    print_parser_msg("Empty statement\n", DEBUG);
   }
   | error {
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
@@ -205,43 +211,43 @@ statement: expression {$$ = $1;}
 inOutStatement: WRITE '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
     $$ = add_ast_node(astP);
-    printf("IO: write identifier\n");
+    print_parser_msg("IO: write identifier\n", DEBUG);
   }
   | WRITELN '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
     $$ = add_ast_node(astP);
-    printf("IO: writeln identifier\n");
+    print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
   | READ '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
     $$ = add_ast_node(astP);
-    printf("IO: read identifier\n");
+    print_parser_msg("IO: read identifier\n", DEBUG);
   }
 ;
 
 fluxControlstatement: RETURN expression {
     astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
     $$ = add_ast_node(astP);
-    printf("return expression\n");
+    print_parser_msg("return expression\n", DEBUG);
   }
   | RETURN ';' {
     astParam astP = { .type = "RETURN", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_NULL" };
     $$ = add_ast_node(astP);
-    printf("return null\n");
+    print_parser_msg("return null\n", DEBUG);
   }
   | IF '(' operationalExpression ')' compoundStatement {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF"
     };
     $$ = add_ast_node(astP);
-    printf("if statement\n");
+    print_parser_msg("if statement\n", DEBUG);
   }
   | IF '(' operationalExpression ')' compoundStatement  ELSE compoundStatement {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
     };
     $$ = add_ast_node(astP);
-    printf("if/else statement\n");
+    print_parser_msg("if/else statement\n", DEBUG);
   }
 ;
 
@@ -250,21 +256,21 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
     };
     $$ = add_ast_node(astP);
-    printf("for loop one argument\n");
+    print_parser_msg("for loop one argument\n", DEBUG);
   }
   | FOR '(' expression expression forIncrement ')' compoundStatement {
     astParam astP = {
       .leftBranch = $3, .middle1Branch=$4, .middle2Branch=$5, .rightBranch = $7, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
-    printf("for loop three arguments\n");
+    print_parser_msg("for loop three arguments\n", DEBUG);
   }
   | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
     };
     $$ = add_ast_node(astP);
-    printf("set forall loop\n");
+    print_parser_msg("set forall loop\n", DEBUG);
   }
 ;
 
@@ -283,28 +289,28 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
     };
     $$ = add_ast_node(astP);
-    printf("add operation\n");
+    print_parser_msg("add operation\n", DEBUG);
   }
   | operationalExpression SUB_OP term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
-    printf("subtraction operation\n");
+    print_parser_msg("subtraction operation\n", DEBUG);
   }
   | operationalExpression MULT_OP term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
-    printf("multiplication operation\n");
+    print_parser_msg("multiplication operation\n", DEBUG);
   }
   | operationalExpression DIV_OP term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
-    printf("division operation\n");
+    print_parser_msg("division operation\n", DEBUG);
   }
 ;
 
@@ -313,42 +319,42 @@ logicalExpression: operationalExpression ILT term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
     };
     $$ = add_ast_node(astP);
-    printf("is less than operation\n");
+    print_parser_msg("is less than operation\n", DEBUG);
   }
   | operationalExpression ILTE term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
-    printf("is less or equal operation\n");
+    print_parser_msg("is less or equal operation\n", DEBUG);
   }
   | operationalExpression IGT term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
     };
     $$ = add_ast_node(astP);
-    printf("is greater than operation\n");
+    print_parser_msg("is greater than operation\n", DEBUG);
   }
   | operationalExpression IGTE term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
-    printf("is greater than or equal operation\n");
+    print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
   | operationalExpression IDIFF term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
     };
     $$ = add_ast_node(astP);
-    printf("is different than operation\n");
+    print_parser_msg("is different than operation\n", DEBUG);
   }
   | operationalExpression IEQ term {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL_THAN"
     };
     $$ = add_ast_node(astP);
-    printf("is equal to operation\n");
+    print_parser_msg("is equal to operation\n", DEBUG);
   }
 ;
 
@@ -357,80 +363,80 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP"
     };
     $$ = add_ast_node(astP);
-    printf("add to set op\n");
+    print_parser_msg("add to set OP\n", DEBUG);
   }
   | REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION REMOVE_SET_OP"
     };
     $$ = add_ast_node(astP);
-    printf("remove from set op\n");
+    print_parser_msg("remove from set OP\n", DEBUG);
   }
   | EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION EXISTS_IN_SET_OP"
     };
     $$ = add_ast_node(astP);
-    printf("exists el in set op\n");
+    print_parser_msg("exists el in set OP\n", DEBUG);
   }
   | IS_SET '(' term ')' {
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION IS_SET" };
     $$ = add_ast_node(astP);
-    printf("is set operator\n");
+    print_parser_msg("is_set OP\n", DEBUG);
   }
 ;
 
 variableAssignment: IDENTIFIER ASSIGN expression {
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
     $$ = add_ast_node(astP);
-    printf("variable assignment\n");
+    print_parser_msg("variable assignment\n", DEBUG);
   }
 ;
 
 forIncrement: IDENTIFIER ASSIGN arithmeticExpression {
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FOR_INCREMENT" };
   $$ = add_ast_node(astP);
-  printf("for loop increment\n");
+  print_parser_msg("for loop increment\n", DEBUG);
 }
 ;
 
 term: '(' operationalExpression ')' {
     $$=$2;
-    printf("( operationalExp )\n");
+    print_parser_msg("( operationalExp )\n", DEBUG);
   }
   | variable {
     $$=$1;
-    printf("variable\n");
+    print_parser_msg("variable\n", DEBUG);
   }
   | functionCall {$$=$1;}
   | EMPTY {
     astParam astP = { .type = "EMPTY", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     $$ = add_ast_node(astP);
-    printf("EMPTY constant value\n");
+    print_parser_msg("EMPTY constant value\n", DEBUG);
   }
   | FLOAT {
     astParam astP = { .type = "FLOAT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     $$ = add_ast_node(astP);
-    printf("float value\n");
+    print_parser_msg("float value\n", DEBUG);
   }
   | INT {
     astParam astP = { .type = "INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     $$ = add_ast_node(astP);
-    printf("int value\n");
+    print_parser_msg("int value\n", DEBUG);
   }
 ;
 
 functionCall: IDENTIFIER '(' functionArguments ')' {
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
   $$ = add_ast_node(astP);
-  printf("function call\n");
+  print_parser_msg("function call\n", DEBUG);
 }
 ;
 
 functionArguments: callArguments {$$=$1;}
   | %empty {
     $$ = NULL;
-    printf("empty function argument\n");
+    print_parser_msg("empty function argument\n", DEBUG);
   }
 ;
 
@@ -439,11 +445,11 @@ callArguments: callArguments ',' operationalExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
-    printf("function arguments , term\n");
+    print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
   | operationalExpression {
     $$ = $1;
-    printf("function term argument\n");
+    print_parser_msg("function callarguments\n", DEBUG);
   }
 ;
 
@@ -453,36 +459,36 @@ variableInit: typeSpecifier IDENTIFIER ';' {
   symbolParam symbol = { globalCounterOfSymbols, enumVariable, $2 };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
-  printf("variable initialization %s\n", $2);
+  print_parser_msg("variable initialization\n", DEBUG);
 }
 ;
 
 variable: IDENTIFIER {
   astParam astP = { .type = "IDENTIFIER", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="IDENTIFIER" };
   $$ = add_ast_node(astP);
-  printf("variable\n");
+  print_parser_msg("variable\n", DEBUG);
 }
 ;
 
 typeSpecifier: T_INT {
     astParam astP = { .type = "T_INT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     $$ = add_ast_node(astP);
-    printf("integer type\n");
+    print_parser_msg("integer type\n", DEBUG);
   }
   | T_FLOAT {
     astParam astP = { .type = "T_FLOAT", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     $$ = add_ast_node(astP);
-    printf("float type\n");
+    print_parser_msg("float type\n", DEBUG);
   }
   | T_ELEM {
     astParam astP = { .type = "T_ELEM", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     $$ = add_ast_node(astP);
-    printf("elem type\n");
+    print_parser_msg("elem type\n", DEBUG);
   }
   | T_SET {
     astParam astP = { .type = "T_SET", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     $$ = add_ast_node(astP);
-    printf("set type\n");
+    print_parser_msg("set type\n", DEBUG);
   }
 ;
 
@@ -504,9 +510,7 @@ int main(int argc, char **argv) {
   yyparse();
   fclose(yyin);
 
-  int parseErrors = yynerrs;
-
-  printf("\nReported amount of parse errors: %d\n", parseErrors);
+  printf("\nReported amount of errors: %d\n", yynerrs);
 
   print_symbols();
   free_symbols_table();
