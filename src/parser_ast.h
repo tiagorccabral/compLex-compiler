@@ -104,3 +104,21 @@ void print_parser_ast(parserNode *node) {
     print_parser_ast(node -> rightBranch);
   }
 }
+
+void free_parser_ast(parserNode *node) {
+  if (node == NULL) {
+    return;
+  }
+  if (node -> leftBranch) {
+    free_parser_ast(node->leftBranch);
+  }
+  if (node -> middle1Branch) {
+    free_parser_ast(node->middle1Branch);
+  }
+  if (node -> middle2Branch) {
+    free_parser_ast(node->middle2Branch);
+  }
+  if (node -> rightBranch) {
+    free_parser_ast(node->rightBranch);
+  }
+}

@@ -27,6 +27,8 @@ extern void free_symbols_table();
 
 // AST functions
 extern parserNode* add_new_node();
+extern void print_parser_ast(parserNode *node);
+extern void free_parser_ast(parserNode *node);
 
 parserNode* parser_ast = NULL;
 
@@ -511,6 +513,7 @@ int main(int argc, char **argv) {
 
   printf("\n=================== Parser AST ====================\n\n");
   print_parser_ast(parser_ast);
+  free_parser_ast(parser_ast);
 
   yylex_destroy();
 
