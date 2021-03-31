@@ -3,6 +3,7 @@ int main () {
   int b;
 
   set s;
+  elem el;
 
   add(1 in add(2 in s));
 
