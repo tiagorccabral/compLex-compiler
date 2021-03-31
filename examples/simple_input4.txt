@@ -1,24 +1,4 @@
 int main (int argc) {
-  int varName;
-  float ab;
-  set s;
-  int i;
-
-  read(varName);
-  writeln(varName);
-  write(varName);
-
-  add(1 in s);
-  add(2 in s);
-  remove(2 in s);
-  exists(1 in s);
-
-  if (i>10) {
-    write(i);
-  } else {
-    writeln(ab);
-  }
-
   for (i=0; i<10; i=i+1) {
     writeln(i);
   }
@@ -28,24 +8,11 @@ int main (int argc) {
     i = i+1;
   }
 
-  a = 1;
-  b = 2;
-  a = a + b;
-  a = a - b;
-  a = a * b;
-  a = a / b;
-
-  a < b;
-  a <= b;
-  a > b;
-  a >= b;
-  a != b;
-  a == b;
 
   return i;
 
 }
 
-int squareRoot() {
+int squareRoot(int a) {
   return;
 }
