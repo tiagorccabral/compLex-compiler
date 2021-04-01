@@ -1,7 +1,6 @@
 set copy_set(set s) {
     set ans;
     ans = EMPTY;
-    forall(x in s) add(x in ans);
     return ans;
 }
 
@@ -13,6 +12,14 @@ set succ(set n) {
 
 int main() {
     set zero; set one; set two; set three;
+
+    if ((i>10) && (i<20)) {
+        writeln(i);
+    }
+
+    if ((i>10) || (i<20)) {
+        writeln(i);
+    }
    
     zero = EMPTY;
     one = succ(zero);

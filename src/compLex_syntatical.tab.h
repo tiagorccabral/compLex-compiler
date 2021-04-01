@@ -79,14 +79,16 @@ extern int yydebug;
     IGTE = 280,                    /* IGTE  */
     IDIFF = 281,                   /* IDIFF  */
     IEQ = 282,                     /* IEQ  */
-    READ = 283,                    /* READ  */
-    WRITE = 284,                   /* WRITE  */
-    WRITELN = 285,                 /* WRITELN  */
-    RETURN = 286,                  /* RETURN  */
-    IF = 287,                      /* IF  */
-    ELSE = 288,                    /* ELSE  */
-    FOR = 289,                     /* FOR  */
-    SET_FORALL = 290               /* SET_FORALL  */
+    AND = 283,                     /* AND  */
+    OR = 284,                      /* OR  */
+    READ = 285,                    /* READ  */
+    WRITE = 286,                   /* WRITE  */
+    WRITELN = 287,                 /* WRITELN  */
+    RETURN = 288,                  /* RETURN  */
+    IF = 289,                      /* IF  */
+    ELSE = 290,                    /* ELSE  */
+    FOR = 291,                     /* FOR  */
+    SET_FORALL = 292               /* SET_FORALL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -100,7 +102,7 @@ union YYSTYPE
   char* str;
   struct parserNode* node;
 
-#line 104 "compLex_syntatical.tab.h"
+#line 106 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

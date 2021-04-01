@@ -161,11 +161,15 @@ WRITELN "writeln"
 {AND} {
   // printf("<logical op AND, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
+  return AND;
 }
 
 {OR} {
   // printf("<logical op OR, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
+  return OR;
 }
 
 {NEG} {

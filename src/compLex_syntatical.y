@@ -63,7 +63,7 @@ int globalCounterOfSymbols = 1;
 // Set Operators
 %token<str> ADD_SET_OP REMOVE_SET_OP EXISTS_IN_SET_OP IS_SET ADD_IN_OP
 // Logical Operators
-%token<str> ILT ILTE IGT IGTE IDIFF IEQ
+%token<str> ILT ILTE IGT IGTE IDIFF IEQ AND OR
 // Input/output
 %token<str> READ WRITE WRITELN
 // Flux control
@@ -355,6 +355,20 @@ logicalExpression: operationalExpression ILT term {
     };
     $$ = add_ast_node(astP);
     print_parser_msg("is equal to operation\n", DEBUG);
+  }
+  | operationalExpression AND term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_AND"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("logical AND operation\n", DEBUG);
+  }
+  | operationalExpression OR term {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_OR"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("logical OR operation\n", DEBUG);
   }
 ;
 
