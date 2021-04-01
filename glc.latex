@@ -59,6 +59,8 @@
                     | <operationalExpression> IGTE <term>
                     | <operationalExpression> IDIFF <term>
                     | <operationalExpression> IEQ <term>
+                    | <operationalExpression> AND <term>
+                    | <operationalExpression> OR <term>
 
 <setOperationalExpression> ::= ADD_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
                             | REMOVE_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
@@ -119,6 +121,8 @@ IGTE ::= '>='
 IDIFF ::= '!='
 IEQ ::= '=='
 IS_SET ::= 'is_set'
+AND ::= '&&'
+OR ::= '||'
 
 IF ::= 'if'
 ELSE ::= 'else'
