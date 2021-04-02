@@ -175,6 +175,8 @@ WRITELN "writeln"
 {NEG} {
   // printf("<logical op Negation, %s>\n", yytext);
   running_column_count += yyleng;
+  yylval.str = (char *) strdup(yytext);
+  return NEG;
 }
 
 {ASSIGN} {
