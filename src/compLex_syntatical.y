@@ -81,7 +81,6 @@ int globalCounterOfSymbols = 1;
 
 entryPoint: programEntries {
   parser_ast = $1;
-  semantic_verify_main();
   print_parser_msg("Program entry point\n", DEBUG);
 }
 ;
@@ -526,7 +525,9 @@ int main(int argc, char **argv) {
   yyparse();
   fclose(yyin);
 
-  printf("\nReported amount of errors: %d\n", yynerrs);
+  printf("\nReported amount syntax errors: %d\n", yynerrs);
+
+  semantic_verify_main();
 
   print_symbols();
   free_symbols_table();
@@ -539,7 +540,6 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
 
 void yyerror(const char* msg) {
   total_errors_count++;
