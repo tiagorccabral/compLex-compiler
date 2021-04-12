@@ -10,6 +10,7 @@
 
 #include "symbol_table.h"
 #include "parser_ast.h"
+#include "semantic_analyzer.h"
 #include "utils.h"
 
 #define DEBUG 0 // controls debug msgs, see utils.h
@@ -22,11 +23,6 @@ extern int yynerrs;
 extern int running_line_count;
 extern int running_column_count;
 extern int total_errors_count;
-
-// Symbols table functions
-extern void add_symbol_node();
-extern void print_symbols();
-extern void free_symbols_table();
 
 // AST functions
 extern parserNode* add_new_node();
@@ -85,6 +81,7 @@ int globalCounterOfSymbols = 1;
 
 entryPoint: programEntries {
   parser_ast = $1;
+  semantic_verify_main();
   print_parser_msg("Program entry point\n", DEBUG);
 }
 ;
