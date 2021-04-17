@@ -34,6 +34,8 @@ extern void print_parser_msg(char* msg, int debug);
 
 parserNode* parser_ast = NULL;
 
+extern UT_icd intchar_icd;
+
 void yyerror(const char *msg);
 
 /* Global variables */
@@ -73,7 +75,7 @@ int globalCounterOfSymbols = 1;
 %type <node> inOutStatement fluxControlstatement iterationStatement forIncrement
 %type <node> expression operationalExpression setOperationalExpression
 %type <node> arithmeticExpression logicalExpression
-%type <node> variableAssignment
+%type <node> variableAssignment localStatetements
 %type <node> variable variableInit typeSpecifier term
 %type <node> functionDefinition functionCall functionArguments callArguments parameters parameter
 
@@ -110,6 +112,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     $$ = add_ast_node(astP);
     symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
     add_symbol_node(symbol);
+    create_new_scope(0, $2);
     globalCounterOfSymbols++;
     print_parser_msg("Function definition \n", DEBUG);
   }
@@ -119,6 +122,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
     };
     $$ = add_ast_node(astP);
     symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+    create_new_scope(0, $2);
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
@@ -252,6 +256,7 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
     };
     $$ = add_ast_node(astP);
+    create_new_scope(1, $1);
     print_parser_msg("for loop one argument\n", DEBUG);
   }
   | FOR '(' expression expression forIncrement ')' compoundStatement {
@@ -259,12 +264,14 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
       .leftBranch = $3, .middle1Branch=$4, .middle2Branch=$5, .rightBranch = $7, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
+    create_new_scope(1, $1);
     print_parser_msg("for loop three arguments\n", DEBUG);
   }
   | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
     };
+    create_new_scope(1, $1);
     $$ = add_ast_node(astP);
     print_parser_msg("set forall loop\n", DEBUG);
   }
@@ -272,6 +279,7 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
 
 expression: operationalExpression ';' {$$=$1;}
   | variableAssignment {$$=$1;}
+  | localStatetements {$$=$1;}
 ;
 
 operationalExpression: arithmeticExpression {$$=$1;}
@@ -408,6 +416,15 @@ variableAssignment: IDENTIFIER ASSIGN expression {
   }
 ;
 
+localStatetements: '{' declaration statements '}' {
+  astParam astP = {
+    .leftBranch = $2, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOCAL_STATEMENTS DECLARATION STATEMENTS"
+  };
+  $$ = add_ast_node(astP);
+  print_parser_msg("local statetements\n", DEBUG);
+}
+;
+
 forIncrement: IDENTIFIER ASSIGN arithmeticExpression {
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FOR_INCREMENT" };
   $$ = add_ast_node(astP);
@@ -517,7 +534,8 @@ int main(int argc, char **argv) {
     yyin = stdin;
   }
 
-  parser_ast = NULL;
+  parser_ast = NULL; /* initialize syntatical AST */
+  utarray_new(scopeList, &intchar_icd); /* initialize dynamic array of scopes */
 
   printf("\n----------------\n");
   printf("\nSyntatical analisys start\n\n");
@@ -527,14 +545,23 @@ int main(int argc, char **argv) {
 
   printf("\nReported amount syntax errors: %d\n", yynerrs);
 
-  semantic_verify_main();
-
   print_symbols();
-  free_symbols_table();
-
   printf("\n=================== Parser AST ====================\n\n");
   print_parser_ast(parser_ast, 0);
+
+  printf("\n----------------\n");
+  printf("\nSemantic analisys start\n\n");
+
+  semantic_verify_main();
+
+  printf("\nList of scopes:\n");
+  print_scopes_list();
+
+  free_symbols_table();
+
   free_parser_ast(parser_ast);
+
+  utarray_free(scopeList); /* free scope list */
 
   yylex_destroy();
 
