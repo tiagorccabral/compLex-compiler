@@ -33,8 +33,9 @@
 
 <fluxControlstatement> ::= RETURN <expression>
                         | RETURN ';'
-                        | IF '(' <operationalExpression> ')' <compoundStatement> ';'
-                        | IF '(' <operationalExpression> ')' <compoundStatement> ELSE <compoundStatement> ';'
+                        | IF '(' <operationalExpression> ')' <expression>
+                        | IF '(' <operationalExpression> ')' RETURN <expression>
+                        | IF '(' <operationalExpression> ')' <compoundStatement> ELSE <compoundStatement>
 
 <iterationStatement> ::= FOR '(' <operationalExpression> ')' <compoundStatement>
                       | FOR '(' <expression> <expression> <forIncrement> ')' <compoundStatement>
@@ -42,6 +43,7 @@
 
 <expression> ::= <operationalExpression>
               | <variableAssignment>
+              | <localStatetements>
 
 <operationalExpression> ::= <arithmeticExpression>
                           | <logicalExpression>
@@ -69,6 +71,8 @@
                             | IS_SET '(' <term> ')'
 
 <variableAssignment> ::= IDENTIFIER ASSIGN <expression>
+
+<localStatetements> ::= '{' <declaration> <statements> '}'
 
 <forIncrement> ::= IDENTIFIER ASSIGN <arithmeticExpression>
 
