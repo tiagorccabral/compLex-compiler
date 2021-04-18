@@ -235,9 +235,16 @@ fluxControlstatement: RETURN expression {
     $$ = add_ast_node(astP);
     print_parser_msg("return null\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' compoundStatement {
+  | IF '(' operationalExpression ')' expression {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("if statement\n", DEBUG);
+  }
+  | IF '(' operationalExpression ')' RETURN expression {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $6, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ONE_LINE RETURN"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
@@ -355,7 +362,7 @@ logicalExpression: operationalExpression ILT term {
   }
   | operationalExpression IEQ term {
     astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL_THAN"
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("is equal to operation\n", DEBUG);
