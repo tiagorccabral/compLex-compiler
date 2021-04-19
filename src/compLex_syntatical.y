@@ -110,7 +110,7 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
       .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
     add_symbol_node(symbol);
     create_new_scope(0, $2);
     globalCounterOfSymbols++;
@@ -121,9 +121,9 @@ functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatemen
       .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { globalCounterOfSymbols, enumFunction, $2 };
-    create_new_scope(0, $2);
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
     add_symbol_node(symbol);
+    create_new_scope(0, $2);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
   }
@@ -146,7 +146,7 @@ parameters: parameter {
 parameter: typeSpecifier IDENTIFIER {
     astParam astP = { .leftBranch = $1, .type=$2, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { globalCounterOfSymbols, enumParameter, $2 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
@@ -156,7 +156,7 @@ parameter: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { globalCounterOfSymbols, enumParameter, $4 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4 };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
@@ -495,7 +495,7 @@ callArguments: callArguments ',' operationalExpression {
 variableInit: typeSpecifier IDENTIFIER ';' {
   astParam astP = { .leftBranch = $1, .type="IDENTIFIER", .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   $$ = add_ast_node(astP);
-  symbolParam symbol = { globalCounterOfSymbols, enumVariable, $2 };
+  symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2 };
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
