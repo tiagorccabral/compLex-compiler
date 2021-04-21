@@ -44,6 +44,27 @@ void verify_id_redefinition() {
   }
 }
 
+void verify_declared_id(char *symbol, int line, int column) {
+  struct symbolNode *s, *tmp;
+  struct symbolNode *nullC = NULL;
+  int found = 0;
+
+  scopeInfo current_scope = get_current_scope();
+
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+    if (strcmp(s->name, symbol) == 0) {
+      HASH_FIND_INT(symbolTable, s, tmp);  /* attempts to find a declaration of id on same scopeID */
+      if (tmp != NULL && tmp->scopeID == current_scope.scopeID) {
+        found = 1;
+      }
+    }
+  }
+  if (found == 0) {
+    printf("semantic error, use of undeclared '%s', at line: %d, column: %d\n", symbol, line, column);
+    semantic_errors++;
+  }
+}
+
 void post_parse_semantic_analysis() {
   semantic_verify_main();
   verify_id_redefinition();
