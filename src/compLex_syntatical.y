@@ -112,7 +112,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2, .line = running_line_count, .column = running_column_count };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Function definition \n", DEBUG);
@@ -124,7 +124,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2, .line = running_line_count, .column = running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
@@ -148,7 +148,7 @@ parameters: parameter {
 parameter: typeSpecifier IDENTIFIER {
     astParam astP = { .leftBranch = $1, .type=$2, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
@@ -158,7 +158,7 @@ parameter: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4 };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
@@ -504,7 +504,7 @@ callArguments: callArguments ',' operationalExpression {
 variableInit: typeSpecifier IDENTIFIER ';' {
   astParam astP = { .leftBranch = $1, .type="IDENTIFIER", .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   $$ = add_ast_node(astP);
-  symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2 };
+  symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
@@ -569,9 +569,11 @@ int main(int argc, char **argv) {
   print_parser_ast(parser_ast, 0);
 
   printf("\n----------------\n");
-  printf("\nSemantic analisys start\n\n");
+  printf("\nSemantic analisys start\n");
 
-  semantic_verify_main();
+  post_parse_semantic_analysis();
+
+  printf("\nReported amount of semantic errors: %d\n", semantic_errors);
 
   free_symbols_table();
 

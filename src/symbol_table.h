@@ -20,6 +20,8 @@ typedef struct symbolNode {
   char *name;
   int scope; /* scope of symbol */
   int scopeID; /* unique ID of scope */
+  int line; /* line of symbol */
+  int column; /* column of symbol */
   UT_hash_handle hh; /* makes this structure hashable */
 } symbolNode;
 
@@ -32,6 +34,8 @@ typedef struct symbolParam {
   char *name;
   int scope; /* scope of symbol */
   int scopeID; /* unique ID of scope */
+  int line; /* line of symbol */
+  int column; /* column of symbol */
 } symbolParam; /* used as a param on add_symbol_node function */
 
 typedef struct scopeStack {

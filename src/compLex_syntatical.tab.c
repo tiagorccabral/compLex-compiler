@@ -1768,7 +1768,7 @@ yyreduce:
       .leftBranch = (yyvsp[-6].node), .middle1Branch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type= "IDENTIFIER", .value=(yyvsp[-5].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     (yyval.node) = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str) };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str), .line = running_line_count, .column = running_column_count };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Function definition \n", DEBUG);
@@ -1791,7 +1791,7 @@ yyreduce:
       .leftBranch = (yyvsp[-6].node), .middle1Branch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type= "MAIN", .value=(yyvsp[-5].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     (yyval.node) = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str) };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str), .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
@@ -1831,7 +1831,7 @@ yyreduce:
                                     {
     astParam astP = { .leftBranch = (yyvsp[-1].node), .type=(yyvsp[0].str), .value = (yyvsp[0].str), .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
     (yyval.node) = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[0].str) };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[0].str), .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
@@ -1846,7 +1846,7 @@ yyreduce:
       .leftBranch = (yyvsp[-3].node), .rightBranch = (yyvsp[-1].node), .nodeType = enumLeftRightBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     (yyval.node) = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = (yyval.node)->rightBranch->value, .name = (yyvsp[0].str) };
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = (yyval.node)->rightBranch->value, .name = (yyvsp[0].str), .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
@@ -2462,7 +2462,7 @@ yyreduce:
                                            {
   astParam astP = { .leftBranch = (yyvsp[-2].node), .type="IDENTIFIER", .value = (yyvsp[-1].str), .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   (yyval.node) = add_ast_node(astP);
-  symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-1].str) };
+  symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-1].str), .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
@@ -2781,9 +2781,11 @@ int main(int argc, char **argv) {
   print_parser_ast(parser_ast, 0);
 
   printf("\n----------------\n");
-  printf("\nSemantic analisys start\n\n");
+  printf("\nSemantic analisys start\n");
 
-  semantic_verify_main();
+  post_parse_semantic_analysis();
+
+  printf("\nReported amount of semantic errors: %d\n", semantic_errors);
 
   free_symbols_table();
 

@@ -72,6 +72,8 @@ void add_symbol_node(symbolParam symbol) {
     symbolPointer -> name = symbol.name;
     symbolPointer -> scope = current_scope.level;
     symbolPointer -> scopeID = current_scope.scopeID;
+    symbolPointer -> line = symbol.line;
+    symbolPointer -> column = symbol.column;
     HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
   } else {
     printf("symbol %s already declared!\n", symbol.name);
