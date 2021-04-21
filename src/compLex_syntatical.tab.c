@@ -1791,7 +1791,7 @@ yyreduce:
       .leftBranch = (yyvsp[-6].node), .middle1Branch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type= "MAIN", .value=(yyvsp[-5].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     (yyval.node) = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str), .line= running_line_count, .column= running_column_count};
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-5].str), .line = running_line_count, .column = running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);

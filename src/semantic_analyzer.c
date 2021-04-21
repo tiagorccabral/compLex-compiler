@@ -38,7 +38,7 @@ void verify_id_redefinition() {
         semantic_errors++;
         checkedErrorMatrix[s->symbolID][a->symbolID] = 1;
         checkedErrorMatrix[a->symbolID][s->symbolID] = 1;
-        printf("semantic error, redefinition of: '%s' at line: %d, column: %d\n", a->name, a->line, a->column);
+        printf("semantic error, redefinition of '%s', at line: %d, column: %d\n", a->name, a->line, a->column);
       }
     }
   }
