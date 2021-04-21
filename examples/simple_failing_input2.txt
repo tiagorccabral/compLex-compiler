@@ -1,4 +1,4 @@
-int main () {
+int initial (int argc) {
   set s;
   float pi;
 
@@ -7,4 +7,8 @@ int main () {
   add(2 in s);
 
   add(1 ins s);
+}
+
+int squareRoot(int a) {
+  return a*a;
 }
