@@ -307,6 +307,12 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
     };
     $$ = add_ast_node(astP);
+    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+      verify_declared_id($1->value, running_line_count, running_column_count);
+    }
+    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+      verify_declared_id($3->value, running_line_count, running_column_count);
+    }
     print_parser_msg("add operation\n", DEBUG);
   }
   | operationalExpression SUB_OP term {
@@ -314,6 +320,12 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
+    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+      verify_declared_id($1->value, running_line_count, running_column_count);
+    }
+    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+      verify_declared_id($3->value, running_line_count, running_column_count);
+    }
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | operationalExpression MULT_OP term {
@@ -321,6 +333,12 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
+    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+      verify_declared_id($1->value, running_line_count, running_column_count);
+    }
+    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+      verify_declared_id($3->value, running_line_count, running_column_count);
+    }
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | operationalExpression DIV_OP term {
@@ -328,6 +346,12 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
+    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+      verify_declared_id($1->value, running_line_count, running_column_count);
+    }
+    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+      verify_declared_id($3->value, running_line_count, running_column_count);
+    }
     print_parser_msg("division operation\n", DEBUG);
   }
 ;
@@ -424,6 +448,7 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
 ;
 
 variableAssignment: IDENTIFIER ASSIGN expression {
+    verify_declared_id($1, running_line_count, running_column_count);
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
     $$ = add_ast_node(astP);
     print_parser_msg("variable assignment\n", DEBUG);
@@ -557,23 +582,18 @@ int main(int argc, char **argv) {
   parser_ast = NULL; /* initialize syntatical AST */
 
   printf("\n----------------\n");
-  printf("\nSyntatical analisys start\n\n");
 
   yyparse();
   fclose(yyin);
 
-  printf("\nReported amount syntax errors: %d\n", yynerrs);
+  post_parse_semantic_analysis();
 
   print_symbols();
   printf("\n=================== Parser AST ====================\n\n");
   print_parser_ast(parser_ast, 0);
 
-  printf("\n----------------\n");
-  printf("\nSemantic analisys start\n");
-
-  post_parse_semantic_analysis();
-
-  printf("\nReported amount of semantic errors: %d\n", semantic_errors);
+  printf("\nReported amount of syntax errors: %d\n", yynerrs);
+  printf("Reported amount of semantic errors: %d\n", semantic_errors);
 
   free_symbols_table();
 
