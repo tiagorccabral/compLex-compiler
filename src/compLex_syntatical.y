@@ -7,6 +7,7 @@
 // Required libs declarations
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "symbol_table.h"
 #include "parser_ast.h"
@@ -34,7 +35,6 @@ extern void print_parser_msg(char* msg, int debug);
 
 parserNode* parser_ast = NULL;
 
-extern UT_icd intchar_icd;
 
 void yyerror(const char *msg);
 
@@ -105,25 +105,27 @@ programEntries: programEntries variableInit {
   }
 ;
 
-functionDefinition: typeSpecifier IDENTIFIER '(' parameters ')' compoundStatement {
+functionDefinition: typeSpecifier IDENTIFIER {
+    create_new_scope_level();
+  } '(' parameters ')' compoundStatement {
     astParam astP = {
-      .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+      .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
     symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
     add_symbol_node(symbol);
-    create_new_scope(0, $2);
     globalCounterOfSymbols++;
     print_parser_msg("Function definition \n", DEBUG);
   }
-  | typeSpecifier MAIN_FUNC '(' parameters ')' compoundStatement {
+  | typeSpecifier MAIN_FUNC {
+      create_new_scope_level();
+  } '(' parameters ')' compoundStatement {
     astParam astP = { 
-      .leftBranch = $1, .middle1Branch = $4, .rightBranch = $6, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
+      .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
     symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2 };
     add_symbol_node(symbol);
-    create_new_scope(0, $2);
     globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
   }
@@ -168,6 +170,7 @@ compoundStatement: '{' declaration statements '}' {
     .leftBranch = $2, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="COMPOUND_STATEMENT"
   };
   $$ = add_ast_node(astP);
+  decrease_scope_level();
   print_parser_msg("Compound statement\n", DEBUG);
 }
 ;
@@ -206,6 +209,7 @@ statement: expression {$$ = $1;}
   | inOutStatement {$$ = $1;}
   | fluxControlstatement {$$ = $1;}
   | iterationStatement {$$ = $1;}
+  | localStatetements {$$ = $1;}
 ;
 
 inOutStatement: WRITE '(' variable ')' ';' {
@@ -249,7 +253,14 @@ fluxControlstatement: RETURN expression {
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' compoundStatement  ELSE compoundStatement {
+  | IF '(' operationalExpression ')' localStatetements {
+    astParam astP = {
+      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_NO_ELSE"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("if statement\n", DEBUG);
+  }
+  | IF '(' operationalExpression ')' localStatetements  ELSE localStatetements {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
     };
@@ -258,27 +269,24 @@ fluxControlstatement: RETURN expression {
   }
 ;
 
-iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
+iterationStatement: FOR '(' operationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
     };
     $$ = add_ast_node(astP);
-    create_new_scope(1, $1);
     print_parser_msg("for loop one argument\n", DEBUG);
   }
-  | FOR '(' expression expression forIncrement ')' compoundStatement {
+  | FOR '(' expression expression forIncrement ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .middle1Branch=$4, .middle2Branch=$5, .rightBranch = $7, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
-    create_new_scope(1, $1);
     print_parser_msg("for loop three arguments\n", DEBUG);
   }
-  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' compoundStatement {
+  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
     };
-    create_new_scope(1, $1);
     $$ = add_ast_node(astP);
     print_parser_msg("set forall loop\n", DEBUG);
   }
@@ -286,7 +294,6 @@ iterationStatement: FOR '(' operationalExpression ')' compoundStatement {
 
 expression: operationalExpression ';' {$$=$1;}
   | variableAssignment {$$=$1;}
-  | localStatetements {$$=$1;}
 ;
 
 operationalExpression: arithmeticExpression {$$=$1;}
@@ -423,9 +430,11 @@ variableAssignment: IDENTIFIER ASSIGN expression {
   }
 ;
 
-localStatetements: '{' declaration statements '}' {
+localStatetements: '{' {create_new_scope_level();}
+  declaration statements '}' {
+  decrease_scope_level();
   astParam astP = {
-    .leftBranch = $2, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOCAL_STATEMENTS DECLARATION STATEMENTS"
+    .leftBranch = $3, .rightBranch = $4, .nodeType = enumLeftRightBranch, .astNodeClass="LOCAL_STATEMENTS DECLARATION STATEMENTS"
   };
   $$ = add_ast_node(astP);
   print_parser_msg("local statetements\n", DEBUG);
@@ -541,8 +550,11 @@ int main(int argc, char **argv) {
     yyin = stdin;
   }
 
+  srand(time(NULL));
+
+  create_new_scope_level(); /* initialize scope stack */
+
   parser_ast = NULL; /* initialize syntatical AST */
-  utarray_new(scopeList, &intchar_icd); /* initialize dynamic array of scopes */
 
   printf("\n----------------\n");
   printf("\nSyntatical analisys start\n\n");
@@ -561,14 +573,11 @@ int main(int argc, char **argv) {
 
   semantic_verify_main();
 
-  printf("\nList of scopes:\n");
-  print_scopes_list();
-
   free_symbols_table();
 
   free_parser_ast(parser_ast);
 
-  utarray_free(scopeList); /* free scope list */
+  free_scope_stack();
 
   yylex_destroy();
 

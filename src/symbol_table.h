@@ -5,8 +5,7 @@
 #include <stdlib.h>
 
 #include "uthash.h" /* https://troydhanson.github.io/uthash/userguide.html#_hash_operations */
-#include "utlist.h"
-#include "utarray.h"
+#include "utstack.h"
 
 enum symbolType {
   enumFunction = 'F',
@@ -19,6 +18,8 @@ typedef struct symbolNode {
   char symbolType; /* could be F, V, P */
   char *type; /* type of the ID (int, float, set, etc) */
   char *name;
+  int scope; /* scope of symbol */
+  int scopeID; /* unique ID of scope */
   UT_hash_handle hh; /* makes this structure hashable */
 } symbolNode;
 
@@ -29,30 +30,42 @@ typedef struct symbolParam {
   int symbolType; /* could be F, V, P */
   char *type; /* type of the ID (int, float, set, etc) */
   char *name;
+  int scope; /* scope of symbol */
+  int scopeID; /* unique ID of scope */
 } symbolParam; /* used as a param on add_symbol_node function */
 
 typedef struct scopeStack {
-  int level;
-  char *name;
+  int level; /* numeric representation of scope level */
+  int scopeID; /* unique ID of scope */
   struct scopeStack *next;
 } scopeStack; /* element of each scope */
 
+typedef struct scopeInfo {
+  int level; /* numeric representation of scope level */
+  int scopeID; /* unique ID of scope */
+}scopeInfo;
+
 scopeStack *scopeStackHead; /* pointer to beginning of scope el stack */
-
-void intchar_copy(void *_dst, const void *_src);
-void intchar_dtor(void *_elt);
-
-UT_array *scopeList;
-
-UT_icd intchar_icd;
 
 /* adds one entry (symbol node struct) to symbol table */
 void add_symbol_node(symbolParam symbol);
 
 void print_symbols();
 
-/* add one list element to scopes list */
-void create_new_scope();
+/* add one level to current scope counting */
+void create_new_scope_level();
+
+/* removes one level of scope stack */
+void decrease_scope_level();
+
+/* releases allocated memory for scopes stack */
+void free_scope_stack();
+
+/* returns the scope stack head, that is the current scope */
+scopeInfo get_current_scope();
+
+/* generates random 5 digit number to be used as unique ID for scope */
+int gen_random_uniqueID();
 
 /* print scope list */
 void print_scopes_list();

@@ -18,9 +18,6 @@ void semantic_verify_main() {
     }
   }
   if (foundMain == 0) {
-    char *error_message = (char *)malloc(40 * sizeof(char));
-    sprintf(error_message, "semantic error: main function was not declared");
-    yyerror(error_message);
-    free(error_message);
+    printf("semantic error, main function was not declared\n");
   }
 }
