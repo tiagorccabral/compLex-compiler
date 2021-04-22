@@ -59,6 +59,13 @@ void verify_declared_id(char *symbol, int line, int column) {
       }
     }
   }
+  if (found == 0) { /* looks on higher scope if cant find in the same scope id */
+    for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+      if (strcmp(s->name, symbol) == 0 && s->scope < current_scope.level) {
+        found = 1;
+      }
+    }
+  }
   if (found == 0) {
     printf("semantic error, use of undeclared '%s', at line: %d, column: %d\n", symbol, line, column);
     semantic_errors++;

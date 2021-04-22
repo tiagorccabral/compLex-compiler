@@ -5,6 +5,7 @@ enum astNodeType {
   enumLeftRightMiddle1And2Branch,   // value && type == NULL
   enumLeftRightMiddleBranch,   // value && type == NULL
   enumLeftRightBranch,         // value && type == NULL
+  enumLeftRightValueBranch,    // middle 1 and 2 null
   enumValueLeftBranch,        // right branch == NULL
   enumValueTypeOnly,          // right && left branch == NULL
 }; /* definition of ast Node type */
@@ -62,6 +63,15 @@ parserNode* add_ast_node(astParam astParam) {
       node->astNodeClass = astParam.astNodeClass;
       node->value = NULL;
       node->type = NULL;
+      break;
+    case enumLeftRightValueBranch:
+      node->leftBranch = astParam.leftBranch;
+      node->middle1Branch = NULL;
+      node->middle2Branch = NULL;
+      node->rightBranch = astParam.rightBranch;
+      node->astNodeClass = astParam.astNodeClass;
+      node->value = astParam.value;
+      node->type = astParam.type;
       break;
     case enumValueLeftBranch:
       node->leftBranch = astParam.leftBranch;

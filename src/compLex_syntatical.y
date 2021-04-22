@@ -35,6 +35,12 @@ extern void print_parser_msg(char* msg, int debug);
 
 parserNode* parser_ast = NULL;
 
+typedef struct currentParsedFunction {
+  char *name;
+  int scopeID;
+}currentParsedFunction;
+
+currentParsedFunction currentFunction = {"", 0};
 
 void yyerror(const char *msg);
 
@@ -106,6 +112,9 @@ programEntries: programEntries variableInit {
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER {
+    scopeInfo current_scope = get_current_scope();
+    currentFunction.scopeID = current_scope.scopeID;
+    currentFunction.name = $2;
     create_new_scope_level();
   } '(' parameters ')' compoundStatement {
     astParam astP = {
@@ -118,6 +127,9 @@ functionDefinition: typeSpecifier IDENTIFIER {
     print_parser_msg("Function definition \n", DEBUG);
   }
   | typeSpecifier MAIN_FUNC {
+      scopeInfo current_scope = get_current_scope();
+      currentFunction.scopeID = current_scope.scopeID;
+      currentFunction.name = $2;
       create_new_scope_level();
   } '(' parameters ')' compoundStatement {
     astParam astP = { 
@@ -132,6 +144,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
 ;
 
 parameters: parameter {
+    printf("uniqueID %d func name: %s\n", currentFunction.scopeID, currentFunction.name);
     $$ = $1;
     print_parser_msg("Parameter\n", DEBUG);
   }
@@ -145,23 +158,29 @@ parameters: parameter {
   }
 ;
 
-parameter: typeSpecifier IDENTIFIER {
-    astParam astP = { .leftBranch = $1, .type=$2, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
-    $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
-    add_symbol_node(symbol);
-    globalCounterOfSymbols++;
-    print_parser_msg("Parameter and identifier\n", DEBUG);
-  }
-  | parameters ',' typeSpecifier IDENTIFIER {
+parameter: parameters ',' typeSpecifier IDENTIFIER {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     $$ = add_ast_node(astP);
+    astParam astP2 = {
+      .leftBranch = $1, .rightBranch = $3, .type=$$->rightBranch->value, .value = $4, .nodeType = enumLeftRightValueBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
+    };
+    $$ = add_ast_node(astP2);
     symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count};
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
+  }
+  | typeSpecifier IDENTIFIER {
+    astParam astP = { .leftBranch = $1, .type=$2, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
+    $$ = add_ast_node(astP);
+    astParam astP2 = { .leftBranch = $1, .type=$$->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
+    $$ = add_ast_node(astP2);
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
+    print_parser_msg("Parameter and identifier\n", DEBUG);
   }
 ;
 
@@ -500,6 +519,7 @@ term: '(' operationalExpression ')' {
 ;
 
 functionCall: IDENTIFIER '(' functionArguments ')' {
+  verify_declared_id($1, running_line_count, running_column_count);
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
   $$ = add_ast_node(astP);
   print_parser_msg("function call\n", DEBUG);
