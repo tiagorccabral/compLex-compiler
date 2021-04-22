@@ -474,6 +474,9 @@ variableAssignment: IDENTIFIER ASSIGN expression {
     verify_declared_id($1, running_line_count, running_column_count);
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
     $$ = add_ast_node(astP);
+    if (strcmp($$->leftBranch->astNodeClass, "IDENTIFIER") == 0) {
+      verify_declared_id($$->leftBranch->value, running_line_count, running_column_count);
+    }
     print_parser_msg("variable assignment\n", DEBUG);
   }
 ;
