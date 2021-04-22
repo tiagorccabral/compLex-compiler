@@ -41,7 +41,14 @@ typedef struct currentParsedFunction {
   int lastParamPosition;
 }currentParsedFunction;
 
+typedef struct calledFunction {
+  char *name;
+  int amountOfParamsCalled;
+}calledFunction;
+
 currentParsedFunction currentFunction = {"", 0, 0};
+
+calledFunction currentCalledFunction = {"", 0};
 
 void yyerror(const char *msg);
 
@@ -527,6 +534,9 @@ term: '(' operationalExpression ')' {
 
 functionCall: IDENTIFIER '(' functionArguments ')' {
   verify_declared_id($1, running_line_count, running_column_count);
+  currentCalledFunction.name = $1;
+  verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, running_line_count);
+  currentCalledFunction.amountOfParamsCalled = 0;
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
   $$ = add_ast_node(astP);
   print_parser_msg("function call\n", DEBUG);
@@ -541,6 +551,7 @@ functionArguments: callArguments {$$=$1;}
 ;
 
 callArguments: callArguments ',' operationalExpression {
+    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
     };
@@ -548,6 +559,7 @@ callArguments: callArguments ',' operationalExpression {
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
   | operationalExpression {
+    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     $$ = $1;
     print_parser_msg("function callarguments\n", DEBUG);
   }

@@ -74,6 +74,20 @@ void verify_declared_id(char *symbol, int line, int column) {
   }
 }
 
+void verify_func_call_params(char *currentFuncName, int amountOfParams, int line) {
+  struct symbolNode *s;
+  struct symbolNode *nullC = NULL;
+
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+    if (strcmp(s->name, currentFuncName) == 0) {
+      if (amountOfParams != (s->last_param)) { /* checks if the amount of params passed by function caller is correct */
+        semantic_errors++;
+        printf("semantic error, function '%s' expected %d param(s) but got %d, at line %d\n", currentFuncName, (s->last_param), amountOfParams, line);
+      }
+    }
+  }
+}
+
 void post_parse_semantic_analysis() {
   semantic_verify_main();
   verify_id_redefinition();
