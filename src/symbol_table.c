@@ -55,9 +55,6 @@ int gen_random_uniqueID() {
   return result;
 }
 
-void print_scopes_list() {
-}
-
 void add_symbol_node(symbolParam symbol) {
   struct symbolNode *symbolPointer;
   char stringSType = symbol.symbolType;
@@ -65,29 +62,65 @@ void add_symbol_node(symbolParam symbol) {
   /* attempts to find entry on symbol table */
   HASH_FIND_INT(symbolTable, &symbol.symbolID, symbolPointer);
   if (symbolPointer == NULL) {
-    symbolPointer = (symbolNode*)malloc(sizeof(symbolNode));
-    symbolPointer -> symbolID = symbol.symbolID;
-    symbolPointer -> type = symbol.type;
-    symbolPointer -> symbolType = stringSType;
-    symbolPointer -> name = symbol.name;
-    symbolPointer -> scope = current_scope.level;
-    symbolPointer -> scopeID = current_scope.scopeID;
-    symbolPointer -> line = symbol.line;
-    symbolPointer -> column = symbol.column;
-    HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
+    if (symbol.symbolType == enumParameter) { /* if its a param, also update associated function */
+      struct symbolNode *func;
+      struct symbolNode *nullC = NULL;
+      for (func = symbolTable; func != nullC; func = (struct symbolNode*)(func -> hh.next)) {
+        if (func->name == symbol.associated_function && func->scopeID == symbol.associated_function_scope) {
+          func -> params_list[symbol.last_param] = symbol.symbolID; /* adds params symbol to list of param of func */
+          func -> last_param = symbol.last_param + 1;
+        }
+      }
+      symbolPointer = (symbolNode*)malloc(sizeof(symbolNode));
+      symbolPointer -> symbolID = symbol.symbolID;
+      symbolPointer -> type = symbol.type;
+      symbolPointer -> symbolType = stringSType;
+      symbolPointer -> name = symbol.name;
+      symbolPointer -> scope = current_scope.level;
+      symbolPointer -> scopeID = current_scope.scopeID;
+      symbolPointer -> line = symbol.line;
+      symbolPointer -> column = symbol.column;
+      HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
+    } else {
+      symbolPointer = (symbolNode*)malloc(sizeof(symbolNode));
+      symbolPointer -> symbolID = symbol.symbolID;
+      symbolPointer -> type = symbol.type;
+      symbolPointer -> symbolType = stringSType;
+      symbolPointer -> name = symbol.name;
+      symbolPointer -> scope = current_scope.level;
+      symbolPointer -> scopeID = current_scope.scopeID;
+      symbolPointer -> line = symbol.line;
+      symbolPointer -> column = symbol.column;
+      HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
+    }
   } else {
     printf("symbol %s already declared!\n", symbol.name);
   }
 }
 
 void print_symbols() {
-  struct symbolNode *s;
+  struct symbolNode *s, *tmp;
   struct symbolNode *nullC = NULL;
 
   printf("\n==================================== Symbols table ====================================\n\n");
   printf("Symbol ID     Symbol Name                Type           Symbol Type   Scope     ScopeID\n\n");
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     printf("   %-5d\t %-15s\t %-10s\t %5c\t %7d\t %-10d\t\n", s -> symbolID, s -> name, s -> type, s -> symbolType, s -> scope, s->scopeID);
+  }
+
+  printf("\n==================================== Func Params ====================================\n\n");
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+    if (s->symbolType == enumFunction) {
+      int i;
+      printf("Function %s params: ", s->name);
+      for (i=0; i<s->last_param; i++) {
+        int *a;
+        a = &s->params_list[i];
+        HASH_FIND_INT(symbolTable, a, tmp);
+        printf("%s (type: %s, symbolID: %d) | ", tmp->name, tmp->type, tmp->symbolID);
+      }
+      printf("\n");
+    }
   }
   printf("========================================================================================\n");
 }

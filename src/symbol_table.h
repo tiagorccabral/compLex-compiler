@@ -22,6 +22,8 @@ typedef struct symbolNode {
   int scopeID; /* unique ID of scope */
   int line; /* line of symbol */
   int column; /* column of symbol */
+  int params_list[253]; /* list of params (253 = maximum amount of params in C specification) */
+  int last_param; /* last ocuppied param position */
   UT_hash_handle hh; /* makes this structure hashable */
 } symbolNode;
 
@@ -36,6 +38,9 @@ typedef struct symbolParam {
   int scopeID; /* unique ID of scope */
   int line; /* line of symbol */
   int column; /* column of symbol */
+  char *associated_function; /* (params only): name of associated function */
+  int associated_function_scope; /* (params only): unique scope ID of associated function */
+  int last_param; /* (params only): last ocuppied param position */
 } symbolParam; /* used as a param on add_symbol_node function */
 
 typedef struct scopeStack {
@@ -70,9 +75,6 @@ scopeInfo get_current_scope();
 
 /* generates random 5 digit number to be used as unique ID for scope */
 int gen_random_uniqueID();
-
-/* print scope list */
-void print_scopes_list();
 
 /* Clear symbol table mem allocation */
 /* https://troydhanson.github.io/uthash/userguide.html#_delete_item */

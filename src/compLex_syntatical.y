@@ -38,9 +38,10 @@ parserNode* parser_ast = NULL;
 typedef struct currentParsedFunction {
   char *name;
   int scopeID;
+  int lastParamPosition;
 }currentParsedFunction;
 
-currentParsedFunction currentFunction = {"", 0};
+currentParsedFunction currentFunction = {"", 0, 0};
 
 void yyerror(const char *msg);
 
@@ -112,39 +113,40 @@ programEntries: programEntries variableInit {
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER {
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $1->value, .name = $2, .line = running_line_count, .column = running_column_count };
+    add_symbol_node(symbol);
+    globalCounterOfSymbols++;
     scopeInfo current_scope = get_current_scope();
     currentFunction.scopeID = current_scope.scopeID;
     currentFunction.name = $2;
-    create_new_scope_level();
+    currentFunction.lastParamPosition = 0;
   } '(' parameters ')' compoundStatement {
+    create_new_scope_level();
     astParam astP = {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2, .line = running_line_count, .column = running_column_count };
-    add_symbol_node(symbol);
-    globalCounterOfSymbols++;
     print_parser_msg("Function definition \n", DEBUG);
   }
   | typeSpecifier MAIN_FUNC {
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $1->value, .name = $2, .line = running_line_count, .column = running_column_count};
+      add_symbol_node(symbol);
+      globalCounterOfSymbols++;
       scopeInfo current_scope = get_current_scope();
       currentFunction.scopeID = current_scope.scopeID;
       currentFunction.name = $2;
-      create_new_scope_level();
+      currentFunction.lastParamPosition = 0;
   } '(' parameters ')' compoundStatement {
+    create_new_scope_level();
     astParam astP = { 
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $$->leftBranch->value, .name = $2, .line = running_line_count, .column = running_column_count};
-    add_symbol_node(symbol);
-    globalCounterOfSymbols++;
     print_parser_msg("Main function definition \n", DEBUG);
   }
 ;
 
 parameters: parameter {
-    printf("uniqueID %d func name: %s\n", currentFunction.scopeID, currentFunction.name);
     $$ = $1;
     print_parser_msg("Parameter\n", DEBUG);
   }
@@ -167,8 +169,9 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
       .leftBranch = $1, .rightBranch = $3, .type=$$->rightBranch->value, .value = $4, .nodeType = enumLeftRightValueBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     $$ = add_ast_node(astP2);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count};
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
     add_symbol_node(symbol);
+    currentFunction.lastParamPosition = currentFunction.lastParamPosition + 1;
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
   }
@@ -177,8 +180,9 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
     $$ = add_ast_node(astP);
     astParam astP2 = { .leftBranch = $1, .type=$$->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
     $$ = add_ast_node(astP2);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
+    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
     add_symbol_node(symbol);
+    currentFunction.lastParamPosition = currentFunction.lastParamPosition + 1;
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
   }
