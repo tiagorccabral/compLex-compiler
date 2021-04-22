@@ -3,6 +3,25 @@ int main (int argc, int argv) {
   float ab;
   set s;
   int i;
+  int b;
+
+  {
+    int inside_a;
+    inside_a = b;
+
+    {
+      int inside_b;
+      inside_b = inside_a;
+    }
+  }
+
+  if (i<10) i = 10;
+
+  if (i == 10) return i;
+
+  if (i>10) {
+    i = i + 1;
+  }
 
   read(varName);
   writeln(varName);
@@ -18,9 +37,9 @@ int main (int argc, int argv) {
   }
 
   for (i=0; i<10; i=i+1) {
+    int i;
     writeln(i);
   }
-
   for (i<10) {
     write(s);
     i = i+1;
@@ -30,6 +49,7 @@ int main (int argc, int argv) {
 }
 
 int squareRoot(int a) {
+  float ab;
   writeln(a);
 
   return a;

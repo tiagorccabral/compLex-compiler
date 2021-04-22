@@ -10,5 +10,5 @@ int initial (int argc) {
 }
 
 int squareRoot(int a) {
-  return a*a;
+  return ab*a;
 }

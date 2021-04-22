@@ -20,6 +20,10 @@ int main() {
     if ((i>10) || (i<20)) {
         writeln(i);
     }
+
+    if (!(i<10)) {
+        read(a);
+    }
    
     zero = EMPTY;
     one = succ(zero);

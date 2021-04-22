@@ -1,12 +1,21 @@
 int writeLine(int a) {
+  int var1;
   a = a + 1;
   return a;
 }
 
-int main () {
+int mains () {
   set s;
   int pi;
+  float pi;
   pi = s + 3;
+
+  var1 = 3;
+
+  pi = var1 + var2;
+  pi = pi * secretVal;
+
+  writeLine2();
 
   is_set(s);
   add(pis in s);
