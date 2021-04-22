@@ -59,9 +59,12 @@ void verify_declared_id(char *symbol, int line, int column) {
       }
     }
   }
-  if (found == 0) { /* looks on higher scope if cant find in the same scope id */
+  if (found == 0) {
     for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
-      if (strcmp(s->name, symbol) == 0 && s->scope < current_scope.level) {
+      if (strcmp(s->name, symbol) == 0 && s->scope < current_scope.level) { /* looks on higher scope */
+        found = 1;
+      }
+      if (strcmp(s->name, symbol) == 0 && s->symbolType == enumFunction && s->scope == 0) { /* looks for global functions */
         found = 1;
       }
     }
