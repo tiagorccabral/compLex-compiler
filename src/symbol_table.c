@@ -80,6 +80,8 @@ void add_symbol_node(symbolParam symbol) {
       symbolPointer -> scopeID = current_scope.scopeID;
       symbolPointer -> line = symbol.line;
       symbolPointer -> column = symbol.column;
+      symbolPointer -> params_list[0] = -1;
+      symbolPointer -> last_param = -1;
       HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
     } else {
       symbolPointer = (symbolNode*)malloc(sizeof(symbolNode));
@@ -91,6 +93,8 @@ void add_symbol_node(symbolParam symbol) {
       symbolPointer -> scopeID = current_scope.scopeID;
       symbolPointer -> line = symbol.line;
       symbolPointer -> column = symbol.column;
+      symbolPointer -> params_list[0] = -1;
+      symbolPointer -> last_param = -1;
       HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
     }
   } else {
@@ -112,7 +116,7 @@ void print_symbols() {
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     if (s->symbolType == enumFunction) {
       int i;
-      printf("Function %s params: ", s->name);
+      printf("Function '%s' params: ", s->name);
       for (i=0; i<s->last_param; i++) {
         int *a;
         a = &s->params_list[i];

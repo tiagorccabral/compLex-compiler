@@ -29,15 +29,14 @@ void verify_id_redefinition() {
   struct symbolNode *s, *a;
   struct symbolNode *nullC = NULL;
   unsigned int symbolTableSize = HASH_COUNT(symbolTable);
-  int checkedErrorMatrix[symbolTableSize][symbolTableSize]; /* used to mark comparisons already with errors */
-  memset(checkedErrorMatrix, 0, sizeof(checkedErrorMatrix[0][0]) * symbolTableSize * symbolTableSize);
+  int checkedErrorMatrix[symbolTableSize]; /* used to mark comparisons already with errors */
+  memset(checkedErrorMatrix, 0, sizeof(checkedErrorMatrix[0]) * symbolTableSize);
 
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     for (a = symbolTable; a != nullC; a = (struct symbolNode*)(a -> hh.next)) {
-      if (checkedErrorMatrix[s->symbolID][a->symbolID] == 0 && s->symbolID != a->symbolID && strcmp(s->name, a->name) == 0 && s->scope == a->scope && s->scopeID == a->scopeID) {
+      if (checkedErrorMatrix[s->symbolID - 1] == 0 && s->symbolID != a->symbolID && strcmp(s->name, a->name) == 0 && s->scope == a->scope && s->scopeID == a->scopeID) {
+        checkedErrorMatrix[a->symbolID - 1] = 1; /* mark symbol as already compared */
         semantic_errors++;
-        checkedErrorMatrix[s->symbolID][a->symbolID] = 1;
-        checkedErrorMatrix[a->symbolID][s->symbolID] = 1;
         printf("semantic error, redefinition of '%s', at line: %d, column: %d\n", a->name, a->line, a->column);
       }
     }
