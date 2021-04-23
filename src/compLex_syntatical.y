@@ -20,10 +20,10 @@ extern int yylex();
 extern int yylex_destroy();
 extern FILE *yyin;
 extern int yynerrs;
+extern int lexical_errors_count;
 
 extern int running_line_count;
 extern int running_column_count;
-extern int total_errors_count;
 
 // AST functions
 extern parserNode* add_new_node();
@@ -55,6 +55,7 @@ void yyerror(const char *msg);
 
 /* Global variables */
 int globalCounterOfSymbols = 1;
+int lexical_errors_count = 0;
 
 %}
 
@@ -665,7 +666,8 @@ int main(int argc, char **argv) {
   printf("\n=================== Parser AST ====================\n\n");
   print_parser_ast(parser_ast, 0);
 
-  printf("\nReported amount of syntax errors: %d\n", yynerrs);
+  printf("\nReported amount of lexical errors: %d\n", lexical_errors_count);
+  printf("Reported amount of syntax errors: %d\n", yynerrs);
   printf("Reported amount of semantic errors: %d\n", semantic_errors);
 
   free_symbols_table();
@@ -680,6 +682,5 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char* msg) {
-  total_errors_count++;
   fprintf(stderr, "%s at line: %d, column: %d\n", msg, running_line_count, running_column_count);
 }

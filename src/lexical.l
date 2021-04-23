@@ -9,11 +9,10 @@
 /* Global vars */
 int running_line_count = 1;
 int running_column_count = 1;
-int total_errors_count = 0;
+extern int lexical_errors_count;
 
 /* Pre-declaring functions */
 void throw_nonexistent_symbol_error(char* symbol);
-void yyerror(const char* msg);
 %}
 
 %option noyywrap
@@ -390,15 +389,14 @@ WRITELN "writeln"
 
 {COMMENT} {}
 
-. { 
-  running_column_count += yyleng;
+. {
   throw_nonexistent_symbol_error(yytext);
 }
 
 %%
 
 void throw_nonexistent_symbol_error(char* symbol){
-  char *error = (char *)malloc((strlen(symbol) + 1 + 35) * sizeof(char));
-  sprintf(error, "Error on lexical analisys: \nNonexistent symbol '%s' detected ", symbol);
-  free(error);
+  printf("%-14s unrecognized token '%s' at line: %d, column: %d \n","lexical error,", symbol, running_line_count, running_column_count);
+  running_column_count += yyleng;
+  lexical_errors_count++;
 }
