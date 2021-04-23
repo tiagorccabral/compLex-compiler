@@ -2189,7 +2189,7 @@ yyreduce:
     if (strcmp((yyvsp[0].node)->type, "IDENTIFIER") == 0) {
       verify_declared_id((yyvsp[0].node)->value, running_line_count, running_column_count);
     }
-    cast_operators((yyvsp[-2].node), (yyvsp[0].node));
+    cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
     print_parser_msg("add operation\n", DEBUG);
   }
 #line 2196 "compLex_syntatical.tab.c"
@@ -2208,7 +2208,7 @@ yyreduce:
     if (strcmp((yyvsp[0].node)->type, "IDENTIFIER") == 0) {
       verify_declared_id((yyvsp[0].node)->value, running_line_count, running_column_count);
     }
-    cast_operators((yyvsp[-2].node), (yyvsp[0].node));
+    cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
 #line 2215 "compLex_syntatical.tab.c"
@@ -2227,7 +2227,7 @@ yyreduce:
     if (strcmp((yyvsp[0].node)->type, "IDENTIFIER") == 0) {
       verify_declared_id((yyvsp[0].node)->value, running_line_count, running_column_count);
     }
-    cast_operators((yyvsp[-2].node), (yyvsp[0].node));
+    cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
 #line 2234 "compLex_syntatical.tab.c"
@@ -2246,7 +2246,7 @@ yyreduce:
     if (strcmp((yyvsp[0].node)->type, "IDENTIFIER") == 0) {
       verify_declared_id((yyvsp[0].node)->value, running_line_count, running_column_count);
     }
-    cast_operators((yyvsp[-2].node), (yyvsp[0].node));
+    cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
     print_parser_msg("division operation\n", DEBUG);
   }
 #line 2253 "compLex_syntatical.tab.c"

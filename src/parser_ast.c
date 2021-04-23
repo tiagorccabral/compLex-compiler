@@ -1,5 +1,6 @@
 #include "parser_ast.h"
 #include "symbol_table.h"
+#include "semantic_analyzer.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
@@ -65,8 +66,9 @@ parserNode* add_ast_node(astParam astParam) {
   return node;
 }
 
-void cast_operators(parserNode *left, parserNode *right) {
+void cast_operators(parserNode *left, parserNode *right, int line) {
   scopeInfo current_scope = get_current_scope();
+  int errorFound = 0;
   struct symbolNode *leftSymbol, *rightSymbol;
   char leftType[6], rightType[6];
   if (strcmp(left->type, "IDENTIFIER")==0) {
@@ -96,10 +98,28 @@ void cast_operators(parserNode *left, parserNode *right) {
     else if (strcmp(right->type, "SET")==0) strcpy(rightType, "set");
   }
 
-  if (strcmp(leftType, "int") == 0 && strcmp(rightType, "float") == 0) {
-    left->cast = strdup("intToFloat");
-  } else if (strcmp(leftType, "float") == 0 && strcmp(rightType, "int") == 0) {
-    right->cast = strdup("intToFloat");
+  if (strcmp(leftType, rightType) != 0) { /* if symbols are not equal */
+    if (strcmp(leftType, "int") == 0 && strcmp(rightType, "float") == 0) {
+      left->cast = strdup("intToFloat");
+    } else if (strcmp(leftType, "float") == 0 && strcmp(rightType, "int") == 0) {
+      right->cast = strdup("intToFloat");
+    } else if (strcmp(leftType, "set") == 0 && strcmp(rightType, "int") == 0) {
+      errorFound = 1;
+    } else if (strcmp(leftType, "set") == 0 && strcmp(rightType, "float") == 0) {
+      errorFound = 1;
+    } else if (strcmp(leftType, "int") == 0 && strcmp(rightType, "set") == 0) {
+      errorFound = 1;
+    } else if (strcmp(leftType, "float") == 0 && strcmp(rightType, "set") == 0) {
+      errorFound = 1;
+    }
+  } else if (strcmp(leftType, rightType) == 0) { /* symbols are equal */
+    if (strcmp(leftType, "set") == 0 && strcmp(rightType, "set") == 0) {
+      errorFound = 1;
+    }
+  }
+  if (errorFound) { /* if got error of types ops */
+    semantic_errors++;
+    printf("semantic error, operation between type '%s' and '%s' is not supported, at line %d\n",leftType, rightType, line);
   }
 }
 

@@ -355,7 +355,7 @@ arithmeticExpression: operationalExpression ADD_OP term {
     if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
-    cast_operators($1, $3);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("add operation\n", DEBUG);
   }
   | operationalExpression SUB_OP term {
@@ -369,7 +369,7 @@ arithmeticExpression: operationalExpression ADD_OP term {
     if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
-    cast_operators($1, $3);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | operationalExpression MULT_OP term {
@@ -383,7 +383,7 @@ arithmeticExpression: operationalExpression ADD_OP term {
     if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
-    cast_operators($1, $3);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | operationalExpression DIV_OP term {
@@ -397,7 +397,7 @@ arithmeticExpression: operationalExpression ADD_OP term {
     if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
-    cast_operators($1, $3);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("division operation\n", DEBUG);
   }
 ;
