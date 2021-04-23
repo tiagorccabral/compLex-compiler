@@ -1,4 +1,4 @@
-int writeLine(int a) {
+int writeLine(int a, float c) {
   int var1;
   a = a + 1;
   return a;
@@ -7,7 +7,8 @@ int writeLine(int a) {
 int mains () {
   set s;
   int pi;
-  float pi;
+  float pifloat;
+  elem el;
   pi = s + 3;
 
   var1 = 3;
@@ -23,5 +24,8 @@ int mains () {
 
   add(1 in s);
 
-  writeLine(pi, 5);
+  writeLine(pi, s);
+  writeLine();
+  writeLine(el);
+  writeLine(el, s);
 }
