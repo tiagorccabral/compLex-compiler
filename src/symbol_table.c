@@ -115,6 +115,26 @@ int get_symbolID(char *name, int scopeID) {
   return foundSymbolID;
 }
 
+int get_symbolID_by_name_and_current_scope(char *name, int currentScopeID, int currentScopeLevel) {
+  struct symbolNode *s;
+  struct symbolNode *nullC = NULL;
+  int foundSymbolID = -1;
+
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+    if (strcmp(name, s->name) == 0 && currentScopeID == s->scopeID) {
+      foundSymbolID = s->symbolID;
+    }
+  }
+  if (foundSymbolID == -1) { /* looks for higher scope */
+    for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+      if (strcmp(name, s->name) == 0 && s->scope < currentScopeLevel) {
+        foundSymbolID = s->symbolID;
+      }
+    }
+  }
+  return foundSymbolID;
+}
+
 void print_symbols() {
   struct symbolNode *s, *tmp;
   struct symbolNode *nullC = NULL;

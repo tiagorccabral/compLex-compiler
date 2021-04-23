@@ -40,6 +40,9 @@ typedef struct astParam {
 /* returns one node of the AST based on astParam */
 parserNode* add_ast_node(astParam astParam);
 
+/* verifies the need of casting operators on of the AST, and if they need mark that in the correspondent node */
+void cast_operators(parserNode *left, parserNode *right);
+
 /* prints the AST to the terminal, first param is the root node, second param the initial level (depth) of that node */
 void print_parser_ast(parserNode *node, int level);
 

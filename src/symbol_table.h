@@ -64,6 +64,9 @@ void print_symbols();
 /* returns a symbolID given a name and a scopeID */
 int get_symbolID(char *name, int scopeID);
 
+/* returns a symbolID given a name and current scope, looks for higher scopes if can't find in the symbol current scope */
+int get_symbolID_by_name_and_current_scope(char *name, int currentScopeID, int currentScopeLevel);
+
 /* add one level to current scope counting */
 void create_new_scope_level();
 

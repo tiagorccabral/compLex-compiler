@@ -1,4 +1,5 @@
 #include "parser_ast.h"
+#include "symbol_table.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
@@ -64,6 +65,44 @@ parserNode* add_ast_node(astParam astParam) {
   return node;
 }
 
+void cast_operators(parserNode *left, parserNode *right) {
+  scopeInfo current_scope = get_current_scope();
+  struct symbolNode *leftSymbol, *rightSymbol;
+  char leftType[6], rightType[6];
+  if (strcmp(left->type, "IDENTIFIER")==0) {
+    int *symbolkey, symbolID;
+    symbolID = get_symbolID_by_name_and_current_scope(left->value, current_scope.scopeID, current_scope.level);
+    symbolkey = &symbolID;
+    HASH_FIND_INT(symbolTable, symbolkey, leftSymbol);
+    strcpy(leftType, leftSymbol->type);
+  }
+  if (strcmp(right->type, "IDENTIFIER")==0) {
+    int *symbolkey, symbolID;
+    symbolID = get_symbolID_by_name_and_current_scope(right->value, current_scope.scopeID, current_scope.level);
+    symbolkey = &symbolID;
+    HASH_FIND_INT(symbolTable, symbolkey, rightSymbol);
+    strcpy(rightType, rightSymbol->type);
+  }
+  if (strcmp(left->astNodeClass, "TERM")==0) {
+    if (strcmp(left->type, "INT")==0) strcpy(leftType, "int");
+    else if (strcmp(left->type, "FLOAT")==0) strcpy(leftType, "float");
+    else if (strcmp(left->type, "ELEM")==0) strcpy(leftType, "elem");
+    else if (strcmp(left->type, "SET")==0) strcpy(leftType, "set");
+  }
+  if (strcmp(right->astNodeClass, "TERM")==0) {
+    if (strcmp(right->type, "INT")==0) strcpy(rightType, "int");
+    else if (strcmp(right->type, "FLOAT")==0) strcpy(rightType, "float");
+    else if (strcmp(right->type, "ELEM")==0) strcpy(rightType, "elem");
+    else if (strcmp(right->type, "SET")==0) strcpy(rightType, "set");
+  }
+
+  if (strcmp(leftType, "int") == 0 && strcmp(rightType, "float") == 0) {
+    left->cast = strdup("intToFloat");
+  } else if (strcmp(leftType, "float") == 0 && strcmp(rightType, "int") == 0) {
+    right->cast = strdup("intToFloat");
+  }
+}
+
 void print_parser_ast(parserNode *node, int level) {
   if (node) {
     for (int aux = level; aux > 0; aux--) {
@@ -76,6 +115,9 @@ void print_parser_ast(parserNode *node, int level) {
     }
     if (node->value != NULL) {
       printf("value: %s - ", node -> value);
+    }
+    if (node->cast != NULL) {
+      printf("CAST: %s - ", node -> cast);
     }
     printf("\n");
     print_parser_ast(node -> leftBranch, level + 1);

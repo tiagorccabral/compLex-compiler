@@ -349,12 +349,13 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
     };
     $$ = add_ast_node(astP);
-    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+    if (strcmp($1->type, "IDENTIFIER") == 0) {
       verify_declared_id($1->value, running_line_count, running_column_count);
     }
-    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+    if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
+    cast_operators($1, $3);
     print_parser_msg("add operation\n", DEBUG);
   }
   | operationalExpression SUB_OP term {
@@ -362,12 +363,13 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
-    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+    if (strcmp($1->type, "IDENTIFIER") == 0) {
       verify_declared_id($1->value, running_line_count, running_column_count);
     }
-    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+    if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
+    cast_operators($1, $3);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | operationalExpression MULT_OP term {
@@ -375,12 +377,13 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
-    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+    if (strcmp($1->type, "IDENTIFIER") == 0) {
       verify_declared_id($1->value, running_line_count, running_column_count);
     }
-    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+    if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
+    cast_operators($1, $3);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | operationalExpression DIV_OP term {
@@ -388,12 +391,13 @@ arithmeticExpression: operationalExpression ADD_OP term {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
-    if (strcmp($1->type, "INT") != 0 && strcmp($1->type, "FLOAT") != 0) {
+    if (strcmp($1->type, "IDENTIFIER") == 0) {
       verify_declared_id($1->value, running_line_count, running_column_count);
     }
-    if (strcmp($3->type, "INT") != 0 && strcmp($3->type, "FLOAT") != 0) {
+    if (strcmp($3->type, "IDENTIFIER") == 0) {
       verify_declared_id($3->value, running_line_count, running_column_count);
     }
+    cast_operators($1, $3);
     print_parser_msg("division operation\n", DEBUG);
   }
 ;
@@ -603,6 +607,8 @@ callArguments: callArguments ',' operationalExpression {
 variableInit: typeSpecifier IDENTIFIER ';' {
   astParam astP = { .leftBranch = $1, .type="IDENTIFIER", .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   $$ = add_ast_node(astP);
+  astParam astP2 = { .leftBranch = $1, .type=$$->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
+  $$ = add_ast_node(astP2);
   symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   globalCounterOfSymbols++;
