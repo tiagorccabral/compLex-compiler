@@ -12,6 +12,7 @@ int mains () {
   pi = s + 3;
 
   var1 = 3;
+  ~@;
 
   pi = var1 + var2;
   pi = pi * secretVal;
