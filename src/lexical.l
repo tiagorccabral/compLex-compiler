@@ -42,7 +42,7 @@ T_SET "set"
 INT {DIGIT}+
 FLOAT {DIGIT}+[.]{DIGIT}+
 %s STRING
-STR \"[^\"]*\"|'[^']*'
+STR \"[^\"]*\"|\'([^'\\\n]|\\.)'
 
 /* Operations */
 ASSIGN "="
@@ -99,7 +99,9 @@ WRITELN "writeln"
 
 {STR} {
   // printf("<string value, %s>\n", yytext);
+  yylval.str = (char *) strdup(yytext);
   running_column_count += yyleng;
+  return STR;
 }
 
 {INT} {

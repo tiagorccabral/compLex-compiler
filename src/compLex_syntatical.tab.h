@@ -60,36 +60,37 @@ extern int yydebug;
     INT = 261,                     /* INT  */
     FLOAT = 262,                   /* FLOAT  */
     EMPTY = 263,                   /* EMPTY  */
-    T_INT = 264,                   /* T_INT  */
-    T_FLOAT = 265,                 /* T_FLOAT  */
-    T_ELEM = 266,                  /* T_ELEM  */
-    T_SET = 267,                   /* T_SET  */
-    ADD_OP = 268,                  /* ADD_OP  */
-    SUB_OP = 269,                  /* SUB_OP  */
-    MULT_OP = 270,                 /* MULT_OP  */
-    DIV_OP = 271,                  /* DIV_OP  */
-    ADD_SET_OP = 272,              /* ADD_SET_OP  */
-    REMOVE_SET_OP = 273,           /* REMOVE_SET_OP  */
-    EXISTS_IN_SET_OP = 274,        /* EXISTS_IN_SET_OP  */
-    IS_SET = 275,                  /* IS_SET  */
-    ADD_IN_OP = 276,               /* ADD_IN_OP  */
-    ILT = 277,                     /* ILT  */
-    ILTE = 278,                    /* ILTE  */
-    IGT = 279,                     /* IGT  */
-    IGTE = 280,                    /* IGTE  */
-    IDIFF = 281,                   /* IDIFF  */
-    IEQ = 282,                     /* IEQ  */
-    AND = 283,                     /* AND  */
-    OR = 284,                      /* OR  */
-    NEG = 285,                     /* NEG  */
-    READ = 286,                    /* READ  */
-    WRITE = 287,                   /* WRITE  */
-    WRITELN = 288,                 /* WRITELN  */
-    RETURN = 289,                  /* RETURN  */
-    IF = 290,                      /* IF  */
-    ELSE = 291,                    /* ELSE  */
-    FOR = 292,                     /* FOR  */
-    SET_FORALL = 293               /* SET_FORALL  */
+    STR = 264,                     /* STR  */
+    T_INT = 265,                   /* T_INT  */
+    T_FLOAT = 266,                 /* T_FLOAT  */
+    T_ELEM = 267,                  /* T_ELEM  */
+    T_SET = 268,                   /* T_SET  */
+    ADD_OP = 269,                  /* ADD_OP  */
+    SUB_OP = 270,                  /* SUB_OP  */
+    MULT_OP = 271,                 /* MULT_OP  */
+    DIV_OP = 272,                  /* DIV_OP  */
+    ADD_SET_OP = 273,              /* ADD_SET_OP  */
+    REMOVE_SET_OP = 274,           /* REMOVE_SET_OP  */
+    EXISTS_IN_SET_OP = 275,        /* EXISTS_IN_SET_OP  */
+    IS_SET = 276,                  /* IS_SET  */
+    ADD_IN_OP = 277,               /* ADD_IN_OP  */
+    ILT = 278,                     /* ILT  */
+    ILTE = 279,                    /* ILTE  */
+    IGT = 280,                     /* IGT  */
+    IGTE = 281,                    /* IGTE  */
+    IDIFF = 282,                   /* IDIFF  */
+    IEQ = 283,                     /* IEQ  */
+    AND = 284,                     /* AND  */
+    OR = 285,                      /* OR  */
+    NEG = 286,                     /* NEG  */
+    READ = 287,                    /* READ  */
+    WRITE = 288,                   /* WRITE  */
+    WRITELN = 289,                 /* WRITELN  */
+    RETURN = 290,                  /* RETURN  */
+    IF = 291,                      /* IF  */
+    ELSE = 292,                    /* ELSE  */
+    FOR = 293,                     /* FOR  */
+    SET_FORALL = 294               /* SET_FORALL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,7 +104,7 @@ union YYSTYPE
   char* str;
   struct parserNode* node;
 
-#line 107 "compLex_syntatical.tab.h"
+#line 108 "compLex_syntatical.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

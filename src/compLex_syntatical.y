@@ -68,7 +68,7 @@ int globalCounterOfSymbols = 1;
 // Operations
 %token<str> ASSIGN
 // Data types primitives / values
-%token<str> INT FLOAT EMPTY
+%token<str> INT FLOAT EMPTY STR
 // Data types
 %token<str> T_INT T_FLOAT T_ELEM T_SET
 // Arithmetic Operators
@@ -243,13 +243,23 @@ statement: expression {$$ = $1;}
   | localStatetements {$$ = $1;}
 ;
 
-inOutStatement: WRITE '(' variable ')' ';' {
-    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
+inOutStatement: WRITE '(' STR ')' ';' {
+    astParam astP = { .type = "WRITE", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITE STRING" };
+    $$ = add_ast_node(astP);
+    print_parser_msg("IO: write string\n", DEBUG);
+  }
+  | WRITE '(' variable ')' ';' {
+    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITE IDENTIFIER" };
     $$ = add_ast_node(astP);
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
+  | WRITELN '(' STR ')' ';' {
+    astParam astP = { .type = "WRITELN", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITELN STRING" };
+    $$ = add_ast_node(astP);
+    print_parser_msg("IO: writeln string\n", DEBUG);
+  }
   | WRITELN '(' variable ')' ';' {
-    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
+    astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITELN IDENTIFIER" };
     $$ = add_ast_node(astP);
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
