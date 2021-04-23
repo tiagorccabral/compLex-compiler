@@ -25,7 +25,9 @@ int main (int argc, int argv) {
 
   read(varName);
   writeln(varName);
-  write(varName);
+  write("ola mundo");
+
+  writeln("programa simples");
 
   add(1 in s);
   add(2 in s);
@@ -41,7 +43,7 @@ int main (int argc, int argv) {
     writeln(i);
   }
   for (i<10) {
-    write(s);
+    write(i);
     i = i+1;
   }
 
