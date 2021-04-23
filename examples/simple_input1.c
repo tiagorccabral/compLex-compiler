@@ -11,7 +11,7 @@ int main (int argc, int argv) {
 
     {
       int inside_b;
-      inside_b = inside_a;
+      inside_b = inside_a + b;
     }
   }
 
@@ -20,7 +20,7 @@ int main (int argc, int argv) {
   if (i == 10) return i;
 
   if (i>10) {
-    i = i + 1;
+    i = 1.5 + i;
   }
 
   read(varName);

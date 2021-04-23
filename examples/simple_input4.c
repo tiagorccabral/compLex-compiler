@@ -10,6 +10,7 @@ int main (int argc) {
     writeln(i);
   }
 
+  a = i + 1.5;
   squareRoot(a);
 
   return i;
