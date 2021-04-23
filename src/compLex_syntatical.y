@@ -560,6 +560,12 @@ callArguments: callArguments ',' operationalExpression {
       scopeInfo current_scope = get_current_scope();
       int symbolID = get_symbolID($3->value, current_scope.scopeID);
       currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = symbolID;
+    } else if (strcmp($3->astNodeClass,"TERM") == 0) {
+      if (strcmp($3->type,"INT") == 0) {
+        currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -1;
+      } else if (strcmp($3->type,"FLOAT") == 0) {
+        currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -2;
+      }
     }
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
@@ -570,6 +576,12 @@ callArguments: callArguments ',' operationalExpression {
       scopeInfo current_scope = get_current_scope();
       int symbolID = get_symbolID($1->value, current_scope.scopeID);
       currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = symbolID;
+    } else if (strcmp($1->astNodeClass,"TERM") == 0) {
+      if (strcmp($1->type,"INT") == 0) {
+        currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -1;
+      } else if (strcmp($1->type,"FLOAT") == 0) {
+        currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -2;
+      }
     }
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
 

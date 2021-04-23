@@ -98,6 +98,18 @@ void verify_func_call_params(char *currentFuncName, int amountOfParams, int para
             semantic_errors++;
             printf("semantic error, function '%s' param on position %d expected to be '%s' but got '%s', at line %d\n",currentFuncName, i+1, tmp->type, tmp2->type, line);
           }
+        } else if (params_list[i] < 0) { /* param its a primitive type */
+          struct symbolNode *tmp;
+          int *symbolkey;
+          symbolkey = &s->params_list[i];
+          HASH_FIND_INT(symbolTable, symbolkey, tmp);
+          if (params_list[i] == -1 && strcmp(tmp->type,"int") != 0) { /* passed param its an integer, but func signature param is not */
+            semantic_errors++;
+            printf("semantic error, function '%s' param on position %d expected to be '%s' but got 'int', at line %d\n",currentFuncName, i+1, tmp->type, line);
+          } else if (params_list[i] == -2 && strcmp(tmp->type,"float") != 0) { /* param its a float */
+            semantic_errors++;
+            printf("semantic error, function '%s' param on position %d expected to be '%s' but got 'float', at line %d\n",currentFuncName, i+1, tmp->type, line);
+          }
         }
       }
     }
