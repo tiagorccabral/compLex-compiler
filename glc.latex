@@ -11,8 +11,8 @@
 <parameters> ::= <parameter>
               | ɛ
 
-<parameter> ::= <typeSpecifier> IDENTIFIER
-              | <parameters> ',' <typeSpecifier> IDENTIFIER
+<parameter> ::= <parameters> ',' <typeSpecifier> IDENTIFIER
+              | <typeSpecifier> IDENTIFIER
 
 <compoundStatement> ::= '{' <declaration> <statements> '}'
 
@@ -27,7 +27,9 @@
               | <fluxControlstatement>
               | <iterationStatement>
 
-<inOutStatement> ::= WRITE '(' <variable> ')' ';'
+<inOutStatement> ::= WRITE '(' STR ')' ';'
+                  | WRITE '(' <variable> ')' ';'
+                  | WRITELN '(' STR ')' ';'
                   | WRITELN '(' <variable> ')' ';'
                   | READ '(' <variable> ')' ';'
 
@@ -108,6 +110,7 @@ LETTER ::= [a-zA-z]
 EMPTY ::= 'EMPTY'
 INT ::= {DIGIT}+
 FLOAT ::= {DIGIT}+[.]{DIGIT}+
+STR ::= \"[^\"]*\"|\'([^'\\\n]|\\.)'
 
 ASSIGN ::= '='
 ADD_OP ::= '+'
