@@ -44,6 +44,7 @@ typedef struct currentParsedFunction {
 typedef struct calledFunction {
   char *name;
   int amountOfParamsCalled;
+  int passedParams[253];
 }calledFunction;
 
 currentParsedFunction currentFunction = {"", 0, 0};
@@ -535,7 +536,7 @@ term: '(' operationalExpression ')' {
 functionCall: IDENTIFIER '(' functionArguments ')' {
   verify_declared_id($1, running_line_count, running_column_count);
   currentCalledFunction.name = $1;
-  verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, running_line_count);
+  verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);
   currentCalledFunction.amountOfParamsCalled = 0;
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
   $$ = add_ast_node(astP);
@@ -551,16 +552,27 @@ functionArguments: callArguments {$$=$1;}
 ;
 
 callArguments: callArguments ',' operationalExpression {
-    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
+    if (strcmp($3->astNodeClass,"IDENTIFIER") == 0) {
+      scopeInfo current_scope = get_current_scope();
+      int symbolID = get_symbolID($3->value, current_scope.scopeID);
+      currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = symbolID;
+    }
+    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
   | operationalExpression {
-    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     $$ = $1;
+    if (strcmp($1->astNodeClass,"IDENTIFIER") == 0) {
+      scopeInfo current_scope = get_current_scope();
+      int symbolID = get_symbolID($1->value, current_scope.scopeID);
+      currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = symbolID;
+    }
+    currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
+
     print_parser_msg("function callarguments\n", DEBUG);
   }
 ;

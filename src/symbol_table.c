@@ -102,6 +102,19 @@ void add_symbol_node(symbolParam symbol) {
   }
 }
 
+int get_symbolID(char *name, int scopeID) {
+  struct symbolNode *s;
+  struct symbolNode *nullC = NULL;
+  int foundSymbolID = -1;
+
+  for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
+    if (strcmp(name, s->name) == 0 && scopeID == s->scopeID) {
+      foundSymbolID = s->symbolID;
+    }
+  }
+  return foundSymbolID;
+}
+
 void print_symbols() {
   struct symbolNode *s, *tmp;
   struct symbolNode *nullC = NULL;

@@ -61,6 +61,9 @@ void add_symbol_node(symbolParam symbol);
 
 void print_symbols();
 
+/* returns a symbolID given a name and a scopeID */
+int get_symbolID(char *name, int scopeID);
+
 /* add one level to current scope counting */
 void create_new_scope_level();
 

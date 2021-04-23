@@ -74,15 +74,31 @@ void verify_declared_id(char *symbol, int line, int column) {
   }
 }
 
-void verify_func_call_params(char *currentFuncName, int amountOfParams, int line) {
+void verify_func_call_params(char *currentFuncName, int amountOfParams, int params_list[253], int line) {
   struct symbolNode *s;
   struct symbolNode *nullC = NULL;
+  int i;
 
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     if (strcmp(s->name, currentFuncName) == 0) {
       if (amountOfParams != (s->last_param)) { /* checks if the amount of params passed by function caller is correct */
         semantic_errors++;
         printf("semantic error, function '%s' expected %d param(s) but got %d, at line %d\n", currentFuncName, (s->last_param), amountOfParams, line);
+        break;
+      }
+      for (i=0;i<amountOfParams;i++) {
+        if(params_list[i] > 0) { /* param its a symbol (ID) */
+          struct symbolNode *tmp, *tmp2;
+          int *symbolkey, *symbolkeyPassedParam;
+          symbolkey = &s->params_list[i];
+          symbolkeyPassedParam = &params_list[i];
+          HASH_FIND_INT(symbolTable, symbolkey, tmp);
+          HASH_FIND_INT(symbolTable, symbolkeyPassedParam, tmp2);
+          if (strcmp(tmp->type,tmp2->type) != 0) { /* verify if expected symbol type is the same as passed symbol type */
+            semantic_errors++;
+            printf("semantic error, function '%s' param on position %d expected to be '%s' but got '%s', at line %d\n",currentFuncName, i+1, tmp->type, tmp2->type, line);
+          }
+        }
       }
     }
   }

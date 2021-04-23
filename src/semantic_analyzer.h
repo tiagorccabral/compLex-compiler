@@ -10,7 +10,7 @@ void semantic_verify_main();
 void verify_id_redefinition();
 
 /* verify if called function has correct params (amount and type) and in correct order */
-void verify_func_call_params(char *currentFuncName, int amountOfParams, int line);
+void verify_func_call_params(char *currentFuncName, int amountOfParams, int params_list[253], int line);
 
 /* verify if term in expression has been declared */
 void verify_declared_id(char *symbol, int line, int column);
