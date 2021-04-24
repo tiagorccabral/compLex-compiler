@@ -34,7 +34,7 @@ void verify_id_redefinition() {
 
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     for (a = symbolTable; a != nullC; a = (struct symbolNode*)(a -> hh.next)) {
-      if (checkedErrorMatrix[s->symbolID - 1] == 0 && s->symbolID != a->symbolID && strcmp(s->name, a->name) == 0 && s->scope == a->scope && s->scopeID == a->scopeID) {
+      if (checkedErrorMatrix[s->symbolID - 1] == 0 && s->symbolID != a->symbolID && strcmp(s->name, a->name) == 0 && ((s->scope == a->scope && s->scopeID == a->scopeID) || (s->scope == a->scope && s->symbolType == enumFunction && a->symbolType == enumFunction))) {
         checkedErrorMatrix[a->symbolID - 1] = 1; /* mark symbol as already compared */
         semantic_errors++;
         printf("semantic error, redefinition of '%s', at line: %d, column: %d\n", a->name, a->line, a->column);
