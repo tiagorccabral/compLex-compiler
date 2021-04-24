@@ -367,6 +367,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is less than operation\n", DEBUG);
   }
   | logicalExpression ILTE arithmeticExpression {
@@ -374,6 +375,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
   | logicalExpression IGT arithmeticExpression {
@@ -381,6 +383,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is greater than operation\n", DEBUG);
   }
   | logicalExpression IGTE arithmeticExpression {
@@ -388,6 +391,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
   | logicalExpression IDIFF arithmeticExpression {
@@ -395,6 +399,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is different than operation\n", DEBUG);
   }
   | logicalExpression IEQ arithmeticExpression {
@@ -402,6 +407,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
     };
     $$ = add_ast_node(astP);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("is equal to operation\n", DEBUG);
   }
   | arithmeticExpression {
@@ -414,7 +420,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
     };
     $$ = add_ast_node(astP);
-    // cast_operators($1, $3, running_line_count);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("add operation\n", DEBUG);
   }
   | arithmeticExpression SUB_OP arithmeticExpression2 {
@@ -422,7 +428,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
-    // cast_operators($1, $3, running_line_count);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | arithmeticExpression2 {$$=$1;}
@@ -433,7 +439,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
-    // cast_operators($1, $3, running_line_count);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | arithmeticExpression2 DIV_OP unaryOperation {
@@ -441,7 +447,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
-    // cast_operators($1, $3, running_line_count);
+    cast_operators($1, $3, running_line_count);
     print_parser_msg("division operation\n", DEBUG);
   }
   | unaryOperation {$$=$1;}
