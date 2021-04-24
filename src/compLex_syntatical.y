@@ -89,8 +89,8 @@ int lexical_errors_count = 0;
 // Types definitions
 %type <node> programEntries compoundStatement declaration statements statement
 %type <node> inOutStatement fluxControlstatement iterationStatement forIncrement
-%type <node> expression operationalExpression setOperationalExpression
-%type <node> arithmeticExpression logicalExpression
+%type <node> expression setOperationalExpression unaryOperation setBody
+%type <node> arithmeticExpression arithmeticExpression2 logicalExpression comparationalExpression
 %type <node> variableAssignment localStatetements
 %type <node> variable variableInit typeSpecifier term
 %type <node> functionDefinition functionCall functionArguments callArguments parameters parameter
@@ -271,7 +271,7 @@ inOutStatement: WRITE '(' STR ')' ';' {
   }
 ;
 
-fluxControlstatement: RETURN expression {
+fluxControlstatement: RETURN comparationalExpression ';' {
     astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
     $$ = add_ast_node(astP);
     print_parser_msg("return expression\n", DEBUG);
@@ -281,28 +281,28 @@ fluxControlstatement: RETURN expression {
     $$ = add_ast_node(astP);
     print_parser_msg("return null\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' expression {
+  | IF '(' comparationalExpression ')' expression {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' RETURN expression {
+  | IF '(' comparationalExpression ')' RETURN expression {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $6, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ONE_LINE RETURN"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' localStatetements {
+  | IF '(' comparationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_NO_ELSE"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' operationalExpression ')' localStatetements  ELSE localStatetements {
+  | IF '(' comparationalExpression ')' localStatetements  ELSE localStatetements {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
     };
@@ -311,7 +311,7 @@ fluxControlstatement: RETURN expression {
   }
 ;
 
-iterationStatement: FOR '(' operationalExpression ')' localStatetements {
+iterationStatement: FOR '(' comparationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
     };
@@ -325,7 +325,7 @@ iterationStatement: FOR '(' operationalExpression ')' localStatetements {
     $$ = add_ast_node(astP);
     print_parser_msg("for loop three arguments\n", DEBUG);
   }
-  | SET_FORALL '(' term ADD_IN_OP operationalExpression ')' localStatetements {
+  | SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
     };
@@ -334,155 +334,141 @@ iterationStatement: FOR '(' operationalExpression ')' localStatetements {
   }
 ;
 
-expression: operationalExpression ';' {$$=$1;}
+expression: comparationalExpression ';' {$$=$1;}
   | variableAssignment {$$=$1;}
 ;
 
-operationalExpression: arithmeticExpression {$$=$1;}
-  | logicalExpression {$$=$1;}
-  | setOperationalExpression {$$=$1;}
-  | term {$$=$1;}
-;
-
-arithmeticExpression: operationalExpression ADD_OP term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
-    };
-    $$ = add_ast_node(astP);
-    if (strcmp($1->type, "IDENTIFIER") == 0) {
-      verify_declared_id($1->value, running_line_count, running_column_count);
-    }
-    if (strcmp($3->type, "IDENTIFIER") == 0) {
-      verify_declared_id($3->value, running_line_count, running_column_count);
-    }
-    cast_operators($1, $3, running_line_count);
-    print_parser_msg("add operation\n", DEBUG);
-  }
-  | operationalExpression SUB_OP term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
-    };
-    $$ = add_ast_node(astP);
-    if (strcmp($1->type, "IDENTIFIER") == 0) {
-      verify_declared_id($1->value, running_line_count, running_column_count);
-    }
-    if (strcmp($3->type, "IDENTIFIER") == 0) {
-      verify_declared_id($3->value, running_line_count, running_column_count);
-    }
-    cast_operators($1, $3, running_line_count);
-    print_parser_msg("subtraction operation\n", DEBUG);
-  }
-  | operationalExpression MULT_OP term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
-    };
-    $$ = add_ast_node(astP);
-    if (strcmp($1->type, "IDENTIFIER") == 0) {
-      verify_declared_id($1->value, running_line_count, running_column_count);
-    }
-    if (strcmp($3->type, "IDENTIFIER") == 0) {
-      verify_declared_id($3->value, running_line_count, running_column_count);
-    }
-    cast_operators($1, $3, running_line_count);
-    print_parser_msg("multiplication operation\n", DEBUG);
-  }
-  | operationalExpression DIV_OP term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
-    };
-    $$ = add_ast_node(astP);
-    if (strcmp($1->type, "IDENTIFIER") == 0) {
-      verify_declared_id($1->value, running_line_count, running_column_count);
-    }
-    if (strcmp($3->type, "IDENTIFIER") == 0) {
-      verify_declared_id($3->value, running_line_count, running_column_count);
-    }
-    cast_operators($1, $3, running_line_count);
-    print_parser_msg("division operation\n", DEBUG);
-  }
-;
-
-logicalExpression: operationalExpression ILT term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is less than operation\n", DEBUG);
-  }
-  | operationalExpression ILTE term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is less or equal operation\n", DEBUG);
-  }
-  | operationalExpression IGT term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is greater than operation\n", DEBUG);
-  }
-  | operationalExpression IGTE term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is greater than or equal operation\n", DEBUG);
-  }
-  | operationalExpression IDIFF term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is different than operation\n", DEBUG);
-  }
-  | operationalExpression IEQ term {
-    astParam astP = {
-      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("is equal to operation\n", DEBUG);
-  }
-  | operationalExpression AND term {
+comparationalExpression: comparationalExpression AND logicalExpression {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_AND"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("logical AND operation\n", DEBUG);
   }
-  | operationalExpression OR term {
+  | comparationalExpression OR logicalExpression {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_OR"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("logical OR operation\n", DEBUG);
   }
-  | NEG term {
+  | NEG logicalExpression {
     astParam astP = { .leftBranch = $2, .type="NEG", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_NOT" };
     $$ = add_ast_node(astP);
     print_parser_msg("logical NOT operation\n", DEBUG);
   }
+  | logicalExpression {
+    $$ = $1;
+  }
 ;
 
-setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
+logicalExpression: logicalExpression ILT arithmeticExpression {
     astParam astP = {
-      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP"
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
     };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is less than operation\n", DEBUG);
+  }
+  | logicalExpression ILTE arithmeticExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is less or equal operation\n", DEBUG);
+  }
+  | logicalExpression IGT arithmeticExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is greater than operation\n", DEBUG);
+  }
+  | logicalExpression IGTE arithmeticExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is greater than or equal operation\n", DEBUG);
+  }
+  | logicalExpression IDIFF arithmeticExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is different than operation\n", DEBUG);
+  }
+  | logicalExpression IEQ arithmeticExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is equal to operation\n", DEBUG);
+  }
+  | arithmeticExpression {
+    $$ = $1;
+  }
+;
+
+arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
+    };
+    $$ = add_ast_node(astP);
+    // cast_operators($1, $3, running_line_count);
+    print_parser_msg("add operation\n", DEBUG);
+  }
+  | arithmeticExpression SUB_OP arithmeticExpression2 {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
+    };
+    $$ = add_ast_node(astP);
+    // cast_operators($1, $3, running_line_count);
+    print_parser_msg("subtraction operation\n", DEBUG);
+  }
+  | arithmeticExpression2 {$$=$1;}
+;
+
+arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
+    };
+    $$ = add_ast_node(astP);
+    // cast_operators($1, $3, running_line_count);
+    print_parser_msg("multiplication operation\n", DEBUG);
+  }
+  | arithmeticExpression2 DIV_OP unaryOperation {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
+    };
+    $$ = add_ast_node(astP);
+    // cast_operators($1, $3, running_line_count);
+    print_parser_msg("division operation\n", DEBUG);
+  }
+  | unaryOperation {$$=$1;}
+;
+
+unaryOperation: SUB_OP term {
+    astParam astP = { .leftBranch = $2, .type="IDENTIFIER", .value = $2->value, .nodeType = enumValueLeftBranch, .astNodeClass="SUB TERM" };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is_set OP\n", DEBUG);
+  }
+  | term {
+    $$ = $1;
+  }
+;
+
+setOperationalExpression: ADD_SET_OP '(' setBody ')' {
+    astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP" };
     $$ = add_ast_node(astP);
     print_parser_msg("add to set OP\n", DEBUG);
   }
-  | REMOVE_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
-    astParam astP = {
-      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION REMOVE_SET_OP"
-    };
+  | REMOVE_SET_OP '(' setBody ')' {
+    astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION REMOVE_FROM_SET_OP" };
     $$ = add_ast_node(astP);
     print_parser_msg("remove from set OP\n", DEBUG);
   }
-  | EXISTS_IN_SET_OP '(' term ADD_IN_OP operationalExpression ')' {
-    astParam astP = {
-      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION EXISTS_IN_SET_OP"
-    };
+  | EXISTS_IN_SET_OP '(' setBody ')' {
+    astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION EXISTS_FROM_SET_OP" };
     $$ = add_ast_node(astP);
     print_parser_msg("exists el in set OP\n", DEBUG);
   }
@@ -490,6 +476,22 @@ setOperationalExpression: ADD_SET_OP '(' term ADD_IN_OP operationalExpression ')
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION IS_SET" };
     $$ = add_ast_node(astP);
     print_parser_msg("is_set OP\n", DEBUG);
+  }
+;
+
+setBody: comparationalExpression ADD_IN_OP setOperationalExpression {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION_SET_BODY"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is_set body\n", DEBUG);
+  }
+  | comparationalExpression ADD_IN_OP variable {
+    astParam astP = {
+      .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION_SET_BODY"
+    };
+    $$ = add_ast_node(astP);
+    print_parser_msg("is_set body\n", DEBUG);
   }
 ;
 
@@ -522,13 +524,17 @@ forIncrement: IDENTIFIER ASSIGN arithmeticExpression {
 }
 ;
 
-term: '(' operationalExpression ')' {
+term: '(' comparationalExpression ')' {
     $$=$2;
     print_parser_msg("( operationalExp )\n", DEBUG);
   }
   | variable {
     $$=$1;
     print_parser_msg("variable\n", DEBUG);
+  }
+  | setOperationalExpression {
+    $$=$1;
+    print_parser_msg("set op\n", DEBUG);
   }
   | functionCall {$$=$1;}
   | EMPTY {
@@ -566,7 +572,7 @@ functionArguments: callArguments {$$=$1;}
   }
 ;
 
-callArguments: callArguments ',' operationalExpression {
+callArguments: callArguments ',' comparationalExpression {
     astParam astP = {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
     };
@@ -585,7 +591,7 @@ callArguments: callArguments ',' operationalExpression {
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
-  | operationalExpression {
+  | comparationalExpression {
     $$ = $1;
     if (strcmp($1->astNodeClass,"IDENTIFIER") == 0) {
       scopeInfo current_scope = get_current_scope();
@@ -619,6 +625,7 @@ variableInit: typeSpecifier IDENTIFIER ';' {
 variable: IDENTIFIER {
   astParam astP = { .type = "IDENTIFIER", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="IDENTIFIER" };
   $$ = add_ast_node(astP);
+  verify_declared_id($1, running_line_count, running_column_count);
   print_parser_msg("variable\n", DEBUG);
 }
 ;
@@ -669,12 +676,14 @@ int main(int argc, char **argv) {
   post_parse_semantic_analysis();
 
   print_symbols();
-  printf("\n=================== Parser AST ====================\n\n");
-  print_parser_ast(parser_ast, 0);
+  if(yynerrs == 0) {
+    printf("\n=================== Parser AST ====================\n\n");
+    print_parser_ast(parser_ast, 0);
+  }
 
   printf("\nReported amount of lexical errors: %d\n", lexical_errors_count);
-  printf("Reported amount of syntax errors: %d\n", yynerrs);
-  printf("Reported amount of semantic errors: %d\n", semantic_errors);
+  printf("Reported amount of syntax errors: %d\n", yynerrs); /* mostrar so tabela de simbolos */
+  printf("Reported amount of semantic errors: %d\n", semantic_errors); /* mostrar tanto arvore quanto tabela */
 
   free_symbols_table();
 
