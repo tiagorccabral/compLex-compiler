@@ -1,6 +1,11 @@
+int squareRootToPower(int num, int save) {
+  return save*num;
+}
+
 int main (int argc) {
   int a;
-  int b;
+  int i;
+  float b;
 
   set s;
   elem el;
@@ -29,12 +34,9 @@ int main (int argc) {
   a != b;
   a == b;
 
-  for (i<10) {
+  if (i<10 && a==b || a>=10) {
     int a;
-    a = 1;
+    a = -1;
+    a = squareRootToPower(i, a);
   }
-}
-
-int squareRootToPower(int num, int save) {
-  return save*num;
 }

@@ -4,6 +4,7 @@ int main (int argc, int argv) {
   set s;
   int i;
   int b;
+  elem x;
 
   {
     int inside_a;
