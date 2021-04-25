@@ -26,6 +26,7 @@
               | <inOutStatement>
               | <fluxControlstatement>
               | <iterationStatement>
+              | <localStatetements>
 
 <inOutStatement> ::= WRITE '(' STR ')' ';'
                   | WRITE '(' <variable> ')' ';'
@@ -33,44 +34,51 @@
                   | WRITELN '(' <variable> ')' ';'
                   | READ '(' <variable> ')' ';'
 
-<fluxControlstatement> ::= RETURN <expression>
+<fluxControlstatement> ::= RETURN <comparationalExpression>
                         | RETURN ';'
-                        | IF '(' <operationalExpression> ')' <expression>
-                        | IF '(' <operationalExpression> ')' RETURN <expression>
-                        | IF '(' <operationalExpression> ')' <compoundStatement> ELSE <compoundStatement>
+                        | IF '(' <comparationalExpression> ')' <expression>
+                        | IF '(' <comparationalExpression> ')' RETURN <expression>
+                        | IF '(' <comparationalExpression> ')' <localStatetements>
+                        | IF '(' <comparationalExpression> ')' <localStatetements> ELSE <localStatetements>
 
-<iterationStatement> ::= FOR '(' <operationalExpression> ')' <compoundStatement>
-                      | FOR '(' <expression> <expression> <forIncrement> ')' <compoundStatement>
-                      | SET_FORALL '(' <term> ADD_IN_OP <operationalExp> ')'
+<iterationStatement> ::= FOR '(' <comparationalExpression> ')' <localStatetements>
+                      | FOR '(' <expression> <expression> <forIncrement> ')' <localStatetements>
+                      | SET_FORALL '(' <term> ADD_IN_OP <comparationalExpression> ')' <localStatetements>
 
-<expression> ::= <operationalExpression>
+<expression> ::= <comparationalExpression> ';'
               | <variableAssignment>
-              | <localStatetements>
 
-<operationalExpression> ::= <arithmeticExpression>
-                          | <logicalExpression>
-                          | <setOperationalExpression>
-                          | <term>
+<comparationalExpression> ::= <comparationalExpression> AND <logicalExpression>
+                        | <comparationalExpression> OR <logicalExpression>
+                        | NEG <logicalExpression>
+                        | <logicalExpression>
 
-<arithmeticExpression> ::= <operationalExpression> ADD_OP <term>
-                        | <operationalExpression> SUB_OP <term>
-                        | <operationalExpression> MULT_OP <term>
-                        | <operationalExpression> DIV_OP <term>
+<logicalExpression> ::= <logicalExpression> ILT <arithmeticExpression>
+                    | <logicalExpression> ILTE <arithmeticExpression>
+                    | <logicalExpression> IGT <arithmeticExpression>
+                    | <logicalExpression> IGTE <arithmeticExpression>
+                    | <logicalExpression> IDIFF <arithmeticExpression>
+                    | <logicalExpression> IEQ <arithmeticExpression>
+                    | <arithmeticExpression>
 
-<logicalExpression> ::= <operationalExpression> ILT <term>
-                    | <operationalExpression> ILTE <term>
-                    | <operationalExpression> IGT <term>
-                    | <operationalExpression> IGTE <term>
-                    | <operationalExpression> IDIFF <term>
-                    | <operationalExpression> IEQ <term>
-                    | <operationalExpression> AND <term>
-                    | <operationalExpression> OR <term>
-                    | NEG <term>
+<arithmeticExpression> ::= <arithmeticExpression> ADD_OP <arithmeticExpression2>
+                        | <arithmeticExpression> SUB_OP <arithmeticExpression2>
+                        | <arithmeticExpression2>
 
-<setOperationalExpression> ::= ADD_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
-                            | REMOVE_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
-                            | EXISTS_IN_SET_OP '(' <term> ADD_IN_OP <operationalExpression> ')'
+<arithmeticExpression2> ::= <arithmeticExpression2> MULT_OP <unaryOperation>
+                    | <arithmeticExpression2> DIV_OP <unaryOperation>
+                    | <unaryOperation>
+
+<unaryOperation> ::= SUB_OP <term>
+                    | <term>
+
+<setOperationalExpression> ::= ADD_SET_OP '(' <setBody>')'
+                            | REMOVE_SET_OP '(' <setBody> ')'
+                            | EXISTS_IN_SET_OP '(' <setBody>')'
                             | IS_SET '(' <term> ')'
+
+<setBody> ::= <comparationalExpression> ADD_IN_OP <setOperationalExpression>
+           | <comparationalExpression> ADD_IN_OP <variable>
 
 <variableAssignment> ::= IDENTIFIER ASSIGN <expression>
 
@@ -78,8 +86,9 @@
 
 <forIncrement> ::= IDENTIFIER ASSIGN <arithmeticExpression>
 
-<term> ::= '(' <operationalExpression> ')'
+<term> ::= '(' <comparationalExpression> ')'
         | <variable>
+        | <setOperationalExpression>
         | <functionCall>
         | EMPTY
         | FLOAT
@@ -90,8 +99,8 @@
 <functionArguments> ::= <callArguments>
                       | ɛ
 
-<callArguments> ::= <callArguments> ',' <operationalExpression>
-                  | <operationalExpression>
+<callArguments> ::= <callArguments> ',' <setOperationalExpression>
+                  | <setOperationalExpression>
 
 <variableInit> ::= <typeSpecifier> IDENTIFIER ';'
 
