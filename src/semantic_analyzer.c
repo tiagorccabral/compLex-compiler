@@ -118,10 +118,29 @@ void verify_func_call_params(char *currentFuncName, int amountOfParams, int para
   }
 }
 
-void verify_return_statement(char *name, int found_return_statement, int line) {
-  if (found_return_statement == 0) {
+void verify_return_statement(char *name, int found_return_statement, char *expected_return_type, parserNode *returned_type, int line) {
+  if(!returned_type) {
     semantic_errors++;
-    printf("semantic error, function '%s' (line: %d) does not have return statement", name, line);
+    printf("semantic error, function '%s' (line: %d) does not have return statement\n", name, line);
+    return;
+  } else if (found_return_statement == 0) {
+    semantic_errors++;
+    printf("semantic error, function '%s' (line: %d) does not have return statement\n", name, line);
+  }
+  if (strcmp(returned_type->type, "IDENTIFIER")!=0) {
+    if (strcmp(expected_return_type, "T_INT")==0 && strcmp(returned_type->type, "INT")!=0) {
+      semantic_errors++;
+      printf("semantic error, function '%s' (line: %d) expected an 'int' type return, but got %s\n", name, line, returned_type->type);
+    } else if (strcmp(expected_return_type, "T_FLOAT")==0 && strcmp(returned_type->type, "FLOAT")!=0) {
+      semantic_errors++;
+      printf("semantic error, function '%s' (line: %d) expected a 'float' type return, but got %s\n", name, line, returned_type->type);
+    } else if (strcmp(expected_return_type, "T_SET")==0 && (strcmp(returned_type->type, "SET")!=0 || (strcmp(returned_type->type, "ELEM")!=0))) {
+      semantic_errors++;
+      printf("semantic error, function '%s' (line: %d) expected a 'set' type return, but got %s\n", name, line, returned_type->type);
+    } else if (strcmp(expected_return_type, "T_ELEM")==0 && (strcmp(returned_type->type, "ELEM")!=0)) {
+      semantic_errors++;
+      printf("semantic error, function '%s' (line: %d) expected an 'elem' type return, but got %s\n", name, line, returned_type->type);
+    }
   }
 }
 

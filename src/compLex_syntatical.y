@@ -57,6 +57,9 @@ void yyerror(const char *msg);
 int globalCounterOfSymbols = 1;
 int lexical_errors_count = 0;
 
+char *return_statement_type; /* aux vars to verify presence of return statements*/
+struct parserNode* returned_node; /* aux vars to verify presence of return statements*/
+
 %}
 
 %union {
@@ -129,12 +132,13 @@ functionDefinition: typeSpecifier IDENTIFIER {
     currentFunction.scopeID = current_scope.scopeID;
     currentFunction.name = $2;
     currentFunction.lastParamPosition = 0;
+    return_statement_type = strdup($1->type);
   } '(' parameters ')' compoundStatement {
     create_new_scope_level();
     astParam astP = {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
-    verify_return_statement($2, found_return_statement, running_line_count);
+    verify_return_statement($2, found_return_statement, return_statement_type, returned_node, running_line_count);
     found_return_statement = 0;
     $$ = add_ast_node(astP);
     print_parser_msg("Function definition \n", DEBUG);
@@ -147,13 +151,14 @@ functionDefinition: typeSpecifier IDENTIFIER {
       currentFunction.scopeID = current_scope.scopeID;
       currentFunction.name = $2;
       currentFunction.lastParamPosition = 0;
+      return_statement_type = strdup($1->type);
   } '(' parameters ')' compoundStatement {
     create_new_scope_level();
     astParam astP = { 
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    verify_return_statement($2, found_return_statement, running_line_count);
+    verify_return_statement($2, found_return_statement, return_statement_type, returned_node, running_line_count);
     found_return_statement = 0;
     print_parser_msg("Main function definition \n", DEBUG);
   }
@@ -279,6 +284,7 @@ fluxControlstatement: RETURN comparationalExpression ';' {
     astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
     $$ = add_ast_node(astP);
     found_return_statement = 1;
+    if ($2->type) returned_node = $2;
     print_parser_msg("return expression\n", DEBUG);
   }
   | RETURN ';' {
@@ -374,6 +380,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less than operation\n", DEBUG);
   }
   | logicalExpression ILTE arithmeticExpression {
@@ -382,6 +389,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
   | logicalExpression IGT arithmeticExpression {
@@ -390,6 +398,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than operation\n", DEBUG);
   }
   | logicalExpression IGTE arithmeticExpression {
@@ -398,6 +407,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
   | logicalExpression IDIFF arithmeticExpression {
@@ -406,6 +416,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is different than operation\n", DEBUG);
   }
   | logicalExpression IEQ arithmeticExpression {
@@ -414,6 +425,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is equal to operation\n", DEBUG);
   }
   | arithmeticExpression {
@@ -427,6 +439,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("add operation\n", DEBUG);
   }
   | arithmeticExpression SUB_OP arithmeticExpression2 {
@@ -435,6 +448,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | arithmeticExpression2 {$$=$1;}
@@ -446,6 +460,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | arithmeticExpression2 DIV_OP unaryOperation {
@@ -454,6 +469,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     };
     $$ = add_ast_node(astP);
     cast_operators($1, $3, running_line_count);
+    if($1->type) $$->type = strdup($1->type);
     print_parser_msg("division operation\n", DEBUG);
   }
   | unaryOperation {$$=$1;}

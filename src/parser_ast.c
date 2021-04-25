@@ -74,6 +74,7 @@ void cast_operators(parserNode *left, parserNode *right, int line) {
   char leftType[6], rightType[6];
   if (strcmp(left->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
+    if (!left->value) return;
     symbolID = get_symbolID_by_name_and_current_scope(left->value, current_scope.scopeID, current_scope.level);
     if (symbolID == -1) return; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
@@ -82,6 +83,7 @@ void cast_operators(parserNode *left, parserNode *right, int line) {
   }
   if (strcmp(right->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
+    if (!right->value) return;
     symbolID = get_symbolID_by_name_and_current_scope(right->value, current_scope.scopeID, current_scope.level);
     if (symbolID == -1) return; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
