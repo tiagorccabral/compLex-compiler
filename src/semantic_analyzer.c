@@ -6,6 +6,8 @@
 
 int semantic_errors = 0;
 
+int found_return_statement = 0;
+
 extern void yyerror(const char *msg);
 
 void semantic_verify_main() {
@@ -113,6 +115,13 @@ void verify_func_call_params(char *currentFuncName, int amountOfParams, int para
         }
       }
     }
+  }
+}
+
+void verify_return_statement(char *name, int found_return_statement, int line) {
+  if (found_return_statement == 0) {
+    semantic_errors++;
+    printf("semantic error, function '%s' (line: %d) does not have return statement", name, line);
   }
 }
 

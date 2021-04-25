@@ -94,7 +94,7 @@ void add_symbol_node(symbolParam symbol) {
       symbolPointer -> line = symbol.line;
       symbolPointer -> column = symbol.column;
       symbolPointer -> params_list[0] = -1;
-      symbolPointer -> last_param = -1;
+      symbolPointer -> last_param = 0;
       HASH_ADD_INT(symbolTable, symbolID, symbolPointer);
     }
   } else {

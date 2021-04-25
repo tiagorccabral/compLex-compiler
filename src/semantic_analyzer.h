@@ -3,6 +3,8 @@
 
 int semantic_errors;
 
+int found_return_statement;
+
 /* verify if there is a function main, and if it is unique */
 void semantic_verify_main();
 
@@ -14,6 +16,9 @@ void verify_func_call_params(char *currentFuncName, int amountOfParams, int para
 
 /* verify if term in expression has been declared */
 void verify_declared_id(char *symbol, int line, int column);
+
+/* verifies if function has return statement */
+void verify_return_statement(char *name, int found_return_statement, int line);
 
 /* calls semantic analysis functions that run after AST is built */
 void post_parse_semantic_analysis();

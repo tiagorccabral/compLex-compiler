@@ -134,6 +134,8 @@ functionDefinition: typeSpecifier IDENTIFIER {
     astParam astP = {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
+    verify_return_statement($2, found_return_statement, running_line_count);
+    found_return_statement = 0;
     $$ = add_ast_node(astP);
     print_parser_msg("Function definition \n", DEBUG);
   }
@@ -151,6 +153,8 @@ functionDefinition: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
+    verify_return_statement($2, found_return_statement, running_line_count);
+    found_return_statement = 0;
     print_parser_msg("Main function definition \n", DEBUG);
   }
 ;
@@ -274,11 +278,13 @@ inOutStatement: WRITE '(' STR ')' ';' {
 fluxControlstatement: RETURN comparationalExpression ';' {
     astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
     $$ = add_ast_node(astP);
+    found_return_statement = 1;
     print_parser_msg("return expression\n", DEBUG);
   }
   | RETURN ';' {
     astParam astP = { .type = "RETURN", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_NULL" };
     $$ = add_ast_node(astP);
+    found_return_statement = 1;
     print_parser_msg("return null\n", DEBUG);
   }
   | IF '(' comparationalExpression ')' expression {
