@@ -67,6 +67,7 @@ parserNode* add_ast_node(astParam astParam) {
 }
 
 void cast_operators(parserNode *left, parserNode *right, int line) {
+  if(!left->type || !right->type || !right || !left) return;
   scopeInfo current_scope = get_current_scope();
   int errorFound = 0;
   struct symbolNode *leftSymbol, *rightSymbol;
@@ -74,6 +75,7 @@ void cast_operators(parserNode *left, parserNode *right, int line) {
   if (strcmp(left->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
     symbolID = get_symbolID_by_name_and_current_scope(left->value, current_scope.scopeID, current_scope.level);
+    if (symbolID == -1) return; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
     HASH_FIND_INT(symbolTable, symbolkey, leftSymbol);
     strcpy(leftType, leftSymbol->type);
@@ -81,6 +83,7 @@ void cast_operators(parserNode *left, parserNode *right, int line) {
   if (strcmp(right->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
     symbolID = get_symbolID_by_name_and_current_scope(right->value, current_scope.scopeID, current_scope.level);
+    if (symbolID == -1) return; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
     HASH_FIND_INT(symbolTable, symbolkey, rightSymbol);
     strcpy(rightType, rightSymbol->type);
