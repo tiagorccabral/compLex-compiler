@@ -6,3 +6,9 @@ src/out.*
 src/compLexOut.out.*
 src/logfile.out
 Cglc-reference.txt
+
+# Local VSCode files
+.vscode
+
+# TAC project
+tac
