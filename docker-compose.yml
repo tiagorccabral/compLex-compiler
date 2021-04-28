@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  gcc:
+    container_name: gcc
+    build: .
+    tty: true
+    stdin_open: true
+    volumes:
+      - './:/code'
