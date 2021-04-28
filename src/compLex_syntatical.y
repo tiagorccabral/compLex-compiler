@@ -51,6 +51,9 @@ currentParsedFunction currentFunction = {"", 0, 0};
 
 calledFunction currentCalledFunction = {"", 0};
 
+scopeInfo currentReturnScope;
+int currentReturnLine;
+
 void yyerror(const char *msg);
 
 /* Global variables */
@@ -138,7 +141,12 @@ functionDefinition: typeSpecifier IDENTIFIER {
     astParam astP = {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "IDENTIFIER", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
-    verify_return_statement($2, found_return_statement, return_statement_type, returned_node, running_line_count);
+    if (currentReturnLine != -1) {
+      verify_return_statement($2, found_return_statement, return_statement_type, returned_node, currentReturnScope, currentReturnLine);
+    } else {
+      verify_return_statement($2, found_return_statement, return_statement_type, returned_node, currentReturnScope, running_line_count);
+    }
+    currentReturnLine = -1;
     found_return_statement = 0;
     $$ = add_ast_node(astP);
     print_parser_msg("Function definition \n", DEBUG);
@@ -158,8 +166,13 @@ functionDefinition: typeSpecifier IDENTIFIER {
       .leftBranch = $1, .middle1Branch = $5, .rightBranch = $7, .type= "MAIN", .value=$2, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FUNCTION_DEFINITION" 
     };
     $$ = add_ast_node(astP);
-    verify_return_statement($2, found_return_statement, return_statement_type, returned_node, running_line_count);
+    if (currentReturnLine != -1) {
+      verify_return_statement($2, found_return_statement, return_statement_type, returned_node, currentReturnScope, currentReturnLine);
+    } else {
+      verify_return_statement($2, found_return_statement, return_statement_type, returned_node, currentReturnScope, running_line_count);
+    }
     found_return_statement = 0;
+    currentReturnLine = -1;
     print_parser_msg("Main function definition \n", DEBUG);
   }
 ;
@@ -284,6 +297,10 @@ fluxControlstatement: RETURN comparationalExpression ';' {
     astParam astP = { .leftBranch = $2, .type="RETURN", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_EXP" };
     $$ = add_ast_node(astP);
     found_return_statement = 1;
+    scopeInfo tmpScope = get_current_scope();
+    currentReturnScope.level = tmpScope.level;
+    currentReturnScope.scopeID = tmpScope.scopeID;
+    currentReturnLine = running_line_count;
     if ($2->type) returned_node = $2;
     print_parser_msg("return expression\n", DEBUG);
   }

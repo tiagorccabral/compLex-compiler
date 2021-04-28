@@ -2,6 +2,7 @@
 #define SEMANTIC_ANALYZER_H_
 
 #include "parser_ast.h"
+#include "symbol_table.h"
 
 int semantic_errors;
 
@@ -20,7 +21,7 @@ void verify_func_call_params(char *currentFuncName, int amountOfParams, int para
 void verify_declared_id(char *symbol, int line, int column);
 
 /* verifies if function has return statement */
-void verify_return_statement(char *name, int found_return_statement, char *expected_return_type, parserNode *returned_type, int line);
+void verify_return_statement(char *name, int found_return_statement, char *expected_return_type, parserNode *returned_type, scopeInfo currentReturnScope, int line);
 
 /* calls semantic analysis functions that run after AST is built */
 void post_parse_semantic_analysis();
