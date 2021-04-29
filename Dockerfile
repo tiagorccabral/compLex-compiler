@@ -5,6 +5,7 @@ RUN apt-get update -y \
   m4 \
   ca-certificates \
   curl \
+  valgrind \
   && rm -rf /var/lib/apt/lists/*
 
 RUN curl -o /root/bison-3.7.4.tar.xz -fSL http://www.nic.funet.fi/pub/gnu/ftp.gnu.org/pub/gnu/bison/bison-3.7.4.tar.xz \
