@@ -12,6 +12,7 @@
 #include "symbol_table.h"
 #include "parser_ast.h"
 #include "semantic_analyzer.h"
+#include "tac.h"
 #include "utils.h"
 
 #define DEBUG 0 // controls debug msgs, see utils.h
@@ -136,6 +137,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
     currentFunction.name = $2;
     currentFunction.lastParamPosition = 0;
     return_statement_type = strdup($1->type);
+    insertTACLabel($2);
   } '(' parameters ')' compoundStatement {
     create_new_scope_level();
     astParam astP = {
@@ -160,6 +162,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
       currentFunction.name = $2;
       currentFunction.lastParamPosition = 0;
       return_statement_type = strdup($1->type);
+      insertTACLabel($2);
   } '(' parameters ')' compoundStatement {
     create_new_scope_level();
     astParam astP = { 
@@ -729,6 +732,12 @@ int main(int argc, char **argv) {
   printf("\nReported amount of lexical errors: %d\n", lexical_errors_count);
   printf("Reported amount of syntax errors: %d\n", yynerrs); /* mostrar so tabela de simbolos */
   printf("Reported amount of semantic errors: %d\n", semantic_errors); /* mostrar tanto arvore quanto tabela */
+
+  if (lexical_errors_count == 0 && yynerrs == 0 && semantic_errors == 0) {
+    createTacFile(tacFileHead);
+  }
+
+  free_TAC_list(tacFileHead);
 
   free_symbols_table();
 

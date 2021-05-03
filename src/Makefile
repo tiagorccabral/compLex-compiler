@@ -6,7 +6,7 @@ compLexLang: compLex_syntatical.y lexical.l
 	@echo "Lexical step"
 	flex lexical.l
 	@echo "Compile step"
-	gcc compLex_syntatical.tab.c parser_ast.c symbol_table.c semantic_analyzer.c lex.yy.c -Wall -g -o out
+	gcc compLex_syntatical.tab.c parser_ast.c symbol_table.c semantic_analyzer.c tac.c lex.yy.c -Wall -g -o out
 	
 memCheck: compLex_syntatical.y lexical.l
 	@echo "Valgrind mem leak check"
