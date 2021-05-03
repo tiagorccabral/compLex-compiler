@@ -6,6 +6,7 @@ RUN apt-get update -y \
   ca-certificates \
   curl \
   valgrind \
+  automake \
   autoconf \
   && rm -rf /var/lib/apt/lists/*
 

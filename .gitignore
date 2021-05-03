@@ -6,3 +6,5 @@ src/out.*
 src/compLexOut.out.*
 src/logfile.out
 Cglc-reference.txt
+
+tutorial.txt
