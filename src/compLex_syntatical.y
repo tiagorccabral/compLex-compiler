@@ -547,8 +547,13 @@ variableAssignment: IDENTIFIER ASSIGN expression {
     verify_declared_id($1, running_line_count, running_column_count);
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
     $$ = add_ast_node(astP);
+    int symbolOK = 0;
     if (strcmp($$->leftBranch->astNodeClass, "IDENTIFIER") == 0) {
-      verify_declared_id($$->leftBranch->value, running_line_count, running_column_count);
+      symbolOK = verify_declared_id($$->leftBranch->value, running_line_count, running_column_count);
+    }
+    if (symbolOK == 0) {
+      tacCodeParam tacP = { .instruction = "mov", .op1 = $1, .op2 = $3->value, .lineType=enumTwoOp};
+      add_TAC_line(tacP);
     }
     print_parser_msg("variable assignment\n", DEBUG);
   }

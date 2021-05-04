@@ -45,7 +45,7 @@ void verify_id_redefinition() {
   }
 }
 
-void verify_declared_id(char *symbol, int line, int column) {
+int verify_declared_id(char *symbol, int line, int column) {
   struct symbolNode *s, *tmp;
   struct symbolNode *nullC = NULL;
   int found = 0;
@@ -73,7 +73,9 @@ void verify_declared_id(char *symbol, int line, int column) {
   if (found == 0) {
     printf("semantic error, use of undeclared '%s', at line: %d, column: %d\n", symbol, line, column);
     semantic_errors++;
+    return 1;
   }
+  return 0;
 }
 
 void verify_func_call_params(char *currentFuncName, int amountOfParams, int params_list[253], int line) {

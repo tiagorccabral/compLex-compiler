@@ -14,6 +14,27 @@ typedef struct tacLine {
 
 tacLine *tacFileHead; /* pointer to the head of the DLList that represents the TAC file */
 
+enum tacCodeType {
+  enumOneOp, /* one operand instruction, e.g: jump <op1> */   
+  enumTwoOp, /* two operand instruction, e.g: brnz <op2>, <op1> */
+  enumThreeOp, /* three operand instruction, e.g: add <dst>, <op1>, <op2> */
+}; /* definition of types of instructions */
+
+/* struct used as param for creation of TAC code line */
+typedef struct tacCodeParam {
+  char* instruction;
+  char* dst;
+  char* op1;
+  char* op2;
+  enum tacCodeType lineType;
+} tacCodeParam;
+
+/* adds symbols from the symbols table to the TAC file */
+void addSymbolsToTable(FILE *file);
+
+/* adds one line of code to TAC list */
+void add_TAC_line(tacCodeParam tacCode);
+
 /* insert label to tac file */
 void insertTACLabel(char *label);
 
