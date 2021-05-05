@@ -302,6 +302,23 @@ inOutStatement: WRITE '(' STR ')' ';' {
   | READ '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="IN_OUT_STATEMENT" };
     $$ = add_ast_node(astP);
+    if ($3->value) {
+      int *symbolkey, symbolID;
+      struct symbolNode *symbol;
+      scopeInfo current_scope = get_current_scope();
+      symbolID = get_symbolID_by_name_and_current_scope($3->value, current_scope.scopeID, current_scope.level);
+      if (symbolID != -1) {
+        symbolkey = &symbolID;
+        HASH_FIND_INT(symbolTable, symbolkey, symbol);
+        if (strcmp(symbol->type, "int")==0) {
+          tacCodeParam tacP = { .instruction = "scani", .op1 = $3->value, .lineType=enumOneOp};
+          add_TAC_line(tacP);
+        } else if (strcmp(symbol->type, "float")==0) {
+          tacCodeParam tacP = { .instruction = "scanf", .op1 = $3->value, .lineType=enumOneOp};
+          add_TAC_line(tacP);
+        }
+      }
+    }
     print_parser_msg("IO: read identifier\n", DEBUG);
   }
 ;
