@@ -30,6 +30,15 @@ typedef struct tacCodeParam {
   enum tacCodeType lineType;
 } tacCodeParam;
 
+/* struct used as param for check_ops_add_TAC_line function */
+typedef struct tacCodeValidationParams {
+  char* instruction;
+  struct parserNode* dst;
+  struct parserNode* op1;
+  struct parserNode* op2;
+  enum tacCodeType lineType;
+} tacCodeValidationParams;
+
 /* adds symbols from the symbols table to the TAC file */
 void addSymbolsToTable(FILE *file);
 
@@ -38,6 +47,9 @@ void add_TAC_line(tacCodeParam tacCode);
 
 /* insert label to tac file */
 void insertTACLabel(char *label);
+
+/* check operands and calls add_TAC_line with correct params */
+void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams);
 
 /* creates a TAC file, given a DLList of TACs */
 void createTacFile(tacLine *tacFileHead);

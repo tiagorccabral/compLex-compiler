@@ -463,19 +463,8 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
     if (symbolOK == 0) {
-      if ($1->value && $3->value) {
-        tacCodeParam tacP = { .instruction = "add", .dst= $$->tempReg,.op1 = $1->value, .op2 = $3->value, .lineType=enumThreeOp};
-        add_TAC_line(tacP);
-      } else if ($1->value && $3->tempReg) {
-        tacCodeParam tacP = { .instruction = "add", .dst= $$->tempReg,.op1 = $1->value, .op2 = $3->tempReg, .lineType=enumThreeOp};
-        add_TAC_line(tacP);
-      } else if ($1->tempReg && $3->value) {
-        tacCodeParam tacP = { .instruction = "add", .dst= $$->tempReg,.op1 = $1->tempReg, .op2 = $3->value, .lineType=enumThreeOp};
-        add_TAC_line(tacP);
-      } else if ($1->tempReg && $3->tempReg) {
-        tacCodeParam tacP = { .instruction = "add", .dst= $$->tempReg,.op1 = $1->tempReg, .op2 = $3->tempReg, .lineType=enumThreeOp};
-        add_TAC_line(tacP);
-      }
+      tacCodeValidationParams tacP = { .instruction = "add", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("add operation\n", DEBUG);
@@ -485,7 +474,13 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    currentTempReg = set_temporary_register($$, currentTempReg);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0) {
+      tacCodeValidationParams tacP = { .instruction = "sub", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
@@ -497,7 +492,13 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    currentTempReg = set_temporary_register($$, currentTempReg);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0) {
+      tacCodeValidationParams tacP = { .instruction = "mul", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
@@ -506,7 +507,13 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    currentTempReg = set_temporary_register($$, currentTempReg);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0) {
+      tacCodeValidationParams tacP = { .instruction = "div", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("division operation\n", DEBUG);
   }

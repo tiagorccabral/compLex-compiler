@@ -156,6 +156,9 @@ void print_parser_ast(parserNode *node, int level) {
     if (node->cast != NULL) {
       printf("CAST: %s - ", node -> cast);
     }
+    if (node->tempReg != NULL) {
+      printf("TempReg: %s - ", node -> tempReg);
+    }
     printf("\n");
     print_parser_ast(node -> leftBranch, level + 1);
     print_parser_ast(node -> middle1Branch, level + 1);

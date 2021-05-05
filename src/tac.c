@@ -54,6 +54,33 @@ void insertTACLabel(char *label) {
   CDL_APPEND(tacFileHead, tmpLine);
 }
 
+void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams) {
+  switch (validationParams.lineType) {
+  case enumOneOp:
+    /* code */
+    break;
+  case enumTwoOp:
+    break;
+  case enumThreeOp:
+    if (validationParams.op1->value && validationParams.op2->value) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->value, .op2 = validationParams.op2->value, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->value && validationParams.op2->tempReg) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->value, .op2 = validationParams.op2->tempReg, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->tempReg && validationParams.op2->value) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->tempReg, .op2 = validationParams.op2->value, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->tempReg && validationParams.op2->tempReg) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->tempReg, .op2 = validationParams.op2->tempReg, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    }
+    break;
+  default:
+    break;
+  }
+}
+
 void createTacFile(tacLine *tacFileHead) {
   tacLine *elt;
   FILE *fp;
