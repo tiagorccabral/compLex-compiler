@@ -15,6 +15,8 @@ typedef struct tacLine {
 
 tacLine *tacFileHead; /* pointer to the head of the DLList that represents the TAC file */
 
+tacLine *tacFileTableHead; /* pointer to the head of the DLList that represents the .table section of the TAC file */
+
 enum tacCodeType {
   enumOneOp, /* one operand instruction, e.g: jump <op1> */   
   enumTwoOp, /* two operand instruction, e.g: brnz <op2>, <op1> */
@@ -46,7 +48,22 @@ void addSymbolsToTable(FILE *file);
 void add_TAC_line(tacCodeParam tacCode);
 
 /* insert label to tac file */
-void insertTACLabel(char *label);
+char * insertTACLabel(char *label);
+
+/* insert a string to the .table portion of the TAC file, returns name of created .table var */
+char* insert_string_to_TAC_table(char *string, int pos, int *currentTableCounter);
+
+/* sets a temporary register to a given node, returns string of that register */
+char * set_temporary_register(parserNode *node, int *currentTempReg);
+
+/* creates a new temporary register, returns string of that register */
+char * create_temporary_register(int *currentTempReg);
+
+/* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
+void add_string_to_TAC(char *string, int writeLn);
+
+/* creates a string that is in the format of array access */
+char * set_operand_array(parserNode *node, int arrayPosition);
 
 /* check operands and calls add_TAC_line with correct params */
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams);

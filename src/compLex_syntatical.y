@@ -8,12 +8,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #include "symbol_table.h"
 #include "parser_ast.h"
 #include "semantic_analyzer.h"
 #include "tac.h"
 #include "utils.h"
+#include "utstring.h"
 
 #define DEBUG 0 // controls debug msgs, see utils.h
 
@@ -61,6 +63,7 @@ void yyerror(const char *msg);
 int globalCounterOfSymbols = 1;
 int lexical_errors_count = 0;
 int currentTempReg = 0;
+int currentTableCounter = 1;
 
 char *return_statement_type; /* aux vars to verify presence of return statements*/
 struct parserNode* returned_node; /* aux vars to verify presence of return statements*/
@@ -273,21 +276,27 @@ statement: expression {$$ = $1;}
 inOutStatement: WRITE '(' STR ')' ';' {
     astParam astP = { .type = "WRITE", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITE STRING" };
     $$ = add_ast_node(astP);
+    add_string_to_TAC($3, 0);
     print_parser_msg("IO: write string\n", DEBUG);
   }
   | WRITE '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITE IDENTIFIER" };
     $$ = add_ast_node(astP);
+    tacCodeParam tacP = { .instruction = "print", .op1 = $3->value, .lineType=enumOneOp};
+    add_TAC_line(tacP);
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
   | WRITELN '(' STR ')' ';' {
     astParam astP = { .type = "WRITELN", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITELN STRING" };
     $$ = add_ast_node(astP);
+    add_string_to_TAC($3, 1);
     print_parser_msg("IO: writeln string\n", DEBUG);
   }
   | WRITELN '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITELN IDENTIFIER" };
     $$ = add_ast_node(astP);
+    tacCodeParam tacP = { .instruction = "println", .op1 = $3->value, .lineType=enumOneOp};
+    add_TAC_line(tacP);
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
   | READ '(' variable ')' ';' {
@@ -459,7 +468,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
     };
     $$ = add_ast_node(astP);
-    currentTempReg = set_temporary_register($$, currentTempReg);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
     if (symbolOK == 0) {
@@ -474,7 +483,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
     };
     $$ = add_ast_node(astP);
-    currentTempReg = set_temporary_register($$, currentTempReg);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
     if (symbolOK == 0) {
@@ -492,7 +501,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
     };
     $$ = add_ast_node(astP);
-    currentTempReg = set_temporary_register($$, currentTempReg);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
     if (symbolOK == 0) {
@@ -507,7 +516,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
     };
     $$ = add_ast_node(astP);
-    currentTempReg = set_temporary_register($$, currentTempReg);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
     if (symbolOK == 0) {

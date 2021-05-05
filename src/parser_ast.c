@@ -1,7 +1,6 @@
 #include "parser_ast.h"
 #include "symbol_table.h"
 #include "semantic_analyzer.h"
-#include "utstring.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
@@ -129,15 +128,6 @@ int cast_operators(parserNode *left, parserNode *right, int line) {
     return 1;
   }
   return 0;
-}
-
-int set_temporary_register(parserNode *node, int currentTempReg) {
-  UT_string *tmp;
-  utstring_new(tmp);
-  utstring_printf(tmp, "$%d", currentTempReg);
-  node->tempReg = utstring_body(tmp);
-  currentTempReg++;
-  return currentTempReg;
 }
 
 void print_parser_ast(parserNode *node, int level) {

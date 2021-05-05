@@ -45,9 +45,6 @@ parserNode* add_ast_node(astParam astParam);
 /* returns 1 if contains error, 0 if Ok */
 int cast_operators(parserNode *left, parserNode *right, int line);
 
-/* sets a temporary register to a given node, returns current Temp reg + 1 */
-int set_temporary_register(parserNode *node, int currentTempReg);
-
 /* prints the AST to the terminal, first param is the root node, second param the initial level (depth) of that node */
 void print_parser_ast(parserNode *node, int level);
 
