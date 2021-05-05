@@ -99,7 +99,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 69 "compLex_syntatical.y"
+#line 70 "compLex_syntatical.y"
 
   char* str;
   struct parserNode* node;

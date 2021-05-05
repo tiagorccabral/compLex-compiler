@@ -1,6 +1,7 @@
 #include "parser_ast.h"
 #include "symbol_table.h"
 #include "semantic_analyzer.h"
+#include "utstring.h"
 
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
@@ -66,26 +67,26 @@ parserNode* add_ast_node(astParam astParam) {
   return node;
 }
 
-void cast_operators(parserNode *left, parserNode *right, int line) {
-  if(!left->type || !right->type || !right || !left) return;
+int cast_operators(parserNode *left, parserNode *right, int line) {
+  if(!left->type || !right->type || !right || !left) return 1;
   scopeInfo current_scope = get_current_scope();
   int errorFound = 0;
   struct symbolNode *leftSymbol, *rightSymbol;
   char leftType[6], rightType[6];
   if (strcmp(left->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
-    if (!left->value) return;
+    if (!left->value) return 1;
     symbolID = get_symbolID_by_name_and_current_scope(left->value, current_scope.scopeID, current_scope.level);
-    if (symbolID == -1) return; /* symbol is undeclared (error) */
+    if (symbolID == -1) return 1; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
     HASH_FIND_INT(symbolTable, symbolkey, leftSymbol);
     strcpy(leftType, leftSymbol->type);
   }
   if (strcmp(right->type, "IDENTIFIER")==0) {
     int *symbolkey, symbolID;
-    if (!right->value) return;
+    if (!right->value) return 1;
     symbolID = get_symbolID_by_name_and_current_scope(right->value, current_scope.scopeID, current_scope.level);
-    if (symbolID == -1) return; /* symbol is undeclared (error) */
+    if (symbolID == -1) return 1; /* symbol is undeclared (error) */
     symbolkey = &symbolID;
     HASH_FIND_INT(symbolTable, symbolkey, rightSymbol);
     strcpy(rightType, rightSymbol->type);
@@ -125,7 +126,18 @@ void cast_operators(parserNode *left, parserNode *right, int line) {
   if (errorFound) { /* if got error of types ops */
     semantic_errors++;
     printf("semantic error, operation between type '%s' and '%s' is not supported, at line %d\n",leftType, rightType, line);
+    return 1;
   }
+  return 0;
+}
+
+int set_temporary_register(parserNode *node, int currentTempReg) {
+  UT_string *tmp;
+  utstring_new(tmp);
+  utstring_printf(tmp, "$%d", currentTempReg);
+  node->tempReg = utstring_body(tmp);
+  currentTempReg++;
+  return currentTempReg;
 }
 
 void print_parser_ast(parserNode *node, int level) {

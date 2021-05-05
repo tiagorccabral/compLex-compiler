@@ -22,6 +22,7 @@ typedef struct parserNode {
   char* value;
   char* type;
   char* astNodeClass;
+  char* tempReg;
   char* cast;
 } parserNode;
 
@@ -41,7 +42,11 @@ typedef struct astParam {
 parserNode* add_ast_node(astParam astParam);
 
 /* verifies the need of casting operators on of the AST, and if they need mark that in the correspondent node */
-void cast_operators(parserNode *left, parserNode *right, int line);
+/* returns 1 if contains error, 0 if Ok */
+int cast_operators(parserNode *left, parserNode *right, int line);
+
+/* sets a temporary register to a given node, returns current Temp reg + 1 */
+int set_temporary_register(parserNode *node, int currentTempReg);
 
 /* prints the AST to the terminal, first param is the root node, second param the initial level (depth) of that node */
 void print_parser_ast(parserNode *node, int level);

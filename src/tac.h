@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "parser_ast.h"
 #include "utstring.h"
 #include "utlist.h"
 
