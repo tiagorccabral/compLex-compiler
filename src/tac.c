@@ -191,6 +191,13 @@ void createTacFile(tacLine *tacFileHead) {
 
   fputs(".code\n", fp); /* creates .code portion of TAC */
 
+  insertTACLabel("main"); /* create TAC file main label first */
+
+  tacCodeParam tacP = { .instruction = "call", .op1 = "fmain", .lineType=enumOneOp};
+  add_TAC_line(tacP);
+  tacCodeParam tacP1 = { .instruction = "nop", .lineType=enumNoOp};
+  add_TAC_line(tacP1);
+
   CDL_FOREACH(tacFileHead,elt) {
     fputs(utstring_body(elt->codeLine), fp);
   }

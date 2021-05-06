@@ -166,7 +166,7 @@ functionDefinition: typeSpecifier IDENTIFIER {
       currentFunction.name = $2;
       currentFunction.lastParamPosition = 0;
       return_statement_type = strdup($1->type);
-      insertTACLabel($2);
+      insertTACLabel("fmain");
   } '(' parameters ')' compoundStatement {
     create_new_scope_level();
     astParam astP = { 
@@ -332,12 +332,21 @@ fluxControlstatement: RETURN comparationalExpression ';' {
     currentReturnScope.scopeID = tmpScope.scopeID;
     currentReturnLine = running_line_count;
     if ($2->type) returned_node = $2;
+    if ($2->value) {
+      tacCodeParam tacP = { .instruction = "return", .op1 = $2->value, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    } else if ($2->tempReg) {
+      tacCodeParam tacP = { .instruction = "return", .op1 = $2->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP);
+    }
     print_parser_msg("return expression\n", DEBUG);
   }
   | RETURN ';' {
     astParam astP = { .type = "RETURN", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="FLUX_CONTROL_STATEMENT RETURN_NULL" };
     $$ = add_ast_node(astP);
     found_return_statement = 1;
+    tacCodeParam tacP = { .instruction = "return", .lineType=enumNoOp};
+    add_TAC_line(tacP);
     print_parser_msg("return null\n", DEBUG);
   }
   | IF '(' comparationalExpression ')' expression {
