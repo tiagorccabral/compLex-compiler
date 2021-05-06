@@ -62,8 +62,8 @@ void yyerror(const char *msg);
 /* Global variables */
 int globalCounterOfSymbols = 1;
 int lexical_errors_count = 0;
-int currentTempReg = 0;
-int currentTableCounter = 1;
+int currentTempReg = 0; /* keeps count of how many regs are used during parse */
+int currentTableCounter = 1; /* keeps count of how many symbols are added to .table during parse, e.g: strings */
 
 char *return_statement_type; /* aux vars to verify presence of return statements*/
 struct parserNode* returned_node; /* aux vars to verify presence of return statements*/
@@ -276,7 +276,7 @@ statement: expression {$$ = $1;}
 inOutStatement: WRITE '(' STR ')' ';' {
     astParam astP = { .type = "WRITE", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITE STRING" };
     $$ = add_ast_node(astP);
-    add_string_to_TAC($3, 0);
+    add_string_to_TAC($3, 0, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: write string\n", DEBUG);
   }
   | WRITE '(' variable ')' ';' {
@@ -289,7 +289,7 @@ inOutStatement: WRITE '(' STR ')' ';' {
   | WRITELN '(' STR ')' ';' {
     astParam astP = { .type = "WRITELN", .value = $3, .nodeType = enumValueTypeOnly, .astNodeClass="WRITELN STRING" };
     $$ = add_ast_node(astP);
-    add_string_to_TAC($3, 1);
+    add_string_to_TAC($3, 1, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: writeln string\n", DEBUG);
   }
   | WRITELN '(' variable ')' ';' {

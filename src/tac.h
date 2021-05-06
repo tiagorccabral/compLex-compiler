@@ -18,6 +18,7 @@ tacLine *tacFileHead; /* pointer to the head of the DLList that represents the T
 tacLine *tacFileTableHead; /* pointer to the head of the DLList that represents the .table section of the TAC file */
 
 enum tacCodeType {
+  enumNoOp, /* 0 operand instruction, e.g: nop */   
   enumOneOp, /* one operand instruction, e.g: jump <op1> */   
   enumTwoOp, /* two operand instruction, e.g: brnz <op2>, <op1> */
   enumThreeOp, /* three operand instruction, e.g: add <dst>, <op1>, <op2> */
@@ -60,10 +61,10 @@ char * set_temporary_register(parserNode *node, int *currentTempReg);
 char * create_temporary_register(int *currentTempReg);
 
 /* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
-void add_string_to_TAC(char *string, int writeLn);
+void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
 
 /* creates a string that is in the format of array access */
-char * set_operand_array(parserNode *node, int arrayPosition);
+char * set_operand_array(char *string, char *arrayPosition);
 
 /* check operands and calls add_TAC_line with correct params */
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams);

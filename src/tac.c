@@ -45,6 +45,9 @@ void add_TAC_line(tacCodeParam tacCode) {
   tacLine *tmpLine = (tacLine*)malloc(sizeof *tmpLine);
   utstring_new(tmpLine->codeLine);
   switch (tacCode.lineType) {
+    case enumNoOp:
+      utstring_printf(tmpLine->codeLine, "%s\n", tacCode.instruction);
+      break;
     case enumOneOp:
       utstring_printf(tmpLine->codeLine, "%s %s\n", tacCode.instruction, tacCode.op1);
       break;
@@ -60,24 +63,55 @@ void add_TAC_line(tacCodeParam tacCode) {
   CDL_APPEND(tacFileHead, tmpLine);
 }
 
-void add_string_to_TAC(char *string, int writeLn) {
-  int i = 1, stringSize;
+void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter) {
+  char *stringPosition = create_temporary_register(currentTempReg);
+  char *stringPointer = create_temporary_register(currentTempReg);
+  char *stringValue = create_temporary_register(currentTempReg);
+  char *comprTmp = create_temporary_register(currentTempReg);
+  char *stringLen = create_temporary_register(currentTempReg);
+  UT_string *tmp, *labelStart, *labelFinish;
+  utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);
+  utstring_printf(tmp, "%lu", strlen(string)-1);
+  utstring_printf(labelStart, "whileWritelnStart%d", *currentTableCounter);
+  utstring_printf(labelFinish, "endWhileWriteln%d", *currentTableCounter);
+  char *stringVar = insert_string_to_TAC_table(string, 0, currentTableCounter);
+  tacCodeParam tacP0 = { .instruction = "mov", .op1 = stringLen, .op2 = utstring_body(tmp), .lineType=enumTwoOp};
+  add_TAC_line(tacP0);
+  tacCodeParam tacP = { .instruction = "mov", .op1 = stringPosition, .op2 = "0", .lineType=enumTwoOp};
+  add_TAC_line(tacP);
+  tacCodeParam tacP2 = { .instruction = "mov", .op1 = stringPointer, .op2 = stringVar, .lineType=enumTwoOp};
+  add_TAC_line(tacP2);
+  insertTACLabel(utstring_body(labelStart));
+  tacCodeParam tacP4 = { .instruction = "seq", .dst= comprTmp,.op1 = stringLen, .op2 = stringPosition, .lineType=enumThreeOp};
+  add_TAC_line(tacP4);
+  tacCodeParam tacP5 = { .instruction = "brnz", .op1 = utstring_body(labelFinish), .op2 = comprTmp, .lineType=enumTwoOp};
+  add_TAC_line(tacP5);
+  tacCodeParam tacP3 = { .instruction = "mov", .op1 = stringValue, .op2 = set_operand_array(stringPointer, stringPosition), .lineType=enumTwoOp};
+  add_TAC_line(tacP3);
+  tacCodeParam tacP6 = { .instruction = "print", .op1 = stringValue, .lineType=enumOneOp};
+  add_TAC_line(tacP6);
+  tacCodeParam tacP7 = { .instruction = "add", .dst= stringPosition,.op1 = stringPosition, .op2 = "1", .lineType=enumThreeOp};
+  add_TAC_line(tacP7);
+  tacCodeParam tac8 = { .instruction = "jump", .op1 = utstring_body(labelStart), .lineType=enumOneOp};
+  add_TAC_line(tac8);
+  insertTACLabel(utstring_body(labelFinish));
+  if (writeLn == 1) {
+    tacCodeParam tacP9 = { .instruction = "print", .op1 = "'\\n'", .lineType=enumOneOp};
+    add_TAC_line(tacP9);
+  } else { /* need to add nop here to avoid case where 'write' op is last instruction, i.e: will have label followed by EOF */
+    tacCodeParam tacP9 = { .instruction = "nop", .lineType=enumNoOp};
+    add_TAC_line(tacP9);
+  }
+  utstring_free(tmp);
+  utstring_free(labelStart);
+  utstring_free(labelFinish);
+}
+
+char * set_operand_array(char *string, char *arrayPosition) {
   UT_string *tmp;
   utstring_new(tmp);
-  stringSize = strlen(string);
-  while(i<stringSize-1) {
-    utstring_printf(tmp, "'%c'", *&string[i]);
-    tacCodeParam tacP1 = { .instruction = "print", .op1 = utstring_body(tmp), .lineType=enumOneOp};
-    add_TAC_line(tacP1);
-    utstring_clear(tmp);
-    i++;
-  };
-  if (writeLn == 1) {
-    utstring_printf(tmp, "'\\n'");
-    tacCodeParam tacP1 = { .instruction = "print", .op1 = utstring_body(tmp), .lineType=enumOneOp};
-    add_TAC_line(tacP1);
-    utstring_clear(tmp);
-  }
+  utstring_printf(tmp, "%s[%s]", string, arrayPosition);
+  return utstring_body(tmp);
 }
 
 char * insertTACLabel(char *label) {
@@ -96,7 +130,7 @@ char * insert_string_to_TAC_table(char *string, int pos, int *currentTableCounte
   utstring_printf(tmpLine->codeLine, "char string%d [] = %s\n", *currentTableCounter, string);
 
   utstring_new(returnString);
-  utstring_printf(returnString, "string%d", *currentTableCounter);
+  utstring_printf(returnString, "&string%d", *currentTableCounter);
   *currentTableCounter = *currentTableCounter + 1;
 
   CDL_APPEND(tacFileTableHead, tmpLine);
