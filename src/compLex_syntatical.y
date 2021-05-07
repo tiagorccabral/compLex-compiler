@@ -133,6 +133,7 @@ programEntries: programEntries variableInit {
 ;
 
 functionDefinition: typeSpecifier IDENTIFIER {
+    currentTempReg = 0;
     symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $1->value, .name = $2, .line = running_line_count, .column = running_column_count };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
@@ -612,7 +613,10 @@ variableAssignment: IDENTIFIER ASSIGN expression {
       symbolOK = verify_declared_id($$->leftBranch->value, running_line_count, running_column_count);
     }
     if (symbolOK == 0) {
-      if ($3->value) {
+      if ($3->tempReg && $3->value) {
+        tacCodeParam tacP = { .instruction = "mov", .op1 = $1, .op2 = $3->tempReg, .lineType=enumTwoOp};
+        add_TAC_line(tacP);
+      } else if ($3->value) {
         tacCodeParam tacP = { .instruction = "mov", .op1 = $1, .op2 = $3->value, .lineType=enumTwoOp};
         add_TAC_line(tacP);
       } else if ($3->tempReg) {
@@ -673,12 +677,25 @@ term: '(' comparationalExpression ')' {
 ;
 
 functionCall: IDENTIFIER '(' functionArguments ')' {
-  verify_declared_id($1, running_line_count, running_column_count);
+  int symbolOK = verify_declared_id($1, running_line_count, running_column_count);
   currentCalledFunction.name = $1;
-  verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);
-  currentCalledFunction.amountOfParamsCalled = 0;
   astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="FUNCTION_CALL" };
   $$ = add_ast_node(astP);
+  if (symbolOK == 0) { /* symbol is declared */
+    if (currentCalledFunction.amountOfParamsCalled == 0) {
+      tacCodeParam tacP = { .instruction = "call", .op1 = $1, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    } else {
+      tacCodeParam tacP = { .instruction = "call", .op1 = $1, .op2 = stringify_integer(currentCalledFunction.amountOfParamsCalled), .lineType=enumTwoOp};
+      add_TAC_line(tacP);
+    }
+    printf("amount of params called: %d\n", currentCalledFunction.amountOfParamsCalled);
+  }
+  verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);
+  currentCalledFunction.amountOfParamsCalled = 0;
+  set_temporary_register($$, &currentTempReg);
+  tacCodeParam tacP = { .instruction = "pop", .op1 = $$->tempReg, .lineType=enumOneOp};
+  add_TAC_line(tacP);
   print_parser_msg("function call\n", DEBUG);
 }
 ;
@@ -706,6 +723,8 @@ callArguments: callArguments ',' comparationalExpression {
         currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -2;
       }
     }
+    tacCodeValidationParams tacP = { .instruction = "param", .op1 = $3, .lineType=enumOneOp};
+    check_ops_and_add_TAC_line(tacP);
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
@@ -722,6 +741,9 @@ callArguments: callArguments ',' comparationalExpression {
         currentCalledFunction.passedParams[currentCalledFunction.amountOfParamsCalled] = -2;
       }
     }
+    tacCodeValidationParams tacP = { .instruction = "param", .op1 = $1, .lineType=enumOneOp};
+    check_ops_and_add_TAC_line(tacP);
+
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
 
     print_parser_msg("function callarguments\n", DEBUG);
@@ -808,6 +830,8 @@ int main(int argc, char **argv) {
   }
 
   free_TAC_list(tacFileHead);
+
+  // TODO: clear .table TAC LIST
 
   free_symbols_table();
 

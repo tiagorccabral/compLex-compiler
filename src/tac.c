@@ -154,10 +154,26 @@ char * create_temporary_register(int *currentTempReg) {
   return utstring_body(tmp);
 }
 
+char * stringify_integer(int number_to_be_string) {
+  UT_string *tmp;
+  utstring_new(tmp);
+  utstring_printf(tmp, "%d", number_to_be_string);
+  return utstring_body(tmp);
+}
+
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams) {
   switch (validationParams.lineType) {
   case enumOneOp:
-    /* code */
+    if (validationParams.op1->value && validationParams.op1->tempReg) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .op1 = validationParams.op1->tempReg, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->value) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .op1 = validationParams.op1->value, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->tempReg) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .op1 = validationParams.op1->tempReg, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    }
     break;
   case enumTwoOp:
     break;

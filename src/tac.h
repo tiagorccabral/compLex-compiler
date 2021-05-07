@@ -66,6 +66,9 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
 /* creates a string that is in the format of array access */
 char * set_operand_array(char *string, char *arrayPosition);
 
+/* takes a number, and returns the string version of that number */
+char * stringify_integer(int number_to_be_string);
+
 /* check operands and calls add_TAC_line with correct params */
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams);
 
