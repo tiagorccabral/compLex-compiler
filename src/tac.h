@@ -60,6 +60,9 @@ char * set_temporary_register(parserNode *node, int *currentTempReg);
 /* creates a new temporary register, returns string of that register */
 char * create_temporary_register(int *currentTempReg);
 
+/* sets a temporary register to a given node representing the param of a function, returns string of that register */
+char * set_param(parserNode *node, int *currentParamsReg);
+
 /* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
 
@@ -77,5 +80,8 @@ void createTacFile(tacLine *tacFileHead);
 
 /* releases memory alocated for the TAC list that represents TAC code */
 void free_TAC_list(tacLine *tacFileHead);
+
+/* releases memory alocated for the TAC list that represents TAC .table */
+void free_TAC_table_list(tacLine *tacFileTableHead);
 
 #endif // TAC_

@@ -20,6 +20,7 @@ typedef struct symbolNode {
   char *name;
   int scope; /* scope of symbol */
   int scopeID; /* unique ID of scope */
+  char *tacName; /* holds a temporary name for a symbol (TAC name, e.g: #0, #1, etc) */
   int line; /* line of symbol */
   int column; /* column of symbol */
   int params_list[253]; /* list of params (253 = maximum amount of params in C specification) */
@@ -36,6 +37,7 @@ typedef struct symbolParam {
   char *name;
   int scope; /* scope of symbol */
   int scopeID; /* unique ID of scope */
+  char *tacName; /* holds a temporary name for a symbol (TAC name, e.g: #0, #1, etc) */
   int line; /* line of symbol */
   int column; /* column of symbol */
   char *associated_function; /* (params only): name of associated function */

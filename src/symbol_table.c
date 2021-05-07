@@ -78,6 +78,7 @@ void add_symbol_node(symbolParam symbol) {
       symbolPointer -> name = symbol.name;
       symbolPointer -> scope = current_scope.level;
       symbolPointer -> scopeID = current_scope.scopeID;
+      symbolPointer -> tacName = symbol.tacName;
       symbolPointer -> line = symbol.line;
       symbolPointer -> column = symbol.column;
       symbolPointer -> params_list[0] = -1;
@@ -91,6 +92,7 @@ void add_symbol_node(symbolParam symbol) {
       symbolPointer -> name = symbol.name;
       symbolPointer -> scope = current_scope.level;
       symbolPointer -> scopeID = current_scope.scopeID;
+      symbolPointer -> tacName = symbol.tacName;
       symbolPointer -> line = symbol.line;
       symbolPointer -> column = symbol.column;
       symbolPointer -> params_list[0] = -1;

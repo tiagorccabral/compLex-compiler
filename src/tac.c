@@ -15,11 +15,11 @@ void addSymbolsToTable(FILE *fp) {
 
   int hasAtLeastOneVar = 0;
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
-    if (s->symbolType == enumVariable && hasAtLeastOneVar == 1) {
+    if ((s->symbolType == enumVariable || s->symbolType == enumParameter) && hasAtLeastOneVar == 1) {
       utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
       fputs(utstring_body(lineOfCode), fp);
       utstring_clear(lineOfCode);
-    } else if (s->symbolType == enumVariable && hasAtLeastOneVar == 0) {
+    } else if ((s->symbolType == enumVariable || s->symbolType == enumParameter) && hasAtLeastOneVar == 0) {
       hasAtLeastOneVar = 1;
       fputs(".table\n", fp);
       utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
@@ -154,6 +154,15 @@ char * create_temporary_register(int *currentTempReg) {
   return utstring_body(tmp);
 }
 
+char * set_param(parserNode *node, int *currentParamsReg) {
+  UT_string *tmp;
+  utstring_new(tmp);
+  utstring_printf(tmp, "#%d", *currentParamsReg);
+  node->tempReg = utstring_body(tmp);
+  *currentParamsReg = *currentParamsReg + 1;
+  return utstring_body(tmp);
+}
+
 char * stringify_integer(int number_to_be_string) {
   UT_string *tmp;
   utstring_new(tmp);
@@ -178,8 +187,8 @@ void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams) {
   case enumTwoOp:
     break;
   case enumThreeOp:
-    if (validationParams.op1->value && validationParams.op2->value) {
-      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->value, .op2 = validationParams.op2->value, .lineType=validationParams.lineType};
+    if (validationParams.op1->value && validationParams.op2->value && validationParams.op1->tempReg && validationParams.op2->tempReg) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->tempReg, .op2 = validationParams.op2->tempReg, .lineType=validationParams.lineType};
       add_TAC_line(tacP);
     } else if (validationParams.op1->value && validationParams.op2->tempReg) {
       tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->value, .op2 = validationParams.op2->tempReg, .lineType=validationParams.lineType};
@@ -189,6 +198,9 @@ void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams) {
       add_TAC_line(tacP);
     } else if (validationParams.op1->tempReg && validationParams.op2->tempReg) {
       tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->tempReg, .op2 = validationParams.op2->tempReg, .lineType=validationParams.lineType};
+      add_TAC_line(tacP);
+    } else if (validationParams.op1->value && validationParams.op2->value) {
+      tacCodeParam tacP = { .instruction=validationParams.instruction, .dst= validationParams.dst->tempReg,.op1 = validationParams.op1->value, .op2 = validationParams.op2->value, .lineType=validationParams.lineType};
       add_TAC_line(tacP);
     }
     break;
@@ -227,6 +239,16 @@ void free_TAC_list(tacLine *tacFileHead) {
 
   CDL_FOREACH_SAFE(tacFileHead,elt,tmp, etmp) {
     CDL_DELETE(tacFileHead,elt);
+    utstring_free(elt->codeLine);
+    free(elt);
+  }
+}
+
+void free_TAC_table_list(tacLine *tacFileTableHead) {
+  tacLine *elt, *tmp, *etmp;
+
+  CDL_FOREACH_SAFE(tacFileTableHead,elt,tmp, etmp) {
+    CDL_DELETE(tacFileTableHead,elt);
     utstring_free(elt->codeLine);
     free(elt);
   }

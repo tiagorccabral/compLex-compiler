@@ -63,6 +63,7 @@ void yyerror(const char *msg);
 int globalCounterOfSymbols = 1;
 int lexical_errors_count = 0;
 int currentTempReg = 0; /* keeps count of how many regs are used during parse */
+int currentParamsReg = 0; /* keeps count of how many params are used during parse */
 int currentTableCounter = 1; /* keeps count of how many symbols are added to .table during parse, e.g: strings */
 
 char *return_statement_type; /* aux vars to verify presence of return statements*/
@@ -134,6 +135,7 @@ programEntries: programEntries variableInit {
 
 functionDefinition: typeSpecifier IDENTIFIER {
     currentTempReg = 0;
+    currentParamsReg = 0;
     symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumFunction, .type = $1->value, .name = $2, .line = running_line_count, .column = running_column_count };
     add_symbol_node(symbol);
     globalCounterOfSymbols++;
@@ -208,8 +210,16 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
       .leftBranch = $1, .rightBranch = $3, .type=$$->rightBranch->value, .value = $4, .nodeType = enumLeftRightValueBranch, .astNodeClass="PARAMETER PARAMETERS TYPE_SPECIFIER"
     };
     $$ = add_ast_node(astP2);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
-    add_symbol_node(symbol);
+    scopeInfo current_scope = get_current_scope();
+    int foundSymbol = get_symbolID_by_name_and_current_scope("main", current_scope.scopeID, current_scope.level);
+    if (foundSymbol == -1) { /* not main */
+      char* tacName = set_param($$, &currentParamsReg);
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .tacName=tacName, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      add_symbol_node(symbol);
+    } else {
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      add_symbol_node(symbol);
+    }
     currentFunction.lastParamPosition = currentFunction.lastParamPosition + 1;
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
@@ -219,8 +229,16 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
     $$ = add_ast_node(astP);
     astParam astP2 = { .leftBranch = $1, .type=$$->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="PARAMETER TYPE_SPECIFIER IDENTIFIER" };
     $$ = add_ast_node(astP2);
-    symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
-    add_symbol_node(symbol);
+    scopeInfo current_scope = get_current_scope();
+    int foundSymbol = get_symbolID_by_name_and_current_scope("main", current_scope.scopeID, current_scope.level);
+    if (foundSymbol == -1) { /* not main */
+      char* tacName = set_param($$, &currentParamsReg);
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .tacName=tacName, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      add_symbol_node(symbol);
+    } else {
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      add_symbol_node(symbol);
+    }
     currentFunction.lastParamPosition = currentFunction.lastParamPosition + 1;
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
@@ -283,8 +301,8 @@ inOutStatement: WRITE '(' STR ')' ';' {
   | WRITE '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITE IDENTIFIER" };
     $$ = add_ast_node(astP);
-    tacCodeParam tacP = { .instruction = "print", .op1 = $3->value, .lineType=enumOneOp};
-    add_TAC_line(tacP);
+    tacCodeValidationParams tacP = { .instruction = "print", .op1 = $3, .lineType=enumOneOp};
+    check_ops_and_add_TAC_line(tacP);
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
   | WRITELN '(' STR ')' ';' {
@@ -296,8 +314,8 @@ inOutStatement: WRITE '(' STR ')' ';' {
   | WRITELN '(' variable ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITELN IDENTIFIER" };
     $$ = add_ast_node(astP);
-    tacCodeParam tacP = { .instruction = "println", .op1 = $3->value, .lineType=enumOneOp};
-    add_TAC_line(tacP);
+    tacCodeValidationParams tacP = { .instruction = "println", .op1 = $3, .lineType=enumOneOp};
+    check_ops_and_add_TAC_line(tacP);
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
   | READ '(' variable ')' ';' {
@@ -764,7 +782,18 @@ variableInit: typeSpecifier IDENTIFIER ';' {
 variable: IDENTIFIER {
   astParam astP = { .type = "IDENTIFIER", .value = $1, .nodeType = enumValueTypeOnly, .astNodeClass="IDENTIFIER" };
   $$ = add_ast_node(astP);
-  verify_declared_id($1, running_line_count, running_column_count);
+  int symbolOK = verify_declared_id($1, running_line_count, running_column_count);
+  if (symbolOK == 0) {
+    int *symbolkey, symbolID;
+    struct symbolNode *symbol;
+    scopeInfo current_scope = get_current_scope();
+    symbolID = get_symbolID_by_name_and_current_scope($1, current_scope.scopeID, current_scope.level);
+    if (symbolID != -1) {
+      symbolkey = &symbolID;
+      HASH_FIND_INT(symbolTable, symbolkey, symbol);
+      $$->tempReg = symbol->tacName;
+    }
+  }
   print_parser_msg("variable\n", DEBUG);
 }
 ;
@@ -830,7 +859,7 @@ int main(int argc, char **argv) {
 
   free_TAC_list(tacFileHead);
 
-  // TODO: clear .table TAC LIST
+  free_TAC_table_list(tacFileTableHead);
 
   free_symbols_table();
 
