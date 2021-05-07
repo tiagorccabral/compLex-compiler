@@ -689,7 +689,6 @@ functionCall: IDENTIFIER '(' functionArguments ')' {
       tacCodeParam tacP = { .instruction = "call", .op1 = $1, .op2 = stringify_integer(currentCalledFunction.amountOfParamsCalled), .lineType=enumTwoOp};
       add_TAC_line(tacP);
     }
-    printf("amount of params called: %d\n", currentCalledFunction.amountOfParamsCalled);
   }
   verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);
   currentCalledFunction.amountOfParamsCalled = 0;
