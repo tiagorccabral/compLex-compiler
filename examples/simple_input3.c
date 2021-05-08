@@ -1,6 +1,10 @@
 set copy_set(set s) {
     set ans;
+    elem el;
     ans = EMPTY;
+    forall(el in ans) {
+        writeln(el);
+    }
     return ans;
 }
 
@@ -12,7 +16,7 @@ set succ(set n) {
 
 int main() {
     set zero; 
-    set one; 
+    set one;
     set two; 
     set three;
 
@@ -20,4 +24,5 @@ int main() {
     one = succ(zero);
     two = succ(one);
     three = succ(two);
+    return 0;
 }

@@ -39,4 +39,6 @@ int main (int argc) {
     a = -1;
     a = squareRootToPower(i, a);
   }
+
+  return a;
 }

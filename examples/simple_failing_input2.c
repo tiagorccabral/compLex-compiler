@@ -1,3 +1,9 @@
+int squareRoot(int a) {
+  a = 1;
+  ab = 3;
+  return 1.3;
+}
+
 int initial (int argc) {
   set s;~
   float pi;
@@ -8,10 +14,6 @@ int initial (int argc) {
   add(2 in s);
 
   add(1 in s);
-}
 
-int squareRoot(int a) {
-  a = 1;
-  ab = 3;
-  return 1+2*1.25-5;
+  squareRoot();
 }
