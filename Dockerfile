@@ -5,10 +5,18 @@ RUN apt-get update -y \
   m4 \
   ca-certificates \
   curl \
+  software-properties-common \
   valgrind \
   automake \
   autoconf \
   && rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
+
+RUN apt-get update -y \
+  && apt-get install -y gcc-9 g++-9
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9
 
 RUN curl -o /root/bison-3.7.6.tar.xz -fSL http://www.nic.funet.fi/pub/gnu/ftp.gnu.org/pub/gnu/bison/bison-3.7.6.tar.xz \
     && curl -o /root/bison-3.7.6.tar.xz.sig -L http://www.nic.funet.fi/pub/gnu/ftp.gnu.org/pub/gnu/bison/bison-3.7.6.tar.xz.sig \
