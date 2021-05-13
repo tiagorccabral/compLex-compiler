@@ -6,12 +6,21 @@
 #include "parser_ast.h"
 #include "utstring.h"
 #include "utlist.h"
+#include "utstack.h"
+
+/* keeps track of current for loop stack name */
+typedef struct forLoopStack {
+  char* name; /* name of current for loop scope stack */
+  struct forLoopStack *next;
+} forLoopStack; /* element of each scope stack of for loops */
 
 /* represents one element of the doubly linked list, i.e: one line of the TAC file */
 typedef struct tacLine {
   UT_string *codeLine; /* string that represents one TAC line of code */
   struct tacLine *next, *prev; /* pointers to next and previos elements of the list */
 }tacLine;
+
+forLoopStack *forLoopStackHead; /* pointer to the head of the stack of labels of ForLoops */
 
 tacLine *tacFileHead; /* pointer to the head of the DLList that represents the TAC file */
 
@@ -72,7 +81,7 @@ void add_for_loop_entry_to_TAC(char *string, int *currentForLoop);
 /* adds closing part of for loop to TAC file, given a string */
 void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
 
-void add_right_logical_loop_OP_to_TAC(char *labelFinish, parserNode *middle1Branch, int *currentTempReg, int *currentForLoop);
+void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop);
 
 /* creates a string that is in the format of array access */
 char * set_operand_array(char *string, char *arrayPosition);

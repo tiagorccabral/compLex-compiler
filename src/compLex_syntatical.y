@@ -403,15 +403,13 @@ fluxControlstatement: RETURN comparationalExpression ';' {
 iterationStatement: FOR '(' expression { 
       add_for_loop_entry_to_TAC("forLoop", &currentForLoop);
       forIncrementCounter++; 
-    } expression {
-      add_right_logical_loop_OP_to_TAC("forLoop", $5, &currentTempReg, &currentForLoop);
-    } forIncrement ')' localStatetements {
-    astParam astP = {
-      .leftBranch = $3, .middle1Branch=$5, .middle2Branch=$7, .rightBranch = $9, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
-    };
-    $$ = add_ast_node(astP);
-    add_for_loop_closing_to_TAC("forLoop", &currentForLoop, &currentTempReg, $$->middle1Branch, $$->middle2Branch);
-    print_parser_msg("for loop three arguments\n", DEBUG);
+    } expression {;} forIncrement ')' localStatetements {
+      astParam astP = {
+        .leftBranch = $3, .middle1Branch=$5, .middle2Branch=$7, .rightBranch = $9, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
+      };
+      $$ = add_ast_node(astP);
+      add_for_loop_closing_to_TAC("forLoop", &currentForLoop, &currentTempReg, $$->middle1Branch, $$->middle2Branch);
+      print_parser_msg("for loop three arguments\n", DEBUG);
   }
   | SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements {
     astParam astP = {
@@ -455,10 +453,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "slt", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less than operation\n", DEBUG);
@@ -468,10 +476,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "sleq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less or equal operation\n", DEBUG);
@@ -481,10 +499,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "sleq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than operation\n", DEBUG);
@@ -494,10 +522,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "slt", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than or equal operation\n", DEBUG);
@@ -507,10 +545,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "seq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is different than operation\n", DEBUG);
@@ -520,10 +568,20 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
     };
     $$ = add_ast_node(astP);
+    set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && forIncrementCounter == 0) {
-      // TODO: Add logical ops
+    if (symbolOK == 0) {
+      UT_string *label;
+      utstring_new(label);
+      forLoopStack *loopLabel;
+      loopLabel = STACK_TOP(forLoopStackHead);
+      utstring_printf(label, "%sFinish", loopLabel->name);
+      tacCodeValidationParams tacP = { .instruction = "seq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
+      check_ops_and_add_TAC_line(tacP);
+      tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
+      add_TAC_line(tacP1);
+      utstring_free(label);
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is equal to operation\n", DEBUG);

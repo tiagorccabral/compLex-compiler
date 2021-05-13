@@ -6,6 +6,8 @@ tacLine *tacFileHead = NULL;
 
 tacLine *tacFileTableHead = NULL;
 
+forLoopStack *forLoopStackHead = NULL;
+
 void addSymbolsToTable(FILE *fp) {
   struct symbolNode *s;
   struct symbolNode *nullC = NULL;
@@ -109,22 +111,24 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
 
 void add_for_loop_entry_to_TAC(char *string, int *currentForLoop) {
   UT_string *labelStart;
+  forLoopStack *forLoopLabel = (forLoopStack *)malloc(sizeof *forLoopLabel);
   utstring_new(labelStart);
   utstring_printf(labelStart, "%s%d", string, *currentForLoop);
   insertTACLabel(utstring_body(labelStart));
+  forLoopLabel->name = utstring_body(labelStart);
+  STACK_PUSH(forLoopStackHead, forLoopLabel);
   *currentForLoop = *currentForLoop + 1;
-  utstring_free(labelStart);
+  // utstring_free(labelStart);
 }
 
 void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
   UT_string *labelStart;
   UT_string *labelFinish;
+  forLoopStack *loopLabel;
+  STACK_POP(forLoopStackHead, loopLabel);
   utstring_new(labelStart);
   utstring_new(labelFinish);
   utstring_printf(labelStart, "%s%d", string, *currentForLoop - 1);
-  utstring_printf(labelFinish, "%sFinish%d", string, *currentForLoop - 1);
-  printf("dentro: %s\n", middle2Branch->leftBranch->astNodeClass);
-  printf("dentro: %s\n", middle2Branch->leftBranch->rightBranch->value);
   if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->tempReg) {
     tacCodeParam tacP0 = { .instruction = "add", .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
@@ -134,40 +138,24 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
   }
   tacCodeParam tac1 = { .instruction = "jump", .op1 = utstring_body(labelStart), .lineType=enumOneOp};
   add_TAC_line(tac1);
+  utstring_printf(labelFinish, "%sFinish", loopLabel->name);
   insertTACLabel(utstring_body(labelFinish));
   *currentForLoop = *currentForLoop - 1;
+  free(loopLabel->name);
+  free(loopLabel);
   utstring_free(labelStart);
   utstring_free(labelFinish);
 }
 
-void add_right_logical_loop_OP_to_TAC(char *labelFinish, parserNode *middle1Branch, int *currentTempReg, int *currentForLoop) {
+void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop) {
   UT_string *label;
   utstring_new(label);
-  utstring_printf(label, "%sFinish%d", labelFinish, *currentForLoop - 1);
-  char *logicalOpDest = create_temporary_register(currentTempReg);
-  if (middle1Branch->leftBranch && middle1Branch->rightBranch) {
-    printf("middle branch1: %s\n", middle1Branch->astNodeClass);
-    if (middle1Branch->leftBranch->tempReg && middle1Branch->rightBranch->tempReg) {
-      tacCodeParam tacP0 = { .instruction = "slt", .dst= logicalOpDest,.op1 = middle1Branch->leftBranch->tempReg, .op2 = middle1Branch->rightBranch->tempReg, .lineType=enumThreeOp};
-      add_TAC_line(tacP0);
-      tacCodeParam tacP1 = { .instruction = "brz", .op1= utstring_body(label),.op2 = logicalOpDest, .lineType=enumTwoOp};
-      add_TAC_line(tacP1);
-    } else if (middle1Branch->leftBranch->tempReg && middle1Branch->rightBranch->value) {
-      tacCodeParam tacP0 = { .instruction = "slt", .dst= logicalOpDest,.op1 = middle1Branch->leftBranch->tempReg, .op2 = middle1Branch->rightBranch->value, .lineType=enumThreeOp};
-      add_TAC_line(tacP0);
-      tacCodeParam tacP1 = { .instruction = "brz", .op1= utstring_body(label),.op2 = logicalOpDest, .lineType=enumTwoOp};
-      add_TAC_line(tacP1);
-    } else if (middle1Branch->leftBranch->value && middle1Branch->rightBranch->tempReg) {
-      tacCodeParam tacP0 = { .instruction = "slt", .dst= logicalOpDest,.op1 = middle1Branch->leftBranch->value, .op2 = middle1Branch->rightBranch->tempReg, .lineType=enumThreeOp};
-      add_TAC_line(tacP0);
-      tacCodeParam tacP1 = { .instruction = "brz", .op1= utstring_body(label),.op2 = logicalOpDest, .lineType=enumTwoOp};
-      add_TAC_line(tacP1);
-    } else if (middle1Branch->leftBranch->value && middle1Branch->rightBranch->value) {
-      tacCodeParam tacP0 = { .instruction = "slt", .dst= logicalOpDest,.op1 = middle1Branch->leftBranch->value, .op2 = middle1Branch->rightBranch->value, .lineType=enumThreeOp};
-      add_TAC_line(tacP0);
-      tacCodeParam tacP1 = { .instruction = "brz", .op1= utstring_body(label),.op2 = logicalOpDest, .lineType=enumTwoOp};
-      add_TAC_line(tacP1);
-    }
+  forLoopStack *loopLabel;
+  loopLabel = STACK_TOP(forLoopStackHead);
+  utstring_printf(label, "%sFinish%d", loopLabel->name, *currentForLoop - 1);
+  if (left && right) {
+    tacCodeValidationParams tacP = { .instruction = op, .dst= dst,.op1 = left, .op2=right, .lineType=enumThreeOp};
+    check_ops_and_add_TAC_line(tacP);
   }
   utstring_free(label);
 }
