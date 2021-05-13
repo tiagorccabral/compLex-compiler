@@ -456,7 +456,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -479,7 +479,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -502,7 +502,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -525,7 +525,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -548,7 +548,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -571,7 +571,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;

@@ -2300,7 +2300,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -2328,7 +2328,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -2356,7 +2356,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -2384,7 +2384,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -2412,7 +2412,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;
@@ -2440,7 +2440,7 @@ yyreduce:
     set_temporary_register((yyval.node), &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators((yyvsp[-2].node), (yyvsp[0].node), running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
       UT_string *label;
       utstring_new(label);
       forLoopStack *loopLabel;

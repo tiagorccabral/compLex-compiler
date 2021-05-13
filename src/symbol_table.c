@@ -170,6 +170,9 @@ void free_symbols_table(){
   symbolNode *s, *tmp;
   HASH_ITER(hh, symbolTable, s, tmp) {
     HASH_DEL(symbolTable, s);
+    free(s->name);
+    free(s->type);
+    free(s->tacName);
     free(s);
   }
 }

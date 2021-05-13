@@ -71,6 +71,7 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   char *stringValue = create_temporary_register(currentTempReg);
   char *comprTmp = create_temporary_register(currentTempReg);
   char *stringLen = create_temporary_register(currentTempReg);
+  char *operand_array = set_operand_array(stringPointer, stringPosition);
   UT_string *tmp, *labelStart, *labelFinish;
   utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);
   utstring_printf(tmp, "%lu", strlen(string)-1);
@@ -88,7 +89,7 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   add_TAC_line(tacP4);
   tacCodeParam tacP5 = { .instruction = "brnz", .op1 = utstring_body(labelFinish), .op2 = comprTmp, .lineType=enumTwoOp};
   add_TAC_line(tacP5);
-  tacCodeParam tacP3 = { .instruction = "mov", .op1 = stringValue, .op2 = set_operand_array(stringPointer, stringPosition), .lineType=enumTwoOp};
+  tacCodeParam tacP3 = { .instruction = "mov", .op1 = stringValue, .op2 = operand_array, .lineType=enumTwoOp};
   add_TAC_line(tacP3);
   tacCodeParam tacP6 = { .instruction = "print", .op1 = stringValue, .lineType=enumOneOp};
   add_TAC_line(tacP6);
@@ -104,9 +105,9 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
     tacCodeParam tacP9 = { .instruction = "nop", .lineType=enumNoOp};
     add_TAC_line(tacP9);
   }
-  utstring_free(tmp);
-  utstring_free(labelStart);
-  utstring_free(labelFinish);
+  free(operand_array); free(stringPosition); free(stringPointer);
+  free(stringValue); free(stringLen); free(comprTmp);
+  utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish);
 }
 
 void add_for_loop_entry_to_TAC(char *string, int *currentForLoop) {
