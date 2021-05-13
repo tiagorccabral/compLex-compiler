@@ -83,6 +83,8 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop);
 
+char * get_TAC_op_from_node_class(char *node);
+
 /* creates a string that is in the format of array access */
 char * set_operand_array(char *string, char *arrayPosition);
 

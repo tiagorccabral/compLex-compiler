@@ -130,11 +130,12 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
   utstring_new(labelStart);
   utstring_new(labelFinish);
   utstring_printf(labelStart, "%s%d", string, *currentForLoop - 1);
+  char *forIncrementOp = get_TAC_op_from_node_class(middle2Branch->leftBranch->astNodeClass);
   if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->tempReg) {
-    tacCodeParam tacP0 = { .instruction = "add", .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
+    tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
   } else if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->value) {
-    tacCodeParam tacP0 = { .instruction = "add", .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->value, .lineType=enumThreeOp};
+    tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->value, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
   }
   tacCodeParam tac1 = { .instruction = "jump", .op1 = utstring_body(labelStart), .lineType=enumOneOp};
@@ -143,9 +144,25 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
   insertTACLabel(utstring_body(labelFinish));
   *currentForLoop = *currentForLoop - 1;
   free(loopLabel->name);
+  free(forIncrementOp);
   free(loopLabel);
   utstring_free(labelStart);
   utstring_free(labelFinish);
+}
+
+char * get_TAC_op_from_node_class(char *node) {
+  UT_string *operation;
+  utstring_new(operation);
+  if (strcmp(node, "ARITHMETIC_EXPRESSION ADD_OP") == 0) {
+    utstring_printf(operation, "add");
+  } else if (strcmp(node, "ARITHMETIC_EXPRESSION SUB_OP") == 0) {
+    utstring_printf(operation, "sub");
+  } else if (strcmp(node, "ARITHMETIC_EXPRESSION MULT_OP") == 0) {
+    utstring_printf(operation, "mul");
+  } else if (strcmp(node, "ARITHMETIC_EXPRESSION DIV_OP") == 0) {
+    utstring_printf(operation, "div");
+  }
+  return utstring_body(operation);
 }
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop) {
