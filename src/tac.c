@@ -8,6 +8,8 @@ tacLine *tacFileTableHead = NULL;
 
 forLoopStack *forLoopStackHead = NULL;
 
+int forLoopsCounter = 0;
+
 void addSymbolsToTable(FILE *fp) {
   struct symbolNode *s;
   struct symbolNode *nullC = NULL;
@@ -114,7 +116,8 @@ void add_for_loop_entry_to_TAC(char *string, int *currentForLoop) {
   UT_string *labelStart;
   forLoopStack *forLoopLabel = (forLoopStack *)malloc(sizeof *forLoopLabel);
   utstring_new(labelStart);
-  utstring_printf(labelStart, "%s%d", string, *currentForLoop);
+  utstring_printf(labelStart, "%s%d%d", string, *currentForLoop, forLoopsCounter);
+  forLoopsCounter++;
   insertTACLabel(utstring_body(labelStart));
   forLoopLabel->name = utstring_body(labelStart);
   STACK_PUSH(forLoopStackHead, forLoopLabel);
@@ -123,13 +126,10 @@ void add_for_loop_entry_to_TAC(char *string, int *currentForLoop) {
 }
 
 void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
-  UT_string *labelStart;
   UT_string *labelFinish;
   forLoopStack *loopLabel;
   STACK_POP(forLoopStackHead, loopLabel);
-  utstring_new(labelStart);
   utstring_new(labelFinish);
-  utstring_printf(labelStart, "%s%d", string, *currentForLoop - 1);
   char *forIncrementOp = get_TAC_op_from_node_class(middle2Branch->leftBranch->astNodeClass);
   if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->tempReg) {
     tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
@@ -138,7 +138,7 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
     tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->value, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
   }
-  tacCodeParam tac1 = { .instruction = "jump", .op1 = utstring_body(labelStart), .lineType=enumOneOp};
+  tacCodeParam tac1 = { .instruction = "jump", .op1 = loopLabel->name, .lineType=enumOneOp};
   add_TAC_line(tac1);
   utstring_printf(labelFinish, "%sFinish", loopLabel->name);
   insertTACLabel(utstring_body(labelFinish));
@@ -146,7 +146,6 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
   free(loopLabel->name);
   free(forIncrementOp);
   free(loopLabel);
-  utstring_free(labelStart);
   utstring_free(labelFinish);
 }
 

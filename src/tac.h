@@ -51,6 +51,8 @@ typedef struct tacCodeValidationParams {
   enum tacCodeType lineType;
 } tacCodeValidationParams;
 
+int forLoopsCounter;
+
 /* adds symbols from the symbols table to the TAC file */
 void addSymbolsToTable(FILE *file);
 

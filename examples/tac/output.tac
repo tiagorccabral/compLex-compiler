@@ -54,9 +54,9 @@ nop
 println resultado
 mov k, 10
 mov i, 0
-forLoop0:
+forLoop00:
 sleq $13, i, 3
-brz forLoop0Finish, $13
+brz forLoop00Finish, $13
 mov $19, 6
 mov $15, 0
 mov $16, &string3
@@ -71,9 +71,9 @@ endWhileWriteln3:
 nop
 println i
 mov j, 10
-forLoop1:
+forLoop11:
 seq $20, k, 10
-brz forLoop1Finish, $20
+brz forLoop11Finish, $20
 mov $26, 6
 mov $22, 0
 mov $23, &string4
@@ -90,12 +90,27 @@ println k
 sub $27, k, 1
 mov k, $27
 add j, j, 1
-jump forLoop1
-forLoop1Finish:
+jump forLoop11
+forLoop11Finish:
 mov k, 10
 add i, i, 1
-jump forLoop0
-forLoop0Finish:
+jump forLoop00
+forLoop00Finish:
+mov i, 10
+forLoop02:
+slt $28, i, 8
+brnz forLoop02Finish, $28
+mov j, 0
+forLoop13:
+slt $30, j, 3
+brz forLoop13Finish, $30
+println i
+add j, j, 1
+jump forLoop13
+forLoop13Finish:
+sub i, i, 1
+jump forLoop02
+forLoop02Finish:
 return 0
 main:
 call fmain
