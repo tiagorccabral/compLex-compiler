@@ -65,6 +65,8 @@ int lexical_errors_count = 0;
 int currentTempReg = 0; /* keeps count of how many regs are used during parse */
 int currentParamsReg = 0; /* keeps count of how many params are used during parse */
 int currentTableCounter = 1; /* keeps count of how many symbols are added to .table during parse, e.g: strings */
+int currentForLoop = 0; /* keeps count of the current for loop */
+int forIncrementCounter = 0;
 
 char *return_statement_type; /* aux vars to verify presence of return statements*/
 struct parserNode* returned_node; /* aux vars to verify presence of return statements*/
@@ -398,18 +400,17 @@ fluxControlstatement: RETURN comparationalExpression ';' {
   }
 ;
 
-iterationStatement: FOR '(' comparationalExpression ')' localStatetements {
+iterationStatement: FOR '(' expression { 
+      add_for_loop_entry_to_TAC("forLoop", &currentForLoop);
+      forIncrementCounter++; 
+    } expression {
+      add_right_logical_loop_OP_to_TAC("forLoop", $5, &currentTempReg, &currentForLoop);
+    } forIncrement ')' localStatetements {
     astParam astP = {
-      .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="ITERATION_STATEMENT FOR_ONE_ARGUMENT"
+      .leftBranch = $3, .middle1Branch=$5, .middle2Branch=$7, .rightBranch = $9, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
     };
     $$ = add_ast_node(astP);
-    print_parser_msg("for loop one argument\n", DEBUG);
-  }
-  | FOR '(' expression expression forIncrement ')' localStatetements {
-    astParam astP = {
-      .leftBranch = $3, .middle1Branch=$4, .middle2Branch=$5, .rightBranch = $7, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
-    };
-    $$ = add_ast_node(astP);
+    add_for_loop_closing_to_TAC("forLoop", &currentForLoop, &currentTempReg, $$->middle1Branch, $$->middle2Branch);
     print_parser_msg("for loop three arguments\n", DEBUG);
   }
   | SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements {
@@ -454,7 +455,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less than operation\n", DEBUG);
   }
@@ -463,7 +468,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
@@ -472,7 +481,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than operation\n", DEBUG);
   }
@@ -481,7 +494,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
@@ -490,7 +507,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is different than operation\n", DEBUG);
   }
@@ -499,7 +520,11 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       .leftBranch = $1, .rightBranch = $3, .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
     };
     $$ = add_ast_node(astP);
-    cast_operators($1, $3, running_line_count);
+    int symbolOK = 0;
+    symbolOK = cast_operators($1, $3, running_line_count);
+    if (symbolOK == 0 && forIncrementCounter == 0) {
+      // TODO: Add logical ops
+    }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("is equal to operation\n", DEBUG);
   }
@@ -516,9 +541,12 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && forIncrementCounter == 0) {
       tacCodeValidationParams tacP = { .instruction = "add", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
+    }
+    else if (symbolOK == 0 && forIncrementCounter > 0) {
+      forIncrementCounter--;
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("add operation\n", DEBUG);
@@ -531,9 +559,12 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && forIncrementCounter == 0) {
       tacCodeValidationParams tacP = { .instruction = "sub", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
+    }
+    else if (symbolOK == 0 && forIncrementCounter > 0) {
+      forIncrementCounter--;
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("subtraction operation\n", DEBUG);
@@ -549,9 +580,12 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && forIncrementCounter == 0) {
       tacCodeValidationParams tacP = { .instruction = "mul", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
+    }
+    else if (symbolOK == 0 && forIncrementCounter > 0) {
+      forIncrementCounter--;
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("multiplication operation\n", DEBUG);
@@ -564,9 +598,12 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0) {
+    if (symbolOK == 0 && forIncrementCounter == 0) {
       tacCodeValidationParams tacP = { .instruction = "div", .dst= $$,.op1 = $1, .op2 = $3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
+    }
+    else if (symbolOK == 0 && forIncrementCounter > 0) {
+      forIncrementCounter--;
     }
     if($1->type) $$->type = strdup($1->type);
     print_parser_msg("division operation\n", DEBUG);

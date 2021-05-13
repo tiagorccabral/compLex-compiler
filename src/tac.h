@@ -66,6 +66,14 @@ char * set_param(parserNode *node, int *currentParamsReg);
 /* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
 
+/* adds initial part of for loop to TAC file, given a string */
+void add_for_loop_entry_to_TAC(char *string, int *currentForLoop);
+
+/* adds closing part of for loop to TAC file, given a string */
+void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
+
+void add_right_logical_loop_OP_to_TAC(char *labelFinish, parserNode *middle1Branch, int *currentTempReg, int *currentForLoop);
+
 /* creates a string that is in the format of array access */
 char * set_operand_array(char *string, char *arrayPosition);
 
