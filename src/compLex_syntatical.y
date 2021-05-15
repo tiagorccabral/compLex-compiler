@@ -102,7 +102,7 @@ struct parserNode* returned_node; /* aux vars to verify presence of return state
 
 // Types definitions
 %type <node> programEntries compoundStatement declaration statements statement
-%type <node> inOutStatement fluxControlstatement iterationStatement forIncrement
+%type <node> inOutStatement fluxControlstatement ifStart iterationStatement forIncrement
 %type <node> expression setOperationalExpression unaryOperation setBody
 %type <node> arithmeticExpression arithmeticExpression2 logicalExpression comparationalExpression
 %type <node> variableAssignment localStatetements
@@ -370,38 +370,46 @@ fluxControlstatement: RETURN comparationalExpression ';' {
     add_TAC_line(tacP);
     print_parser_msg("return null\n", DEBUG);
   }
-  | IF '(' comparationalExpression ')' expression {
+  | ifStart '(' comparationalExpression ')' expression {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' comparationalExpression ')' RETURN expression {
+  | ifStart '(' comparationalExpression ')' RETURN expression {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $6, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ONE_LINE RETURN"
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' comparationalExpression ')' localStatetements {
+  | ifStart '(' comparationalExpression ')' localStatetements {
     astParam astP = {
       .leftBranch = $3, .rightBranch = $5, .nodeType = enumLeftRightBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_NO_ELSE"
     };
     $$ = add_ast_node(astP);
+    if (STACK_TOP(codeStackHead)) {
+      add_if_finish_to_TAC();
+    }
     print_parser_msg("if statement\n", DEBUG);
   }
-  | IF '(' comparationalExpression ')' localStatetements  ELSE localStatetements {
+  | ifStart '(' comparationalExpression ')' localStatetements  ELSE localStatetements {
     astParam astP = {
-      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
+      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value="if", .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
     };
     $$ = add_ast_node(astP);
     print_parser_msg("if/else statement\n", DEBUG);
   }
 ;
 
-iterationStatement: FOR '(' expression { 
-      add_for_loop_entry_to_TAC("forLoop", &currentForLoop);
+ifStart: IF {
+  add_for_or_if_entry_to_TAC("simpleIfStart", &currentForLoop);
+}
+;
+
+iterationStatement: FOR '(' expression {
+      add_for_or_if_entry_to_TAC("forLoop", &currentForLoop);
       forIncrementCounter++; 
     } expression {;} forIncrement ')' localStatetements {
       astParam astP = {
@@ -456,12 +464,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "slt", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
@@ -479,12 +487,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "sleq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
@@ -502,12 +510,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "sleq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
@@ -525,12 +533,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "slt", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
@@ -548,12 +556,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "seq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brnz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};
@@ -571,12 +579,12 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
     set_temporary_register($$, &currentTempReg);
     int symbolOK = 0;
     symbolOK = cast_operators($1, $3, running_line_count);
-    if (symbolOK == 0 && STACK_TOP(forLoopStackHead)) {
+    if (symbolOK == 0 && STACK_TOP(codeStackHead)) {
       UT_string *label;
       utstring_new(label);
-      forLoopStack *loopLabel;
-      loopLabel = STACK_TOP(forLoopStackHead);
-      utstring_printf(label, "%sFinish", loopLabel->name);
+      codeLabelStack *currentLoopLabel;
+      currentLoopLabel = STACK_TOP(codeStackHead);
+      utstring_printf(label, "%sFinish", currentLoopLabel->name);
       tacCodeValidationParams tacP = { .instruction = "seq", .dst= $$,.op1 = $1, .op2=$3, .lineType=enumThreeOp};
       check_ops_and_add_TAC_line(tacP);
       tacCodeParam tacP1 = { .instruction = "brz", .op1 = utstring_body(label), $$->tempReg, .lineType=enumTwoOp};

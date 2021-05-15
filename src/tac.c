@@ -6,7 +6,7 @@ tacLine *tacFileHead = NULL;
 
 tacLine *tacFileTableHead = NULL;
 
-forLoopStack *forLoopStackHead = NULL;
+codeLabelStack *codeStackHead = NULL;
 
 int forLoopsCounter = 0;
 
@@ -112,23 +112,23 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish);
 }
 
-void add_for_loop_entry_to_TAC(char *string, int *currentForLoop) {
+void add_for_or_if_entry_to_TAC(char *string, int *currentForLoop) {
   UT_string *labelStart;
-  forLoopStack *forLoopLabel = (forLoopStack *)malloc(sizeof *forLoopLabel);
+  codeLabelStack *codeLabel = (codeLabelStack *)malloc(sizeof *codeLabel);
   utstring_new(labelStart);
   utstring_printf(labelStart, "%s%d%d", string, *currentForLoop, forLoopsCounter);
   forLoopsCounter++;
   insertTACLabel(utstring_body(labelStart));
-  forLoopLabel->name = utstring_body(labelStart);
-  STACK_PUSH(forLoopStackHead, forLoopLabel);
+  codeLabel->name = utstring_body(labelStart);
+  STACK_PUSH(codeStackHead, codeLabel);
   *currentForLoop = *currentForLoop + 1;
   // utstring_free(labelStart);
 }
 
 void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
   UT_string *labelFinish;
-  forLoopStack *loopLabel;
-  STACK_POP(forLoopStackHead, loopLabel);
+  codeLabelStack *loopLabel;
+  STACK_POP(codeStackHead, loopLabel);
   utstring_new(labelFinish);
   char *forIncrementOp = get_TAC_op_from_node_class(middle2Branch->leftBranch->astNodeClass);
   if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->tempReg) {
@@ -167,13 +167,23 @@ char * get_TAC_op_from_node_class(char *node) {
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop) {
   UT_string *label;
   utstring_new(label);
-  forLoopStack *loopLabel;
-  loopLabel = STACK_TOP(forLoopStackHead);
+  codeLabelStack *loopLabel;
+  loopLabel = STACK_TOP(codeStackHead);
   utstring_printf(label, "%sFinish%d", loopLabel->name, *currentForLoop - 1);
   if (left && right) {
     tacCodeValidationParams tacP = { .instruction = op, .dst= dst,.op1 = left, .op2=right, .lineType=enumThreeOp};
     check_ops_and_add_TAC_line(tacP);
   }
+  utstring_free(label);
+}
+
+void add_if_finish_to_TAC() {
+  UT_string *label;
+  utstring_new(label);
+  codeLabelStack *ifLabel;
+  ifLabel = STACK_TOP(codeStackHead);
+  utstring_printf(label, "%sFinish", ifLabel->name);
+  insertTACLabel(utstring_body(label));
   utstring_free(label);
 }
 
@@ -316,10 +326,17 @@ void free_TAC_list(tacLine *tacFileHead) {
 
 void free_TAC_table_list(tacLine *tacFileTableHead) {
   tacLine *elt, *tmp, *etmp;
+  codeLabelStack *stackElt;
 
   CDL_FOREACH_SAFE(tacFileTableHead,elt,tmp, etmp) {
     CDL_DELETE(tacFileTableHead,elt);
     utstring_free(elt->codeLine);
     free(elt);
+  }
+
+  while (!STACK_EMPTY(codeStackHead)) {
+    STACK_POP(codeStackHead, stackElt);
+    free(stackElt->name);
+    free(stackElt);
   }
 }

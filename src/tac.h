@@ -8,11 +8,11 @@
 #include "utlist.h"
 #include "utstack.h"
 
-/* keeps track of current for loop stack name */
-typedef struct forLoopStack {
-  char* name; /* name of current for loop scope stack */
-  struct forLoopStack *next;
-} forLoopStack; /* element of each scope stack of for loops */
+/* keeps track of current for coode stack name */
+typedef struct codeLabelStack {
+  char* name; /* name of current code scope stack */
+  struct codeLabelStack *next;
+} codeLabelStack; /* element of each scope stack of for code */
 
 /* represents one element of the doubly linked list, i.e: one line of the TAC file */
 typedef struct tacLine {
@@ -20,7 +20,7 @@ typedef struct tacLine {
   struct tacLine *next, *prev; /* pointers to next and previos elements of the list */
 }tacLine;
 
-forLoopStack *forLoopStackHead; /* pointer to the head of the stack of labels of ForLoops */
+codeLabelStack *codeStackHead; /* pointer to the head of the stack of labels of loops and ifs */
 
 tacLine *tacFileHead; /* pointer to the head of the DLList that represents the TAC file */
 
@@ -77,13 +77,15 @@ char * set_param(parserNode *node, int *currentParamsReg);
 /* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
 
-/* adds initial part of for loop to TAC file, given a string */
-void add_for_loop_entry_to_TAC(char *string, int *currentForLoop);
+/* adds initial part of 'if' or 'for loop' to TAC file, given a string */
+void add_for_or_if_entry_to_TAC(char *string, int *currentForLoop);
 
 /* adds closing part of for loop to TAC file, given a string */
 void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop);
+
+void add_if_finish_to_TAC();
 
 char * get_TAC_op_from_node_class(char *node);
 
