@@ -112,20 +112,21 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish);
 }
 
-void add_for_or_if_entry_to_TAC(char *string, int *currentForLoop) {
+void add_for_or_if_entry_to_TAC(char *string) {
   UT_string *labelStart;
+  int stackSize = 0;
   codeLabelStack *codeLabel = (codeLabelStack *)malloc(sizeof *codeLabel);
+  codeLabelStack *tmp;
+  STACK_COUNT(codeStackHead, tmp, stackSize);
   utstring_new(labelStart);
-  utstring_printf(labelStart, "%s%d%d", string, *currentForLoop, forLoopsCounter);
+  utstring_printf(labelStart, "%s%d%d", string, stackSize, forLoopsCounter);
   forLoopsCounter++;
   insertTACLabel(utstring_body(labelStart));
   codeLabel->name = utstring_body(labelStart);
   STACK_PUSH(codeStackHead, codeLabel);
-  *currentForLoop = *currentForLoop + 1;
-  // utstring_free(labelStart);
 }
 
-void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
+void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
   UT_string *labelFinish;
   codeLabelStack *loopLabel;
   STACK_POP(codeStackHead, loopLabel);
@@ -142,7 +143,6 @@ void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *current
   add_TAC_line(tac1);
   utstring_printf(labelFinish, "%sFinish", loopLabel->name);
   insertTACLabel(utstring_body(labelFinish));
-  *currentForLoop = *currentForLoop - 1;
   free(loopLabel->name);
   free(forIncrementOp);
   free(loopLabel);
@@ -175,6 +175,45 @@ void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *lef
     check_ops_and_add_TAC_line(tacP);
   }
   utstring_free(label);
+}
+
+void add_if_else_entry_to_TAC() {
+  UT_string *labelAfterElse;
+  int stackSize = 0;
+  codeLabelStack *codeLabel = (codeLabelStack *)malloc(sizeof *codeLabel);
+  codeLabelStack *tmp;
+  STACK_COUNT(codeStackHead, tmp, stackSize);
+  utstring_new(labelAfterElse);
+  utstring_printf(labelAfterElse, "%s%d%d", "afterElseLabel", stackSize, forLoopsCounter);
+  forLoopsCounter++;
+  tacCodeParam tac0 = { .instruction = "jump", .op1 = utstring_body(labelAfterElse), .lineType=enumOneOp};
+  add_TAC_line(tac0);
+
+  UT_string *labelFinish;
+  codeLabelStack *ifLabelStart;
+  STACK_POP(codeStackHead, ifLabelStart);
+  utstring_new(labelFinish);
+  utstring_printf(labelFinish, "%sFinish", ifLabelStart->name);
+  insertTACLabel(utstring_body(labelFinish));
+  free(ifLabelStart->name);
+  free(ifLabelStart);
+
+  codeLabelStack *afterElseCodeLabel = (codeLabelStack *)malloc(sizeof *afterElseCodeLabel);
+  afterElseCodeLabel->name = utstring_body(labelAfterElse);
+  STACK_PUSH(codeStackHead, afterElseCodeLabel);
+}
+
+void add_if_else_closing_to_TAC() {
+  if (STACK_TOP(codeStackHead)) {
+    UT_string *labelFinish;
+    codeLabelStack *elseLabelFinish;
+    STACK_POP(codeStackHead, elseLabelFinish);
+    utstring_new(labelFinish);
+    utstring_printf(labelFinish, "%s", elseLabelFinish->name);
+    insertTACLabel(utstring_body(labelFinish));
+    free(elseLabelFinish->name);
+    free(elseLabelFinish);
+  }
 }
 
 void add_if_finish_to_TAC() {

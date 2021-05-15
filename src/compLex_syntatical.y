@@ -65,7 +65,6 @@ int lexical_errors_count = 0;
 int currentTempReg = 0; /* keeps count of how many regs are used during parse */
 int currentParamsReg = 0; /* keeps count of how many params are used during parse */
 int currentTableCounter = 1; /* keeps count of how many symbols are added to .table during parse, e.g: strings */
-int currentForLoop = 0; /* keeps count of the current for loop */
 int forIncrementCounter = 0;
 
 char *return_statement_type; /* aux vars to verify presence of return statements*/
@@ -394,29 +393,32 @@ fluxControlstatement: RETURN comparationalExpression ';' {
     }
     print_parser_msg("if statement\n", DEBUG);
   }
-  | ifStart '(' comparationalExpression ')' localStatetements  ELSE localStatetements {
+  | ifStart '(' comparationalExpression ')' localStatetements {
+    add_if_else_entry_to_TAC();
+  } ELSE localStatetements {
     astParam astP = {
-      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type= "IF/ELSE", .value="if", .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
+      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $8, .type= "IF/ELSE", .value="if", .nodeType = enumLeftRightMiddleBranch, .astNodeClass="FLUX_CONTROL_STATEMENT IF_ELSE" 
     };
     $$ = add_ast_node(astP);
+    add_if_else_closing_to_TAC();
     print_parser_msg("if/else statement\n", DEBUG);
   }
 ;
 
 ifStart: IF {
-  add_for_or_if_entry_to_TAC("simpleIfStart", &currentForLoop);
+  add_for_or_if_entry_to_TAC("ifStart");
 }
 ;
 
 iterationStatement: FOR '(' expression {
-      add_for_or_if_entry_to_TAC("forLoop", &currentForLoop);
+      add_for_or_if_entry_to_TAC("forLoop");
       forIncrementCounter++; 
     } expression {;} forIncrement ')' localStatetements {
       astParam astP = {
         .leftBranch = $3, .middle1Branch=$5, .middle2Branch=$7, .rightBranch = $9, .type= "FOR", .value=$1, .nodeType = enumLeftRightMiddle1And2Branch, .astNodeClass="ITERATION_STATEMENT FOR_THREE_ARGUMENTS"
       };
       $$ = add_ast_node(astP);
-      add_for_loop_closing_to_TAC("forLoop", &currentForLoop, &currentTempReg, $$->middle1Branch, $$->middle2Branch);
+      add_for_loop_closing_to_TAC("forLoop", &currentTempReg, $$->middle1Branch, $$->middle2Branch);
       print_parser_msg("for loop three arguments\n", DEBUG);
   }
   | SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements {

@@ -78,12 +78,16 @@ char * set_param(parserNode *node, int *currentParamsReg);
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
 
 /* adds initial part of 'if' or 'for loop' to TAC file, given a string */
-void add_for_or_if_entry_to_TAC(char *string, int *currentForLoop);
+void add_for_or_if_entry_to_TAC(char *string);
 
 /* adds closing part of for loop to TAC file, given a string */
-void add_for_loop_closing_to_TAC(char *string, int *currentForLoop, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
+void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop);
+
+void add_if_else_entry_to_TAC();
+
+void add_if_else_closing_to_TAC();
 
 void add_if_finish_to_TAC();
 
