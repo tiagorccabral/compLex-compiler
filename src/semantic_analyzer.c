@@ -126,8 +126,7 @@ void verify_return_statement(char *name, int found_return_statement, char *expec
     printf("semantic error, function '%s' (line: %d) does not have return statement\n", name, line==0?line+1:line);
     return;
   } else if (found_return_statement == 0) {
-    semantic_errors++;
-    printf("semantic error, function '%s' (line: %d) does not have return statement\n", name, line==0?line+1:line);
+    printf("semantic warning, function '%s' (line: %d) does not have return statement\n", name, line==0?line+1:line);
     return;
   }
   if (strcmp(returned_type->type, "IDENTIFIER")!=0) {
