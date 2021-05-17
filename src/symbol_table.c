@@ -21,7 +21,6 @@ void create_new_scope_level() {
 
 void decrease_scope_level() {
   scopeStack *tmpStack;
-  tmpStack = (scopeStack*)malloc(sizeof(scopeStack));
   STACK_POP(scopeStackHead, tmpStack);
   free(tmpStack);
 }
@@ -32,7 +31,6 @@ scopeInfo get_current_scope() {
   scopeInfo scopeData;
   if (!STACK_EMPTY(scopeStackHead)) { /* if scope stack is not empty, return current scope, return 0 otherwise */
     scopeStack *tmpStack;
-    tmpStack = (scopeStack*)malloc(sizeof(scopeStack));
     STACK_POP(scopeStackHead, tmpStack);
     current_scope = tmpStack->level;
     uniqueID = tmpStack->scopeID;
@@ -179,7 +177,6 @@ void free_symbols_table(){
 
 void free_scope_stack(){
   scopeStack *tmpStack;
-  tmpStack = (scopeStack*)malloc(sizeof(scopeStack));
   while (!STACK_EMPTY(scopeStackHead)) {
     STACK_POP(scopeStackHead, tmpStack);
     free(tmpStack);

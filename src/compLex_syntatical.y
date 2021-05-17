@@ -214,8 +214,10 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
     scopeInfo current_scope = get_current_scope();
     int foundSymbol = get_symbolID_by_name_and_current_scope("main", current_scope.scopeID, current_scope.level);
     if (foundSymbol == -1) { /* not main */
-      char* tacName = set_param($$, &currentParamsReg);
-      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .tacName=tacName, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      UT_string *tacName;
+      utstring_new(tacName);
+      set_param(tacName, $$, &currentParamsReg);
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .tacName=utstring_body(tacName), .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
       add_symbol_node(symbol);
     } else {
       symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->rightBranch->value, .name = $4, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
@@ -233,8 +235,10 @@ parameter: parameters ',' typeSpecifier IDENTIFIER {
     scopeInfo current_scope = get_current_scope();
     int foundSymbol = get_symbolID_by_name_and_current_scope("main", current_scope.scopeID, current_scope.level);
     if (foundSymbol == -1) { /* not main */
-      char* tacName = set_param($$, &currentParamsReg);
-      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .tacName=tacName, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
+      UT_string *tacName;
+      utstring_new(tacName);
+      set_param(tacName, $$, &currentParamsReg);
+      symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .tacName=utstring_body(tacName), .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
       add_symbol_node(symbol);
     } else {
       symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumParameter, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count, .associated_function=currentFunction.name, .last_param=currentFunction.lastParamPosition, .associated_function_scope=currentFunction.scopeID};
@@ -809,8 +813,12 @@ functionCall: IDENTIFIER '(' functionArguments ')' {
       tacCodeParam tacP = { .instruction = "call", .op1 = $1, .lineType=enumOneOp};
       add_TAC_line(tacP);
     } else {
-      tacCodeParam tacP = { .instruction = "call", .op1 = $1, .op2 = stringify_integer(currentCalledFunction.amountOfParamsCalled), .lineType=enumTwoOp};
+      UT_string *tmp;
+      utstring_new(tmp);
+      stringify_integer(tmp, currentCalledFunction.amountOfParamsCalled);
+      tacCodeParam tacP = { .instruction = "call", .op1 = $1, .op2 = utstring_body(tmp), .lineType=enumTwoOp};
       add_TAC_line(tacP);
+      utstring_free(tmp);
     }
   }
   verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);

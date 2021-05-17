@@ -62,17 +62,17 @@ void add_TAC_line(tacCodeParam tacCode);
 /* insert label to tac file */
 char * insertTACLabel(char *label);
 
-/* insert a string to the .table portion of the TAC file, returns name of created .table var */
-char* insert_string_to_TAC_table(char *string, int pos, int *currentTableCounter);
+/* insert a string to the .table portion of the TAC file, modifies name of created .table var to stringVar */
+void insert_string_to_TAC_table(UT_string *stringVar, char *string, int pos, int *currentTableCounter);
 
-/* sets a temporary register to a given node, returns string of that register */
-char * set_temporary_register(parserNode *node, int *currentTempReg);
+/* sets a temporary register to a given node */
+void set_temporary_register(parserNode *node, int *currentTempReg);
 
 /* creates a new temporary register, returns string of that register */
-char * create_temporary_register(int *currentTempReg);
+void create_temporary_register(UT_string *string, int *currentTempReg);
 
 /* sets a temporary register to a given node representing the param of a function, returns string of that register */
-char * set_param(parserNode *node, int *currentParamsReg);
+void set_param(UT_string *string, parserNode *node, int *currentParamsReg);
 
 /* add instructions to TAC to print a simple string to terminal. If writeln is 1, add a \n to end of string */
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter);
@@ -94,10 +94,10 @@ void add_if_finish_to_TAC();
 char * get_TAC_op_from_node_class(char *node);
 
 /* creates a string that is in the format of array access */
-char * set_operand_array(char *string, char *arrayPosition);
+void set_operand_array(UT_string *, char *, char *);
 
 /* takes a number, and returns the string version of that number */
-char * stringify_integer(int number_to_be_string);
+void stringify_integer(UT_string *string, int number_to_be_string);
 
 /* check operands and calls add_TAC_line with correct params */
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams);

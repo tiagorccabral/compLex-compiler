@@ -68,34 +68,41 @@ void add_TAC_line(tacCodeParam tacCode) {
 }
 
 void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *currentTableCounter) {
-  char *stringPosition = create_temporary_register(currentTempReg);
-  char *stringPointer = create_temporary_register(currentTempReg);
-  char *stringValue = create_temporary_register(currentTempReg);
-  char *comprTmp = create_temporary_register(currentTempReg);
-  char *stringLen = create_temporary_register(currentTempReg);
-  char *operand_array = set_operand_array(stringPointer, stringPosition);
-  UT_string *tmp, *labelStart, *labelFinish;
-  utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);
+  UT_string *stringPosition, *stringPointer, *stringValue, *comprTmp;
+  UT_string *stringLen, *tmp, *labelStart, *labelFinish, *operand_array, *stringVar;
+  utstring_new(stringPosition);utstring_new(stringPointer);
+  utstring_new(stringValue);
+  utstring_new(comprTmp);
+  utstring_new(stringLen);
+  utstring_new(operand_array);
+  utstring_new(stringVar);
+  create_temporary_register(stringPosition, currentTempReg);
+  create_temporary_register(stringPointer, currentTempReg);
+  create_temporary_register(stringValue, currentTempReg);
+  create_temporary_register(comprTmp, currentTempReg);
+  create_temporary_register(stringLen, currentTempReg);
+  set_operand_array(operand_array, utstring_body(stringPointer), utstring_body(stringPosition));
+  utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);utstring_new(stringVar);
   utstring_printf(tmp, "%lu", strlen(string)-1);
   utstring_printf(labelStart, "whileWritelnStart%d", *currentTableCounter);
   utstring_printf(labelFinish, "endWhileWriteln%d", *currentTableCounter);
-  char *stringVar = insert_string_to_TAC_table(string, 0, currentTableCounter);
-  tacCodeParam tacP0 = { .instruction = "mov", .op1 = stringLen, .op2 = utstring_body(tmp), .lineType=enumTwoOp};
+  insert_string_to_TAC_table(stringVar, string, 0, currentTableCounter);
+  tacCodeParam tacP0 = { .instruction = "mov", .op1 = utstring_body(stringLen), .op2 = utstring_body(tmp), .lineType=enumTwoOp};
   add_TAC_line(tacP0);
-  tacCodeParam tacP = { .instruction = "mov", .op1 = stringPosition, .op2 = "0", .lineType=enumTwoOp};
+  tacCodeParam tacP = { .instruction = "mov", .op1 = utstring_body(stringPosition), .op2 = "0", .lineType=enumTwoOp};
   add_TAC_line(tacP);
-  tacCodeParam tacP2 = { .instruction = "mov", .op1 = stringPointer, .op2 = stringVar, .lineType=enumTwoOp};
+  tacCodeParam tacP2 = { .instruction = "mov", .op1 = utstring_body(stringPointer), .op2 = utstring_body(stringVar), .lineType=enumTwoOp};
   add_TAC_line(tacP2);
   insertTACLabel(utstring_body(labelStart));
-  tacCodeParam tacP4 = { .instruction = "seq", .dst= comprTmp,.op1 = stringLen, .op2 = stringPosition, .lineType=enumThreeOp};
+  tacCodeParam tacP4 = { .instruction = "seq", .dst= utstring_body(comprTmp),.op1 = utstring_body(stringLen), .op2 = utstring_body(stringPosition), .lineType=enumThreeOp};
   add_TAC_line(tacP4);
-  tacCodeParam tacP5 = { .instruction = "brnz", .op1 = utstring_body(labelFinish), .op2 = comprTmp, .lineType=enumTwoOp};
+  tacCodeParam tacP5 = { .instruction = "brnz", .op1 = utstring_body(labelFinish), .op2 = utstring_body(comprTmp), .lineType=enumTwoOp};
   add_TAC_line(tacP5);
-  tacCodeParam tacP3 = { .instruction = "mov", .op1 = stringValue, .op2 = operand_array, .lineType=enumTwoOp};
+  tacCodeParam tacP3 = { .instruction = "mov", .op1 = utstring_body(stringValue), .op2 = utstring_body(operand_array), .lineType=enumTwoOp};
   add_TAC_line(tacP3);
-  tacCodeParam tacP6 = { .instruction = "print", .op1 = stringValue, .lineType=enumOneOp};
+  tacCodeParam tacP6 = { .instruction = "print", .op1 = utstring_body(stringValue), .lineType=enumOneOp};
   add_TAC_line(tacP6);
-  tacCodeParam tacP7 = { .instruction = "add", .dst= stringPosition,.op1 = stringPosition, .op2 = "1", .lineType=enumThreeOp};
+  tacCodeParam tacP7 = { .instruction = "add", .dst= utstring_body(stringPosition),.op1 = utstring_body(stringPosition), .op2 = "1", .lineType=enumThreeOp};
   add_TAC_line(tacP7);
   tacCodeParam tac8 = { .instruction = "jump", .op1 = utstring_body(labelStart), .lineType=enumOneOp};
   add_TAC_line(tac8);
@@ -107,9 +114,9 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
     tacCodeParam tacP9 = { .instruction = "nop", .lineType=enumNoOp};
     add_TAC_line(tacP9);
   }
-  free(operand_array); free(stringPosition); free(stringPointer);
-  free(stringValue); free(stringLen); free(comprTmp);
-  utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish);
+  utstring_free(operand_array); utstring_free(stringPosition); utstring_free(stringPointer);
+  utstring_free(stringValue); utstring_free(stringLen); utstring_free(comprTmp);
+  utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish); utstring_free(stringVar);
 }
 
 void add_for_or_if_entry_to_TAC(char *string) {
@@ -180,7 +187,6 @@ void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *lef
 void add_if_else_entry_to_TAC() {
   UT_string *labelAfterElse;
   int stackSize = 0;
-  codeLabelStack *codeLabel = (codeLabelStack *)malloc(sizeof *codeLabel);
   codeLabelStack *tmp;
   STACK_COUNT(codeStackHead, tmp, stackSize);
   utstring_new(labelAfterElse);
@@ -199,8 +205,10 @@ void add_if_else_entry_to_TAC() {
   free(ifLabelStart);
 
   codeLabelStack *afterElseCodeLabel = (codeLabelStack *)malloc(sizeof *afterElseCodeLabel);
-  afterElseCodeLabel->name = utstring_body(labelAfterElse);
+  afterElseCodeLabel->name = strdup(utstring_body(labelAfterElse));
   STACK_PUSH(codeStackHead, afterElseCodeLabel);
+  utstring_free(labelAfterElse);
+  utstring_free(labelFinish);
 }
 
 void add_if_else_closing_to_TAC() {
@@ -226,11 +234,8 @@ void add_if_finish_to_TAC() {
   utstring_free(label);
 }
 
-char * set_operand_array(char *string, char *arrayPosition) {
-  UT_string *tmp;
-  utstring_new(tmp);
+void set_operand_array(UT_string *tmp, char *string, char *arrayPosition) {
   utstring_printf(tmp, "%s[%s]", string, arrayPosition);
-  return utstring_body(tmp);
 }
 
 char * insertTACLabel(char *label) {
@@ -241,52 +246,40 @@ char * insertTACLabel(char *label) {
   return utstring_body(tmpLine->codeLine);
 }
 
-char * insert_string_to_TAC_table(char *string, int pos, int *currentTableCounter) {
+void insert_string_to_TAC_table(UT_string *stringVar, char *string, int pos, int *currentTableCounter) {
   tacLine *tmpLine = (tacLine*)malloc(sizeof *tmpLine);
-  UT_string *returnString;
 
   utstring_new(tmpLine->codeLine);
   utstring_printf(tmpLine->codeLine, "char string%d [] = %s\n", *currentTableCounter, string);
 
-  utstring_new(returnString);
-  utstring_printf(returnString, "&string%d", *currentTableCounter);
+  utstring_printf(stringVar, "&string%d", *currentTableCounter);
   *currentTableCounter = *currentTableCounter + 1;
 
   CDL_APPEND(tacFileTableHead, tmpLine);
-  return utstring_body(returnString);
 }
 
-char * set_temporary_register(parserNode *node, int *currentTempReg) {
+void set_temporary_register(parserNode *node, int *currentTempReg) {
   UT_string *tmp;
   utstring_new(tmp);
   utstring_printf(tmp, "$%d", *currentTempReg);
-  node->tempReg = utstring_body(tmp);
+  node->tempReg = strdup(utstring_body(tmp));
   *currentTempReg = *currentTempReg + 1;
-  return utstring_body(tmp);
+  utstring_free(tmp);
 }
 
-char * create_temporary_register(int *currentTempReg) {
-  UT_string *tmp;
-  utstring_new(tmp);
-  utstring_printf(tmp, "$%d", *currentTempReg);
+void create_temporary_register(UT_string *string, int *currentTempReg) {
+  utstring_printf(string, "$%d", *currentTempReg);
   *currentTempReg = *currentTempReg + 1;
-  return utstring_body(tmp);
 }
 
-char * set_param(parserNode *node, int *currentParamsReg) {
-  UT_string *tmp;
-  utstring_new(tmp);
-  utstring_printf(tmp, "#%d", *currentParamsReg);
-  node->tempReg = utstring_body(tmp);
+void set_param(UT_string *string, parserNode *node, int *currentParamsReg) {
+  utstring_printf(string, "#%d", *currentParamsReg);
+  node->tempReg = utstring_body(string);
   *currentParamsReg = *currentParamsReg + 1;
-  return utstring_body(tmp);
 }
 
-char * stringify_integer(int number_to_be_string) {
-  UT_string *tmp;
-  utstring_new(tmp);
-  utstring_printf(tmp, "%d", number_to_be_string);
-  return utstring_body(tmp);
+void stringify_integer(UT_string *string, int number_to_be_string) {
+  utstring_printf(string, "%d", number_to_be_string);
 }
 
 void check_ops_and_add_TAC_line(tacCodeValidationParams validationParams) {
