@@ -303,11 +303,16 @@ inOutStatement: WRITE '(' STR ')' ';' {
     add_string_to_TAC($3, 0, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: write string\n", DEBUG);
   }
-  | WRITE '(' variable ')' ';' {
+  | WRITE '(' comparationalExpression ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITE IDENTIFIER" };
     $$ = add_ast_node(astP);
-    tacCodeValidationParams tacP = { .instruction = "print", .op1 = $3, .lineType=enumOneOp};
-    check_ops_and_add_TAC_line(tacP);
+    if ($3->tempReg) {
+      tacCodeParam tacP = { .instruction = "print", .op1 = $3->tempReg, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    } else if ($3->value) {
+      tacCodeParam tacP = { .instruction = "print", .op1 = $3->value, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    }
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
   | WRITELN '(' STR ')' ';' {
@@ -316,11 +321,16 @@ inOutStatement: WRITE '(' STR ')' ';' {
     add_string_to_TAC($3, 1, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: writeln string\n", DEBUG);
   }
-  | WRITELN '(' variable ')' ';' {
+  | WRITELN '(' comparationalExpression ')' ';' {
     astParam astP = { .leftBranch = $3, .type=$1, .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="WRITELN IDENTIFIER" };
     $$ = add_ast_node(astP);
-    tacCodeValidationParams tacP = { .instruction = "println", .op1 = $3, .lineType=enumOneOp};
-    check_ops_and_add_TAC_line(tacP);
+    if ($3->tempReg) {
+      tacCodeParam tacP = { .instruction ="println", .op1 = $3->tempReg, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    } else if ($3->value) {
+      tacCodeParam tacP = { .instruction ="println", .op1 = $3->value, .lineType=enumOneOp};
+      add_TAC_line(tacP);
+    }
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
   | READ '(' variable ')' ';' {
@@ -823,6 +833,7 @@ functionCall: IDENTIFIER '(' functionArguments ')' {
   }
   verify_func_call_params(currentCalledFunction.name, currentCalledFunction.amountOfParamsCalled, currentCalledFunction.passedParams, running_line_count);
   currentCalledFunction.amountOfParamsCalled = 0;
+  currentParamsReg = 0;
   set_temporary_register($$, &currentTempReg);
   tacCodeParam tacP = { .instruction = "pop", .op1 = $$->tempReg, .lineType=enumOneOp};
   add_TAC_line(tacP);

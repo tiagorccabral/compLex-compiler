@@ -20,13 +20,15 @@ void addSymbolsToTable(FILE *fp) {
   int hasAtLeastOneVar = 0;
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     if ((s->symbolType == enumVariable || s->symbolType == enumParameter) && hasAtLeastOneVar == 1) {
-      utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
+      if (strcmp(s->type, "set") == 0) utstring_printf(lineOfCode, "int %s\n", s->name);
+      else utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
       fputs(utstring_body(lineOfCode), fp);
       utstring_clear(lineOfCode);
     } else if ((s->symbolType == enumVariable || s->symbolType == enumParameter) && hasAtLeastOneVar == 0) {
       hasAtLeastOneVar = 1;
       fputs(".table\n", fp);
-      utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
+      if (strcmp(s->type, "set") == 0) utstring_printf(lineOfCode, "int %s\n", s->name);
+      else utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
       fputs(utstring_body(lineOfCode), fp);
       utstring_clear(lineOfCode);
     }
