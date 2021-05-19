@@ -1,6 +1,7 @@
 #include "tac.h"
 #include "symbol_table.h"
 #include "utlist.h"
+#include "utstring.h"
 
 tacLine *tacFileHead = NULL;
 
@@ -9,6 +10,60 @@ tacLine *tacFileTableHead = NULL;
 codeLabelStack *codeStackHead = NULL;
 
 int forLoopsCounter = 0;
+
+void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize) {
+  struct setInfo *symbolPointer;
+  /* attempts to find entry on symbol table */
+  HASH_FIND_INT(setInfoTable, &setID, symbolPointer);
+  if (symbolPointer == NULL) {
+      symbolPointer = (setInfo*)malloc(sizeof(setInfo));
+      symbolPointer -> setID = setID;
+      symbolPointer -> current_size = currentSize;
+      symbolPointer -> pointerToSet = pointerToSet;
+      HASH_ADD_INT(setInfoTable, setID, symbolPointer);
+  } else {
+    printf("set symbol %d already declared!\n", setID);
+  }
+}
+
+void increaseSetSize(int setID) {
+  struct setInfo *symbolPointer;
+  int backupCurrentSize;
+  UT_string *bckupPointerToSet;
+  utstring_new(bckupPointerToSet);
+  /* attempts to find entry on symbol table */
+  HASH_FIND_INT(setInfoTable, &setID, symbolPointer);
+  if (symbolPointer) {
+      utstring_printf(bckupPointerToSet, "%s", symbolPointer->pointerToSet);
+      backupCurrentSize = symbolPointer->current_size;
+      HASH_DEL(setInfoTable, symbolPointer);
+      addSymbolToSetInfoTable(setID, strdup(utstring_body(bckupPointerToSet)), backupCurrentSize+1);
+  } else {
+    printf("set symbol not found!\n");
+  }
+}
+
+setInfo* getSetSymbolInfo(char *name) {
+  int *symbolkey, symbolID;
+  struct symbolNode *symbol;
+  struct setInfo *setInfoPointer;
+  scopeInfo current_scope = get_current_scope();
+  symbolID = get_symbolID_by_name_and_current_scope(name, current_scope.scopeID, current_scope.level);
+  if (symbolID != -1) {
+    symbolkey = &symbolID;
+    HASH_FIND_INT(symbolTable, symbolkey, symbol);
+    if (symbol != NULL) {
+      int *setInfoKey;
+      setInfoKey = &(symbol->symbolID);
+      HASH_FIND_INT(setInfoTable, setInfoKey, setInfoPointer);
+      if (setInfoPointer != NULL) {
+        printf("found symbol %d\n", symbol->symbolID);
+        return setInfoPointer;
+      }
+    }
+  }
+  return setInfoPointer;
+}
 
 void addSymbolsToTable(FILE *fp) {
   struct symbolNode *s;
@@ -372,5 +427,13 @@ void free_TAC_table_list(tacLine *tacFileTableHead) {
     STACK_POP(codeStackHead, stackElt);
     free(stackElt->name);
     free(stackElt);
+  }
+}
+
+void free_setInfo_table() {
+  setInfo *s, *tmp;
+  HASH_ITER(hh, setInfoTable, s, tmp) {
+    HASH_DEL(setInfoTable, s);
+    free(s);
   }
 }

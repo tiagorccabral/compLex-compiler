@@ -706,6 +706,25 @@ unaryOperation: SUB_OP term {
 setOperationalExpression: ADD_SET_OP '(' setBody ')' {
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP" };
     $$ = add_ast_node(astP);
+    if ($$->leftBranch->rightBranch && $$->leftBranch->rightBranch->value) {
+      struct setInfo *setInfoPointer;
+      setInfoPointer = getSetSymbolInfo($$->leftBranch->rightBranch->value);
+      if (setInfoPointer) {
+        UT_string *operand_array, *sizePlusOne, *size;
+        utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
+        stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
+        stringify_integer(size, setInfoPointer->current_size);
+        tacCodeParam tacP = {.instruction="mema", .op1=setInfoPointer->pointerToSet, .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
+        add_TAC_line(tacP);
+        set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(size));
+        tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array), .op2=$$->leftBranch->leftBranch->value, .lineType=enumTwoOp};
+        add_TAC_line(tacP1);
+        increaseSetSize(setInfoPointer->setID);
+        utstring_free(operand_array);
+        utstring_free(sizePlusOne);
+        utstring_free(size);
+      }
+    }
     print_parser_msg("add to set OP\n", DEBUG);
   }
   | REMOVE_SET_OP '(' setBody ')' {
@@ -753,7 +772,14 @@ variableAssignment: IDENTIFIER ASSIGN expression {
       if ($3->tempReg && $3->value) {
         tacCodeParam tacP = { .instruction = "mov", .op1 = $1, .op2 = $3->tempReg, .lineType=enumTwoOp};
         add_TAC_line(tacP);
-      } else if ($3->value) {
+      } else if ($3->value && strcmp($3->value, "EMPTY")==0) {
+        struct setInfo *setInfoPointer;
+        setInfoPointer = getSetSymbolInfo($1);
+        if (setInfoPointer) {
+          tacCodeParam tacP = { .instruction = "mov", .op1 = setInfoPointer->pointerToSet, .op2 = $1, .lineType=enumTwoOp};
+          add_TAC_line(tacP);
+        }
+      } else if ($3->value && strcmp($3->value, "EMPTY")!=0) {
         tacCodeParam tacP = { .instruction = "mov", .op1 = $1, .op2 = $3->value, .lineType=enumTwoOp};
         add_TAC_line(tacP);
       } else if ($3->tempReg) {
@@ -898,6 +924,13 @@ variableInit: typeSpecifier IDENTIFIER ';' {
   $$ = add_ast_node(astP2);
   symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
+  if ($$->leftBranch && $$->leftBranch->type && strcmp($$->leftBranch->type, "T_SET") == 0) {
+    set_temporary_register($$, &currentTempReg);
+    UT_string *tmp; utstring_new(tmp);
+    utstring_printf(tmp, "$%d", currentTempReg);
+    addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(tmp)), 0);
+    utstring_free(tmp);
+  }
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
 }
@@ -990,6 +1023,8 @@ int main(int argc, char **argv) {
   free_parser_ast(parser_ast);
 
   free_scope_stack();
+
+  free_setInfo_table();
 
   yylex_destroy();
 

@@ -7,6 +7,7 @@
 #include "utstring.h"
 #include "utlist.h"
 #include "utstack.h"
+#include "uthash.h"
 
 /* keeps track of current for coode stack name */
 typedef struct codeLabelStack {
@@ -19,6 +20,16 @@ typedef struct tacLine {
   UT_string *codeLine; /* string that represents one TAC line of code */
   struct tacLine *next, *prev; /* pointers to next and previos elements of the list */
 }tacLine;
+
+/* hash table with info about dynamic sets */
+typedef struct setInfo {
+  int setID; /* required key ID from documentation */
+  int current_size; /* current size of set */
+  char* pointerToSet; /* tempReg pointing to SET */
+  UT_hash_handle hh; /* makes this structure hashable */
+} setInfo;
+
+setInfo *setInfoTable; /* pointer to set info table */
 
 codeLabelStack *codeStackHead; /* pointer to the head of the stack of labels of loops and ifs */
 
@@ -52,6 +63,15 @@ typedef struct tacCodeValidationParams {
 } tacCodeValidationParams;
 
 int forLoopsCounter;
+
+/* add set to set info table */
+void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize);
+
+/* increase current set size + 1 of given ID on the hash table */
+void increaseSetSize(int setID);
+
+/* get set to set info table */
+setInfo* getSetSymbolInfo(char *name);
 
 /* adds symbols from the symbols table to the TAC file */
 void addSymbolsToTable(FILE *file);
@@ -110,5 +130,7 @@ void free_TAC_list(tacLine *tacFileHead);
 
 /* releases memory alocated for the TAC list that represents TAC .table */
 void free_TAC_table_list(tacLine *tacFileTableHead);
+
+void free_setInfo_table();
 
 #endif // TAC_
