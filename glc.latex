@@ -29,9 +29,9 @@
               | <localStatetements>
 
 <inOutStatement> ::= WRITE '(' STR ')' ';'
-                  | WRITE '(' <variable> ')' ';'
+                  | WRITE '(' <comparationalExpression> ')' ';'
                   | WRITELN '(' STR ')' ';'
-                  | WRITELN '(' <variable> ')' ';'
+                  | WRITELN '(' <comparationalExpression> ')' ';'
                   | READ '(' <variable> ')' ';'
 
 <fluxControlstatement> ::= RETURN <comparationalExpression>
