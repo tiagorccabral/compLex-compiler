@@ -1,3 +1,10 @@
+int squareRoot(int a) {
+  float ab;
+  writeln(a);
+
+  return a;
+}
+
 int main (int argc, int argv) {
   int varName;
   float ab;
@@ -40,20 +47,8 @@ int main (int argc, int argv) {
   }
 
   for (i=0; i<10; i=i+1) {
-    int i;
     writeln(i);
-  }
-  for (i<10) {
-    write(i);
-    i = i+1;
   }
 
   return;
-}
-
-int squareRoot(int a) {
-  float ab;
-  writeln(a);
-
-  return a;
 }

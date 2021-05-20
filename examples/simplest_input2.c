@@ -5,6 +5,10 @@ float funcao(float num1, float num2) {
   return resultadoFuncao;
 }
 
+int funcao2(int numero) {
+  return numero + 40 * 2;
+}
+
 int main () {
   int i;
   int j;
@@ -23,6 +27,9 @@ int main () {
   writeln("informe k: ");
   read(k);
 
+  write("k + 40 * 2 eh: ");
+  writeln(funcao2(k));
+
   if (k==10) {
     writeln("k eh 10");
   } else {
@@ -36,6 +43,5 @@ int main () {
   if (k == 10) {
     writeln("voce eh mto bom em informar numeros");
   }
-
   return 0;
 }
