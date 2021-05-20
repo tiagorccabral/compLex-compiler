@@ -435,12 +435,36 @@ iterationStatement: FOR '(' expression {
       add_for_loop_closing_to_TAC("forLoop", &currentTempReg, $$->middle1Branch, $$->middle2Branch);
       print_parser_msg("for loop three arguments\n", DEBUG);
   }
-  | SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements {
-    astParam astP = {
-      .leftBranch = $3, .middle1Branch = $5, .rightBranch = $7, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
-    };
-    $$ = add_ast_node(astP);
-    print_parser_msg("set forall loop\n", DEBUG);
+  | SET_FORALL '(' term ADD_IN_OP comparationalExpression {
+      struct setInfo *setInfoPointer;
+      setInfoPointer = getSetSymbolInfo($5->value);
+      if (setInfoPointer && setInfoPointer->current_size > 0) {
+        UT_string *operand_array, *currentPos;
+        utstring_new(operand_array);utstring_new(currentPos);
+        set_operand_array(operand_array, setInfoPointer->pointerToSet, "0");
+        tacCodeParam tacP0 = {.instruction = "mov", .op1 = $3->value, .op2 = utstring_body(operand_array), .lineType=enumTwoOp};
+        add_TAC_line(tacP0);
+        create_temporary_register(currentPos, &currentTempReg);
+        tacCodeParam tacP1 = {.instruction = "mov", .op1 = utstring_body(currentPos), .op2 = "0", .lineType=enumTwoOp};
+        add_TAC_line(tacP1);
+        add_for_or_if_entry_to_TAC("forallLoop");
+        setForallStack *tmpForallStack = (setForallStack *)malloc(sizeof *tmpForallStack);
+        tmpForallStack->name = strdup(utstring_body(currentPos));
+        STACK_PUSH(setForall, tmpForallStack);
+        forIncrementCounter++;
+        utstring_free(operand_array);
+      }
+    } ')' localStatetements {
+      astParam astP = {
+        .leftBranch = $3, .middle1Branch = $5, .rightBranch = $8, .type="SET_FORALL", .value=$1, .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
+      };
+      $$ = add_ast_node(astP);
+      struct setInfo *setInfoPointer;
+      setInfoPointer = getSetSymbolInfo($5->value);
+      if (setInfoPointer && setInfoPointer->current_size > 0) {
+        add_forall_loop_closing_to_TAC("forallLoop", setInfoPointer, &currentTempReg, $3->value);
+      }
+      print_parser_msg("set forall loop\n", DEBUG);
   }
 ;
 
@@ -706,23 +730,55 @@ unaryOperation: SUB_OP term {
 setOperationalExpression: ADD_SET_OP '(' setBody ')' {
     astParam astP = { .leftBranch = $3, .type="IDENTIFIER", .value = $1, .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP" };
     $$ = add_ast_node(astP);
-    if ($$->leftBranch->rightBranch && $$->leftBranch->rightBranch->value) {
+    if ($$->leftBranch->rightBranch && $$->leftBranch->rightBranch->value && strcmp($$->leftBranch->rightBranch->astNodeClass, "IDENTIFIER") == 0) {
       struct setInfo *setInfoPointer;
       setInfoPointer = getSetSymbolInfo($$->leftBranch->rightBranch->value);
       if (setInfoPointer) {
-        UT_string *operand_array, *sizePlusOne, *size;
-        utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
-        stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
-        stringify_integer(size, setInfoPointer->current_size);
-        tacCodeParam tacP = {.instruction="mema", .op1=setInfoPointer->pointerToSet, .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
-        add_TAC_line(tacP);
-        set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(size));
-        tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array), .op2=$$->leftBranch->leftBranch->value, .lineType=enumTwoOp};
-        add_TAC_line(tacP1);
-        increaseSetSize(setInfoPointer->setID);
-        utstring_free(operand_array);
-        utstring_free(sizePlusOne);
-        utstring_free(size);
+        if (setInfoPointer->current_size > 0) {
+          int i, setID = setInfoPointer->setID, current_size = setInfoPointer->current_size;
+          UT_string *newSetReg, *sizePlusOne, *operand_array, *currentPos, *operand_array_dest, *tmpReg;
+          utstring_new(newSetReg); utstring_new(sizePlusOne); utstring_new(tmpReg); 
+          utstring_new(operand_array); utstring_new(operand_array_dest); utstring_new(currentPos);
+          stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
+          create_temporary_register(newSetReg, &currentTempReg);
+          create_temporary_register(tmpReg, &currentTempReg);
+          tacCodeParam tacP = {.instruction="mema", .op1=utstring_body(newSetReg), .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
+          add_TAC_line(tacP);
+          for (i=0; i<setInfoPointer->current_size; i++) {
+            utstring_clear(currentPos);utstring_clear(operand_array);utstring_clear(operand_array_dest);
+            stringify_integer(currentPos, i);
+            set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(currentPos));
+            set_operand_array(operand_array_dest, utstring_body(newSetReg), utstring_body(currentPos));
+            tacCodeParam tacP2 = {.instruction="mov", .op1=utstring_body(tmpReg), .op2=utstring_body(operand_array), .lineType=enumTwoOp};
+            add_TAC_line(tacP2);
+            tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array_dest), .op2=utstring_body(tmpReg), .lineType=enumTwoOp};
+            add_TAC_line(tacP1);
+          }
+          utstring_clear(operand_array_dest);utstring_clear(currentPos);
+          stringify_integer(currentPos, i);
+          set_operand_array(operand_array_dest, utstring_body(newSetReg), utstring_body(currentPos));
+          tacCodeParam tacP4 = {.instruction="mov", .op1=utstring_body(operand_array_dest), .op2=$$->leftBranch->leftBranch->value, .lineType=enumTwoOp};
+          add_TAC_line(tacP4);
+          tacCodeParam tacP3 = {.instruction="memf", .op1=setInfoPointer->pointerToSet, .lineType=enumOneOp};
+          add_TAC_line(tacP3);
+          deleteSymbolSetInfo(setID);
+          addSymbolToSetInfoTable(setID, strdup(utstring_body(newSetReg)), current_size+1);
+          utstring_free(sizePlusOne);
+        } else {
+          UT_string *operand_array, *sizePlusOne, *size;
+          utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
+          stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
+          stringify_integer(size, setInfoPointer->current_size);
+          tacCodeParam tacP = {.instruction="mema", .op1=setInfoPointer->pointerToSet, .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
+          add_TAC_line(tacP);
+          set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(size));
+          tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array), .op2=$$->leftBranch->leftBranch->value, .lineType=enumTwoOp};
+          add_TAC_line(tacP1);
+          increaseSetSize(setInfoPointer->setID);
+          utstring_free(operand_array);
+          utstring_free(sizePlusOne);
+          utstring_free(size);
+        }
       }
     }
     print_parser_msg("add to set OP\n", DEBUG);
@@ -925,11 +981,12 @@ variableInit: typeSpecifier IDENTIFIER ';' {
   symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   if ($$->leftBranch && $$->leftBranch->type && strcmp($$->leftBranch->type, "T_SET") == 0) {
+    UT_string *currentPos;
+    utstring_new(currentPos);utstring_new(currentPos);
+    create_temporary_register(currentPos, &currentTempReg);
     set_temporary_register($$, &currentTempReg);
-    UT_string *tmp; utstring_new(tmp);
-    utstring_printf(tmp, "$%d", currentTempReg);
-    addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(tmp)), 0);
-    utstring_free(tmp);
+    addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(currentPos)), 0);
+    utstring_free(currentPos);
   }
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);

@@ -15,6 +15,11 @@ typedef struct codeLabelStack {
   struct codeLabelStack *next;
 } codeLabelStack; /* element of each scope stack of for code */
 
+typedef struct setForallStack {
+  char* name;
+  struct setForallStack *next;
+} setForallStack; /* element of each scope stack of set forall loop*/
+
 /* represents one element of the doubly linked list, i.e: one line of the TAC file */
 typedef struct tacLine {
   UT_string *codeLine; /* string that represents one TAC line of code */
@@ -30,6 +35,8 @@ typedef struct setInfo {
 } setInfo;
 
 setInfo *setInfoTable; /* pointer to set info table */
+
+setForallStack *setForall;
 
 codeLabelStack *codeStackHead; /* pointer to the head of the stack of labels of loops and ifs */
 
@@ -70,6 +77,8 @@ void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize);
 /* increase current set size + 1 of given ID on the hash table */
 void increaseSetSize(int setID);
 
+void deleteSymbolSetInfo(int setID);
+
 /* get set to set info table */
 setInfo* getSetSymbolInfo(char *name);
 
@@ -88,7 +97,7 @@ void insert_string_to_TAC_table(UT_string *stringVar, char *string, int pos, int
 /* sets a temporary register to a given node */
 void set_temporary_register(parserNode *node, int *currentTempReg);
 
-/* creates a new temporary register, returns string of that register */
+/* creates a new temporary register */
 void create_temporary_register(UT_string *string, int *currentTempReg);
 
 /* sets a temporary register to a given node representing the param of a function, returns string of that register */
@@ -102,6 +111,8 @@ void add_for_or_if_entry_to_TAC(char *string);
 
 /* adds closing part of for loop to TAC file, given a string */
 void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch);
+
+void add_forall_loop_closing_to_TAC(char *string, setInfo *setInfoPointer, int *currentTempReg, char* varName);
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop);
 

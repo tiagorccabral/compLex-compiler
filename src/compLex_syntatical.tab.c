@@ -230,25 +230,26 @@ enum yysymbol_kind_t
   YYSYMBOL_iterationStatement = 62,        /* iterationStatement  */
   YYSYMBOL_63_4 = 63,                      /* $@4  */
   YYSYMBOL_64_5 = 64,                      /* $@5  */
-  YYSYMBOL_expression = 65,                /* expression  */
-  YYSYMBOL_comparationalExpression = 66,   /* comparationalExpression  */
-  YYSYMBOL_logicalExpression = 67,         /* logicalExpression  */
-  YYSYMBOL_arithmeticExpression = 68,      /* arithmeticExpression  */
-  YYSYMBOL_arithmeticExpression2 = 69,     /* arithmeticExpression2  */
-  YYSYMBOL_unaryOperation = 70,            /* unaryOperation  */
-  YYSYMBOL_setOperationalExpression = 71,  /* setOperationalExpression  */
-  YYSYMBOL_setBody = 72,                   /* setBody  */
-  YYSYMBOL_variableAssignment = 73,        /* variableAssignment  */
-  YYSYMBOL_localStatetements = 74,         /* localStatetements  */
-  YYSYMBOL_75_6 = 75,                      /* $@6  */
-  YYSYMBOL_forIncrement = 76,              /* forIncrement  */
-  YYSYMBOL_term = 77,                      /* term  */
-  YYSYMBOL_functionCall = 78,              /* functionCall  */
-  YYSYMBOL_functionArguments = 79,         /* functionArguments  */
-  YYSYMBOL_callArguments = 80,             /* callArguments  */
-  YYSYMBOL_variableInit = 81,              /* variableInit  */
-  YYSYMBOL_variable = 82,                  /* variable  */
-  YYSYMBOL_typeSpecifier = 83              /* typeSpecifier  */
+  YYSYMBOL_65_6 = 65,                      /* $@6  */
+  YYSYMBOL_expression = 66,                /* expression  */
+  YYSYMBOL_comparationalExpression = 67,   /* comparationalExpression  */
+  YYSYMBOL_logicalExpression = 68,         /* logicalExpression  */
+  YYSYMBOL_arithmeticExpression = 69,      /* arithmeticExpression  */
+  YYSYMBOL_arithmeticExpression2 = 70,     /* arithmeticExpression2  */
+  YYSYMBOL_unaryOperation = 71,            /* unaryOperation  */
+  YYSYMBOL_setOperationalExpression = 72,  /* setOperationalExpression  */
+  YYSYMBOL_setBody = 73,                   /* setBody  */
+  YYSYMBOL_variableAssignment = 74,        /* variableAssignment  */
+  YYSYMBOL_localStatetements = 75,         /* localStatetements  */
+  YYSYMBOL_76_7 = 76,                      /* $@7  */
+  YYSYMBOL_forIncrement = 77,              /* forIncrement  */
+  YYSYMBOL_term = 78,                      /* term  */
+  YYSYMBOL_functionCall = 79,              /* functionCall  */
+  YYSYMBOL_functionArguments = 80,         /* functionArguments  */
+  YYSYMBOL_callArguments = 81,             /* callArguments  */
+  YYSYMBOL_variableInit = 82,              /* variableInit  */
+  YYSYMBOL_variable = 83,                  /* variable  */
+  YYSYMBOL_typeSpecifier = 84              /* typeSpecifier  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -578,11 +579,11 @@ union yyalloc
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  46
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  38
+#define YYNNTS  39
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  93
+#define YYNRULES  94
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  186
+#define YYNSTATES  187
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   294
@@ -639,12 +640,12 @@ static const yytype_int16 yyrline[] =
      164,   164,   191,   195,   199,   205,   230,   253,   263,   270,
      276,   283,   287,   293,   294,   295,   296,   297,   300,   306,
      318,   324,   336,   360,   378,   386,   393,   400,   410,   410,
-     422,   427,   430,   427,   438,   447,   448,   451,   458,   465,
-     470,   475,   498,   521,   544,   567,   590,   613,   618,   636,
-     654,   657,   675,   693,   696,   701,   706,   730,   735,   740,
-     747,   754,   763,   794,   794,   805,   812,   816,   820,   824,
-     825,   830,   835,   842,   870,   871,   877,   898,   920,   939,
-     958,   963,   968,   973
+     422,   427,   430,   427,   438,   438,   471,   472,   475,   482,
+     489,   494,   499,   522,   545,   568,   591,   614,   637,   642,
+     660,   678,   681,   699,   717,   720,   725,   730,   786,   791,
+     796,   803,   810,   819,   850,   850,   861,   868,   872,   876,
+     880,   881,   886,   891,   898,   926,   927,   933,   954,   976,
+     996,  1015,  1020,  1025,  1030
 };
 #endif
 
@@ -670,10 +671,10 @@ static const char *const yytname[] =
   "programEntries", "functionDefinition", "$@1", "$@2", "parameters",
   "parameter", "compoundStatement", "declaration", "statements",
   "statement", "inOutStatement", "fluxControlstatement", "$@3", "ifStart",
-  "iterationStatement", "$@4", "$@5", "expression",
+  "iterationStatement", "$@4", "$@5", "$@6", "expression",
   "comparationalExpression", "logicalExpression", "arithmeticExpression",
   "arithmeticExpression2", "unaryOperation", "setOperationalExpression",
-  "setBody", "variableAssignment", "localStatetements", "$@6",
+  "setBody", "variableAssignment", "localStatetements", "$@7",
   "forIncrement", "term", "functionCall", "functionArguments",
   "callArguments", "variableInit", "variable", "typeSpecifier", YY_NULLPTR
 };
@@ -698,7 +699,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-123)
+#define YYPACT_NINF (-137)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -712,25 +713,25 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     111,  -123,  -123,  -123,  -123,  -123,    55,   181,  -123,  -123,
-      18,  -123,  -123,  -123,    23,  -123,  -123,    32,    48,    29,
-      29,  -123,   -16,  -123,    26,     5,    51,   181,  -123,    51,
-    -123,  -123,    54,  -123,    96,  -123,  -123,   164,  -123,    60,
-      11,  -123,  -123,  -123,   141,    56,    73,    80,    93,   350,
-      97,   118,   128,   135,  -123,   129,   133,   298,  -123,  -123,
-    -123,  -123,  -123,   134,  -123,  -123,   -11,   189,    35,    75,
-    -123,  -123,  -123,  -123,  -123,  -123,  -123,    23,   324,   298,
-     138,  -123,   298,   298,   298,   141,   189,    72,    58,   272,
-    -123,    14,   324,   141,    -6,  -123,   298,   350,   350,  -123,
+     111,  -137,  -137,  -137,  -137,  -137,    27,   202,  -137,  -137,
+      22,  -137,  -137,  -137,   -16,  -137,  -137,     7,     9,    29,
+      29,  -137,    33,  -137,    57,    40,    12,   202,  -137,    12,
+    -137,  -137,    60,  -137,    96,  -137,  -137,   164,  -137,    65,
+      11,  -137,  -137,  -137,   141,    32,    48,    54,    73,   350,
+      80,    93,    97,   135,  -137,   118,   133,   298,  -137,  -137,
+    -137,  -137,  -137,   134,  -137,  -137,   -11,   166,    77,    84,
+    -137,  -137,  -137,  -137,  -137,  -137,  -137,   -16,   324,   298,
+     138,  -137,   298,   298,   298,   141,   166,   183,    58,   272,
+    -137,    -9,   324,   141,    -6,  -137,   298,   350,   350,  -137,
      350,   350,   350,   350,   350,   350,   350,   350,   350,   350,
-    -123,    71,   145,   163,    52,   146,   178,   179,   184,  -123,
-     185,   186,   116,   187,   122,  -123,  -123,   207,  -123,    96,
-     147,   189,   189,    35,    35,    35,    35,    35,    35,    75,
-      75,  -123,  -123,  -123,   298,    66,  -123,  -123,  -123,  -123,
-     188,   195,   199,   206,   208,   324,   298,   203,   242,    71,
-    -123,  -123,  -123,  -123,  -123,  -123,  -123,  -123,   160,  -123,
-     324,  -123,   193,   228,   209,  -123,   217,   227,   214,  -123,
-     209,   350,   209,  -123,    35,  -123
+    -137,    89,    55,   145,    28,   160,   175,   176,   178,  -137,
+     179,   184,   116,   185,   122,  -137,  -137,   205,  -137,    96,
+     147,   166,   166,    77,    77,    77,    77,    77,    77,    84,
+      84,  -137,  -137,  -137,   298,    66,  -137,  -137,  -137,  -137,
+     186,   187,   188,   195,   199,   324,   298,   203,   242,    89,
+    -137,  -137,  -137,  -137,  -137,  -137,  -137,  -137,    89,  -137,
+     324,  -137,   168,   225,   189,  -137,   192,   246,   211,   210,
+     210,   350,   210,  -137,  -137,    77,  -137
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -738,43 +739,43 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     7,    90,    91,    92,    93,     0,     2,     6,     4,
-       0,     1,     5,     3,     8,    10,    88,     0,     0,     0,
+       0,     7,    91,    92,    93,    94,     0,     2,     6,     4,
+       0,     1,     5,     3,     8,    10,    89,     0,     0,     0,
        0,    14,     0,    12,     0,     0,     0,     0,    16,     0,
       19,     9,     0,    11,     0,    15,    22,     0,    18,     0,
-      89,    82,    81,    80,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    40,     0,     0,     0,    73,    17,
-      20,    24,    25,     0,    26,    23,     0,    50,    57,    60,
-      63,    78,    46,    27,    65,    79,    77,     0,     0,    85,
-      89,    64,     0,     0,     0,     0,    49,     0,     0,     0,
-      34,     0,     0,     0,     0,    19,     0,     0,     0,    45,
+      90,    83,    82,    81,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,    40,     0,     0,     0,    74,    17,
+      20,    24,    25,     0,    26,    23,     0,    51,    58,    61,
+      64,    79,    47,    27,    66,    80,    78,     0,     0,    86,
+      90,    65,     0,     0,     0,     0,    50,     0,     0,     0,
+      34,     0,     0,     0,     0,    19,     0,     0,     0,    46,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      72,    87,     0,    84,     0,     0,     0,     0,     0,    89,
-       0,     0,     0,     0,     0,    33,    41,     0,    76,     0,
-       0,    47,    48,    51,    52,    53,    54,    55,    56,    58,
-      59,    61,    62,    83,     0,     0,    66,    67,    68,    69,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,    86,
-      70,    71,    32,    28,    29,    30,    31,    42,     0,    74,
-       0,    35,    37,     0,     0,    36,     0,     0,     0,    44,
-       0,     0,     0,    39,    75,    43
+      73,    88,     0,    85,     0,     0,     0,     0,     0,    90,
+       0,     0,     0,     0,     0,    33,    41,     0,    77,     0,
+       0,    48,    49,    52,    53,    54,    55,    56,    57,    59,
+      60,    62,    63,    84,     0,     0,    67,    68,    69,    70,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    87,
+      71,    72,    32,    28,    29,    30,    31,    42,    44,    75,
+       0,    35,    37,     0,     0,    36,     0,     0,     0,     0,
+       0,     0,     0,    45,    39,    76,    43
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -123,  -123,  -123,   249,  -123,  -123,   238,  -123,   230,   169,
-     136,  -123,  -123,  -123,  -123,  -123,  -123,  -123,  -123,   -75,
-     -51,   -44,   -91,    12,    17,   121,    81,  -123,  -122,  -123,
-    -123,   -37,  -123,  -123,  -123,    20,   -83,   -19
+    -137,  -137,  -137,   247,  -137,  -137,   235,  -137,   227,   163,
+     130,  -137,  -137,  -137,  -137,  -137,  -137,  -137,  -137,  -137,
+     -75,   -51,   -44,   -91,    19,    56,   119,    85,  -137,  -136,
+    -137,  -137,   -37,  -137,  -137,  -137,    52,   -83,   -19
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
        0,     6,     7,     8,    17,    18,    22,    23,    31,    34,
-      37,    60,    61,    62,   176,    63,    64,   155,   173,    65,
-      66,    67,    68,    69,    70,    71,   115,    72,    73,    95,
-     178,    74,    75,   112,   113,    38,    76,    10
+      37,    60,    61,    62,   176,    63,    64,   155,   173,   174,
+      65,    66,    67,    68,    69,    70,    71,   115,    72,    73,
+      95,   178,    74,    75,   112,   113,    38,    76,    10
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -784,31 +785,31 @@ static const yytype_int16 yytable[] =
 {
       24,    24,    91,   110,   120,    86,    94,    81,    32,   133,
      134,   135,   136,   137,   138,    39,    78,   126,    97,    98,
-       9,    14,    15,    97,    98,    26,    27,    13,   111,    28,
-      21,   114,   114,   114,    99,   128,   172,   122,   124,     2,
-       3,     4,     5,    97,    98,   130,    29,    27,   118,   106,
-     107,    79,   179,   131,   132,    11,   127,    35,   183,   125,
-     185,    80,   161,    77,    41,    42,    43,   121,    16,   119,
-     -13,   -13,    19,    44,   145,   119,    45,    46,    47,    48,
-     167,    97,    98,   171,    45,    46,    47,    48,    20,    49,
-     184,   108,   109,   159,    30,   175,    82,    36,    57,   -21,
-      97,    98,   -21,   -21,   -21,   168,     2,     3,     4,     5,
-      39,   -21,     1,    83,   -21,   -21,   -21,   -21,   139,   140,
-      84,     2,     3,     4,     5,   141,   142,   -21,   -21,   -21,
-     -21,   -21,   -21,    85,   -21,   -21,   -21,    87,    80,   -21,
+      97,    98,   172,    97,    98,    14,    15,    11,   111,    16,
+      21,   114,   114,   114,    99,   128,   125,   122,   124,     2,
+       3,     4,     5,   183,   184,   130,   186,    19,   118,    20,
+     145,    79,     9,   131,   132,    30,   127,    97,    98,    13,
+      28,    80,   161,    35,    41,    42,    43,   121,    77,   119,
+     -13,   -13,    82,    44,    26,    27,    45,    46,    47,    48,
+     167,    29,    27,   171,    45,    46,    47,    48,    83,    49,
+     185,   106,   107,   159,    84,   175,   143,    36,    57,   -21,
+     108,   109,   -21,   -21,   -21,   168,     2,     3,     4,     5,
+      39,   -21,     1,    85,   -21,   -21,   -21,   -21,    97,    98,
+      87,     2,     3,     4,     5,   139,   140,   -21,   -21,   -21,
+     -21,   -21,   -21,    88,   -21,   -21,   -21,    89,    80,   -21,
      -21,    41,    42,    43,    80,    97,    98,    41,    42,    43,
-      44,    97,    98,    45,    46,    47,    48,   152,    88,    45,
-      46,    47,    48,   154,   116,   117,    49,    40,    89,    92,
+      44,    97,    98,    45,    46,    47,    48,   152,    92,    45,
+      46,    47,    48,   154,   141,   142,    49,    40,   116,   117,
       41,    42,    43,    93,    96,    57,    97,    98,    79,    44,
-      90,    57,    45,    46,    47,    48,   143,   146,   158,    97,
-      98,     2,     3,     4,     5,    49,    50,    51,    52,    53,
-      54,   174,    55,    56,    57,   144,    40,    58,    59,    41,
-      42,    43,   100,   101,   102,   103,   104,   105,    44,   147,
-     148,    45,    46,    47,    48,   149,   150,   151,   153,   156,
-     -38,   177,   181,   162,    49,    50,    51,    52,    53,    54,
-     163,    55,    56,    57,   164,    40,    58,   169,    41,    42,
-      43,   165,    58,   166,   180,   182,    12,    44,    25,    33,
-      45,    46,    47,    48,   129,   157,   160,     0,     0,     0,
+      90,    57,    45,    46,    47,    48,   119,   144,   158,   100,
+     101,   102,   103,   104,   105,    49,    50,    51,    52,    53,
+      54,   146,    55,    56,    57,   -38,    40,    58,    59,    41,
+      42,    43,     2,     3,     4,     5,   147,   148,    44,   149,
+     150,    45,    46,    47,    48,   151,   153,   156,   177,   180,
+     179,   162,   163,   164,    49,    50,    51,    52,    53,    54,
+     165,    55,    56,    57,   166,    40,    58,   169,    41,    42,
+      43,   181,   182,    58,    12,    25,    33,    44,   129,   157,
+      45,    46,    47,    48,   160,     0,     0,     0,     0,     0,
        0,     0,     0,    49,     0,    80,     0,   170,    41,    42,
       43,   123,    57,     0,     0,    58,     0,    44,     0,     0,
       45,    46,    47,    48,     0,     0,     0,     0,     0,     0,
@@ -828,31 +829,31 @@ static const yytype_int16 yycheck[] =
 {
       19,    20,    53,    78,    87,    49,    57,    44,    27,   100,
      101,   102,   103,   104,   105,    34,     5,    92,    29,    30,
-       0,     3,     4,    29,    30,    41,    42,     7,    79,     3,
-       1,    82,    83,    84,    45,    41,   158,    88,    89,    10,
-      11,    12,    13,    29,    30,    96,    41,    42,    85,    14,
-      15,    40,   174,    97,    98,     0,    93,     3,   180,    45,
-     182,     3,   145,     3,     6,     7,     8,     9,    45,     3,
-      41,    42,    40,    15,    22,     3,    18,    19,    20,    21,
-     155,    29,    30,   158,    18,    19,    20,    21,    40,    31,
-     181,    16,    17,   144,    43,   170,    40,     1,    40,     3,
-      29,    30,     6,     7,     8,   156,    10,    11,    12,    13,
-     129,    15,     1,    40,    18,    19,    20,    21,   106,   107,
-      40,    10,    11,    12,    13,   108,   109,    31,    32,    33,
+      29,    30,   158,    29,    30,     3,     4,     0,    79,    45,
+       1,    82,    83,    84,    45,    41,    45,    88,    89,    10,
+      11,    12,    13,   179,   180,    96,   182,    40,    85,    40,
+      22,    40,     0,    97,    98,    43,    93,    29,    30,     7,
+       3,     3,   145,     3,     6,     7,     8,     9,     3,     3,
+      41,    42,    40,    15,    41,    42,    18,    19,    20,    21,
+     155,    41,    42,   158,    18,    19,    20,    21,    40,    31,
+     181,    14,    15,   144,    40,   170,    41,     1,    40,     3,
+      16,    17,     6,     7,     8,   156,    10,    11,    12,    13,
+     129,    15,     1,    40,    18,    19,    20,    21,    29,    30,
+      40,    10,    11,    12,    13,   106,   107,    31,    32,    33,
       34,    35,    36,    40,    38,    39,    40,    40,     3,    43,
       44,     6,     7,     8,     3,    29,    30,     6,     7,     8,
       15,    29,    30,    18,    19,    20,    21,    41,    40,    18,
-      19,    20,    21,    41,    83,    84,    31,     3,    40,    40,
+      19,    20,    21,    41,   108,   109,    31,     3,    83,    84,
        6,     7,     8,    40,    40,    40,    29,    30,    40,    15,
-      45,    40,    18,    19,    20,    21,    41,    41,    41,    29,
-      30,    10,    11,    12,    13,    31,    32,    33,    34,    35,
-      36,    41,    38,    39,    40,    42,     3,    43,    44,     6,
-       7,     8,    23,    24,    25,    26,    27,    28,    15,    41,
-      41,    18,    19,    20,    21,    41,    41,    41,    41,    22,
-      37,     3,     5,    45,    31,    32,    33,    34,    35,    36,
+      45,    40,    18,    19,    20,    21,     3,    42,    41,    23,
+      24,    25,    26,    27,    28,    31,    32,    33,    34,    35,
+      36,    41,    38,    39,    40,    37,     3,    43,    44,     6,
+       7,     8,    10,    11,    12,    13,    41,    41,    15,    41,
+      41,    18,    19,    20,    21,    41,    41,    22,     3,    37,
+      41,    45,    45,    45,    31,    32,    33,    34,    35,    36,
       45,    38,    39,    40,    45,     3,    43,    44,     6,     7,
-       8,    45,    43,    45,    37,    41,     7,    15,    20,    29,
-      18,    19,    20,    21,    95,   129,   145,    -1,    -1,    -1,
+       8,     5,    41,    43,     7,    20,    29,    15,    95,   129,
+      18,    19,    20,    21,   145,    -1,    -1,    -1,    -1,    -1,
       -1,    -1,    -1,    31,    -1,     3,    -1,    35,     6,     7,
        8,     9,    40,    -1,    -1,    43,    -1,    15,    -1,    -1,
       18,    19,    20,    21,    -1,    -1,    -1,    -1,    -1,    -1,
@@ -872,25 +873,25 @@ static const yytype_int16 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     1,    10,    11,    12,    13,    47,    48,    49,    81,
-      83,     0,    49,    81,     3,     4,    45,    50,    51,    40,
-      40,     1,    52,    53,    83,    52,    41,    42,     3,    41,
-      43,    54,    83,    54,    55,     3,     1,    56,    81,    83,
+       0,     1,    10,    11,    12,    13,    47,    48,    49,    82,
+      84,     0,    49,    82,     3,     4,    45,    50,    51,    40,
+      40,     1,    52,    53,    84,    52,    41,    42,     3,    41,
+      43,    54,    84,    54,    55,     3,     1,    56,    82,    84,
        3,     6,     7,     8,    15,    18,    19,    20,    21,    31,
       32,    33,    34,    35,    36,    38,    39,    40,    43,    44,
-      57,    58,    59,    61,    62,    65,    66,    67,    68,    69,
-      70,    71,    73,    74,    77,    78,    82,     3,     5,    40,
-       3,    77,    40,    40,    40,    40,    67,    40,    40,    40,
-      45,    66,    40,    40,    66,    75,    40,    29,    30,    45,
+      57,    58,    59,    61,    62,    66,    67,    68,    69,    70,
+      71,    72,    74,    75,    78,    79,    83,     3,     5,    40,
+       3,    78,    40,    40,    40,    40,    68,    40,    40,    40,
+      45,    67,    40,    40,    67,    76,    40,    29,    30,    45,
       23,    24,    25,    26,    27,    28,    14,    15,    16,    17,
-      65,    66,    79,    80,    66,    72,    72,    72,    77,     3,
-      82,     9,    66,     9,    66,    45,    65,    77,    41,    55,
-      66,    67,    67,    68,    68,    68,    68,    68,    68,    69,
-      69,    70,    70,    41,    42,    22,    41,    41,    41,    41,
-      41,    41,    41,    41,    41,    63,    22,    56,    41,    66,
-      71,    82,    45,    45,    45,    45,    45,    65,    66,    44,
-      35,    65,    74,    64,    41,    65,    60,     3,    76,    74,
-      37,     5,    41,    74,    68,    74
+      66,    67,    80,    81,    67,    73,    73,    73,    78,     3,
+      83,     9,    67,     9,    67,    45,    66,    78,    41,    55,
+      67,    68,    68,    69,    69,    69,    69,    69,    69,    70,
+      70,    71,    71,    41,    42,    22,    41,    41,    41,    41,
+      41,    41,    41,    41,    41,    63,    22,    56,    41,    67,
+      72,    83,    45,    45,    45,    45,    45,    66,    67,    44,
+      35,    66,    75,    64,    65,    66,    60,     3,    77,    41,
+      37,     5,    41,    75,    75,    69,    75
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -900,12 +901,12 @@ static const yytype_int8 yyr1[] =
       51,    49,    52,    52,    52,    53,    53,    54,    55,    55,
       56,    56,    56,    57,    57,    57,    57,    57,    58,    58,
       58,    58,    58,    59,    59,    59,    59,    59,    60,    59,
-      61,    63,    64,    62,    62,    65,    65,    66,    66,    66,
-      66,    67,    67,    67,    67,    67,    67,    67,    68,    68,
-      68,    69,    69,    69,    70,    70,    71,    71,    71,    71,
-      72,    72,    73,    75,    74,    76,    77,    77,    77,    77,
-      77,    77,    77,    78,    79,    79,    80,    80,    81,    82,
-      83,    83,    83,    83
+      61,    63,    64,    62,    65,    62,    66,    66,    67,    67,
+      67,    67,    68,    68,    68,    68,    68,    68,    68,    69,
+      69,    69,    70,    70,    70,    71,    71,    72,    72,    72,
+      72,    73,    73,    74,    76,    75,    77,    78,    78,    78,
+      78,    78,    78,    78,    79,    80,    80,    81,    81,    82,
+      83,    84,    84,    84,    84
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -915,12 +916,12 @@ static const yytype_int8 yyr2[] =
        0,     7,     1,     0,     1,     4,     2,     4,     2,     0,
        2,     0,     1,     1,     1,     1,     1,     1,     5,     5,
        5,     5,     5,     3,     2,     5,     6,     5,     0,     8,
-       1,     0,     0,     9,     7,     2,     1,     3,     3,     2,
-       1,     3,     3,     3,     3,     3,     3,     1,     3,     3,
-       1,     3,     3,     1,     2,     1,     4,     4,     4,     4,
-       3,     3,     3,     0,     5,     3,     3,     1,     1,     1,
-       1,     1,     1,     4,     1,     0,     3,     1,     3,     1,
-       1,     1,     1,     1
+       1,     0,     0,     9,     0,     8,     2,     1,     3,     3,
+       2,     1,     3,     3,     3,     3,     3,     3,     1,     3,
+       3,     1,     3,     3,     1,     2,     1,     4,     4,     4,
+       4,     3,     3,     3,     0,     5,     3,     3,     1,     1,
+       1,     1,     1,     1,     4,     1,     0,     3,     1,     3,
+       1,     1,     1,     1,     1
 };
 
 
@@ -1759,7 +1760,7 @@ yyreduce:
   parser_ast = (yyvsp[0].node);
   print_parser_msg("Program entry point\n", DEBUG);
 }
-#line 1763 "compLex_syntatical.tab.c"
+#line 1764 "compLex_syntatical.tab.c"
     break;
 
   case 3: /* programEntries: programEntries variableInit  */
@@ -1770,13 +1771,13 @@ yyreduce:
     };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1774 "compLex_syntatical.tab.c"
+#line 1775 "compLex_syntatical.tab.c"
     break;
 
   case 4: /* programEntries: variableInit  */
 #line 125 "compLex_syntatical.y"
                  {(yyval.node)=(yyvsp[0].node);}
-#line 1780 "compLex_syntatical.tab.c"
+#line 1781 "compLex_syntatical.tab.c"
     break;
 
   case 5: /* programEntries: programEntries functionDefinition  */
@@ -1785,13 +1786,13 @@ yyreduce:
     astParam astP = { .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES FUNCTION_DEFINITION" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1789 "compLex_syntatical.tab.c"
+#line 1790 "compLex_syntatical.tab.c"
     break;
 
   case 6: /* programEntries: functionDefinition  */
 #line 130 "compLex_syntatical.y"
                        {(yyval.node)=(yyvsp[0].node);}
-#line 1795 "compLex_syntatical.tab.c"
+#line 1796 "compLex_syntatical.tab.c"
     break;
 
   case 7: /* programEntries: error  */
@@ -1800,7 +1801,7 @@ yyreduce:
       astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
       (yyval.node) = add_ast_node(astP);
   }
-#line 1804 "compLex_syntatical.tab.c"
+#line 1805 "compLex_syntatical.tab.c"
     break;
 
   case 8: /* $@1: %empty  */
@@ -1818,7 +1819,7 @@ yyreduce:
     return_statement_type = strdup((yyvsp[-1].node)->type);
     insertTACLabel((yyvsp[0].str));
   }
-#line 1822 "compLex_syntatical.tab.c"
+#line 1823 "compLex_syntatical.tab.c"
     break;
 
   case 9: /* functionDefinition: typeSpecifier IDENTIFIER $@1 '(' parameters ')' compoundStatement  */
@@ -1838,7 +1839,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Function definition \n", DEBUG);
   }
-#line 1842 "compLex_syntatical.tab.c"
+#line 1843 "compLex_syntatical.tab.c"
     break;
 
   case 10: /* $@2: %empty  */
@@ -1854,7 +1855,7 @@ yyreduce:
       return_statement_type = strdup((yyvsp[-1].node)->type);
       insertTACLabel("fmain");
   }
-#line 1858 "compLex_syntatical.tab.c"
+#line 1859 "compLex_syntatical.tab.c"
     break;
 
   case 11: /* functionDefinition: typeSpecifier MAIN_FUNC $@2 '(' parameters ')' compoundStatement  */
@@ -1874,7 +1875,7 @@ yyreduce:
     currentReturnLine = -1;
     print_parser_msg("Main function definition \n", DEBUG);
   }
-#line 1878 "compLex_syntatical.tab.c"
+#line 1879 "compLex_syntatical.tab.c"
     break;
 
   case 12: /* parameters: parameter  */
@@ -1883,7 +1884,7 @@ yyreduce:
     (yyval.node) = (yyvsp[0].node);
     print_parser_msg("Parameter\n", DEBUG);
   }
-#line 1887 "compLex_syntatical.tab.c"
+#line 1888 "compLex_syntatical.tab.c"
     break;
 
   case 13: /* parameters: %empty  */
@@ -1892,7 +1893,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty parameters\n", DEBUG);
   }
-#line 1896 "compLex_syntatical.tab.c"
+#line 1897 "compLex_syntatical.tab.c"
     break;
 
   case 14: /* parameters: error  */
@@ -1901,7 +1902,7 @@ yyreduce:
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1905 "compLex_syntatical.tab.c"
+#line 1906 "compLex_syntatical.tab.c"
     break;
 
   case 15: /* parameter: parameters ',' typeSpecifier IDENTIFIER  */
@@ -1931,7 +1932,7 @@ yyreduce:
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
   }
-#line 1935 "compLex_syntatical.tab.c"
+#line 1936 "compLex_syntatical.tab.c"
     break;
 
   case 16: /* parameter: typeSpecifier IDENTIFIER  */
@@ -1957,7 +1958,7 @@ yyreduce:
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
   }
-#line 1961 "compLex_syntatical.tab.c"
+#line 1962 "compLex_syntatical.tab.c"
     break;
 
   case 17: /* compoundStatement: '{' declaration statements '}'  */
@@ -1970,7 +1971,7 @@ yyreduce:
   decrease_scope_level();
   print_parser_msg("Compound statement\n", DEBUG);
 }
-#line 1974 "compLex_syntatical.tab.c"
+#line 1975 "compLex_syntatical.tab.c"
     break;
 
   case 18: /* declaration: declaration variableInit  */
@@ -1982,7 +1983,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Declaration\n", DEBUG);
   }
-#line 1986 "compLex_syntatical.tab.c"
+#line 1987 "compLex_syntatical.tab.c"
     break;
 
   case 19: /* declaration: %empty  */
@@ -1991,7 +1992,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty declaration\n", DEBUG);
   }
-#line 1995 "compLex_syntatical.tab.c"
+#line 1996 "compLex_syntatical.tab.c"
     break;
 
   case 20: /* statements: statements statement  */
@@ -2003,7 +2004,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Statements, statement\n", DEBUG);
   }
-#line 2007 "compLex_syntatical.tab.c"
+#line 2008 "compLex_syntatical.tab.c"
     break;
 
   case 21: /* statements: %empty  */
@@ -2012,7 +2013,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty statement\n", DEBUG);
   }
-#line 2016 "compLex_syntatical.tab.c"
+#line 2017 "compLex_syntatical.tab.c"
     break;
 
   case 22: /* statements: error  */
@@ -2021,37 +2022,37 @@ yyreduce:
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 2025 "compLex_syntatical.tab.c"
+#line 2026 "compLex_syntatical.tab.c"
     break;
 
   case 23: /* statement: expression  */
 #line 293 "compLex_syntatical.y"
                       {(yyval.node) = (yyvsp[0].node);}
-#line 2031 "compLex_syntatical.tab.c"
+#line 2032 "compLex_syntatical.tab.c"
     break;
 
   case 24: /* statement: inOutStatement  */
 #line 294 "compLex_syntatical.y"
                    {(yyval.node) = (yyvsp[0].node);}
-#line 2037 "compLex_syntatical.tab.c"
+#line 2038 "compLex_syntatical.tab.c"
     break;
 
   case 25: /* statement: fluxControlstatement  */
 #line 295 "compLex_syntatical.y"
                          {(yyval.node) = (yyvsp[0].node);}
-#line 2043 "compLex_syntatical.tab.c"
+#line 2044 "compLex_syntatical.tab.c"
     break;
 
   case 26: /* statement: iterationStatement  */
 #line 296 "compLex_syntatical.y"
                        {(yyval.node) = (yyvsp[0].node);}
-#line 2049 "compLex_syntatical.tab.c"
+#line 2050 "compLex_syntatical.tab.c"
     break;
 
   case 27: /* statement: localStatetements  */
 #line 297 "compLex_syntatical.y"
                       {(yyval.node) = (yyvsp[0].node);}
-#line 2055 "compLex_syntatical.tab.c"
+#line 2056 "compLex_syntatical.tab.c"
     break;
 
   case 28: /* inOutStatement: WRITE '(' STR ')' ';'  */
@@ -2062,7 +2063,7 @@ yyreduce:
     add_string_to_TAC((yyvsp[-2].str), 0, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: write string\n", DEBUG);
   }
-#line 2066 "compLex_syntatical.tab.c"
+#line 2067 "compLex_syntatical.tab.c"
     break;
 
   case 29: /* inOutStatement: WRITE '(' comparationalExpression ')' ';'  */
@@ -2079,7 +2080,7 @@ yyreduce:
     }
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
-#line 2083 "compLex_syntatical.tab.c"
+#line 2084 "compLex_syntatical.tab.c"
     break;
 
   case 30: /* inOutStatement: WRITELN '(' STR ')' ';'  */
@@ -2090,7 +2091,7 @@ yyreduce:
     add_string_to_TAC((yyvsp[-2].str), 1, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: writeln string\n", DEBUG);
   }
-#line 2094 "compLex_syntatical.tab.c"
+#line 2095 "compLex_syntatical.tab.c"
     break;
 
   case 31: /* inOutStatement: WRITELN '(' comparationalExpression ')' ';'  */
@@ -2107,7 +2108,7 @@ yyreduce:
     }
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
-#line 2111 "compLex_syntatical.tab.c"
+#line 2112 "compLex_syntatical.tab.c"
     break;
 
   case 32: /* inOutStatement: READ '(' variable ')' ';'  */
@@ -2134,7 +2135,7 @@ yyreduce:
     }
     print_parser_msg("IO: read identifier\n", DEBUG);
   }
-#line 2138 "compLex_syntatical.tab.c"
+#line 2139 "compLex_syntatical.tab.c"
     break;
 
   case 33: /* fluxControlstatement: RETURN comparationalExpression ';'  */
@@ -2157,7 +2158,7 @@ yyreduce:
     }
     print_parser_msg("return expression\n", DEBUG);
   }
-#line 2161 "compLex_syntatical.tab.c"
+#line 2162 "compLex_syntatical.tab.c"
     break;
 
   case 34: /* fluxControlstatement: RETURN ';'  */
@@ -2170,7 +2171,7 @@ yyreduce:
     add_TAC_line(tacP);
     print_parser_msg("return null\n", DEBUG);
   }
-#line 2174 "compLex_syntatical.tab.c"
+#line 2175 "compLex_syntatical.tab.c"
     break;
 
   case 35: /* fluxControlstatement: ifStart '(' comparationalExpression ')' expression  */
@@ -2182,7 +2183,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2186 "compLex_syntatical.tab.c"
+#line 2187 "compLex_syntatical.tab.c"
     break;
 
   case 36: /* fluxControlstatement: ifStart '(' comparationalExpression ')' RETURN expression  */
@@ -2194,7 +2195,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2198 "compLex_syntatical.tab.c"
+#line 2199 "compLex_syntatical.tab.c"
     break;
 
   case 37: /* fluxControlstatement: ifStart '(' comparationalExpression ')' localStatetements  */
@@ -2209,7 +2210,7 @@ yyreduce:
     }
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2213 "compLex_syntatical.tab.c"
+#line 2214 "compLex_syntatical.tab.c"
     break;
 
   case 38: /* $@3: %empty  */
@@ -2217,7 +2218,7 @@ yyreduce:
                                                               {
     add_if_else_entry_to_TAC();
   }
-#line 2221 "compLex_syntatical.tab.c"
+#line 2222 "compLex_syntatical.tab.c"
     break;
 
   case 39: /* fluxControlstatement: ifStart '(' comparationalExpression ')' localStatetements $@3 ELSE localStatetements  */
@@ -2230,7 +2231,7 @@ yyreduce:
     add_if_else_closing_to_TAC();
     print_parser_msg("if/else statement\n", DEBUG);
   }
-#line 2234 "compLex_syntatical.tab.c"
+#line 2235 "compLex_syntatical.tab.c"
     break;
 
   case 40: /* ifStart: IF  */
@@ -2238,7 +2239,7 @@ yyreduce:
             {
   add_for_or_if_entry_to_TAC("ifStart");
 }
-#line 2242 "compLex_syntatical.tab.c"
+#line 2243 "compLex_syntatical.tab.c"
     break;
 
   case 41: /* $@4: %empty  */
@@ -2247,13 +2248,13 @@ yyreduce:
       add_for_or_if_entry_to_TAC("forLoop");
       forIncrementCounter++; 
     }
-#line 2251 "compLex_syntatical.tab.c"
+#line 2252 "compLex_syntatical.tab.c"
     break;
 
   case 42: /* $@5: %empty  */
 #line 430 "compLex_syntatical.y"
                  {;}
-#line 2257 "compLex_syntatical.tab.c"
+#line 2258 "compLex_syntatical.tab.c"
     break;
 
   case 43: /* iterationStatement: FOR '(' expression $@4 expression $@5 forIncrement ')' localStatetements  */
@@ -2266,35 +2267,65 @@ yyreduce:
       add_for_loop_closing_to_TAC("forLoop", &currentTempReg, (yyval.node)->middle1Branch, (yyval.node)->middle2Branch);
       print_parser_msg("for loop three arguments\n", DEBUG);
   }
-#line 2270 "compLex_syntatical.tab.c"
+#line 2271 "compLex_syntatical.tab.c"
     break;
 
-  case 44: /* iterationStatement: SET_FORALL '(' term ADD_IN_OP comparationalExpression ')' localStatetements  */
+  case 44: /* $@6: %empty  */
 #line 438 "compLex_syntatical.y"
-                                                                                {
-    astParam astP = {
-      .leftBranch = (yyvsp[-4].node), .middle1Branch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .type="SET_FORALL", .value=(yyvsp[-6].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
-    };
-    (yyval.node) = add_ast_node(astP);
-    print_parser_msg("set forall loop\n", DEBUG);
+                                                          {
+      struct setInfo *setInfoPointer;
+      setInfoPointer = getSetSymbolInfo((yyvsp[0].node)->value);
+      if (setInfoPointer && setInfoPointer->current_size > 0) {
+        UT_string *operand_array, *currentPos;
+        utstring_new(operand_array);utstring_new(currentPos);
+        set_operand_array(operand_array, setInfoPointer->pointerToSet, "0");
+        tacCodeParam tacP0 = {.instruction = "mov", .op1 = (yyvsp[-2].node)->value, .op2 = utstring_body(operand_array), .lineType=enumTwoOp};
+        add_TAC_line(tacP0);
+        create_temporary_register(currentPos, &currentTempReg);
+        tacCodeParam tacP1 = {.instruction = "mov", .op1 = utstring_body(currentPos), .op2 = "0", .lineType=enumTwoOp};
+        add_TAC_line(tacP1);
+        add_for_or_if_entry_to_TAC("forallLoop");
+        setForallStack *tmpForallStack = (setForallStack *)malloc(sizeof *tmpForallStack);
+        tmpForallStack->name = strdup(utstring_body(currentPos));
+        STACK_PUSH(setForall, tmpForallStack);
+        forIncrementCounter++;
+        utstring_free(operand_array);
+      }
+    }
+#line 2296 "compLex_syntatical.tab.c"
+    break;
+
+  case 45: /* iterationStatement: SET_FORALL '(' term ADD_IN_OP comparationalExpression $@6 ')' localStatetements  */
+#line 457 "compLex_syntatical.y"
+                            {
+      astParam astP = {
+        .leftBranch = (yyvsp[-5].node), .middle1Branch = (yyvsp[-3].node), .rightBranch = (yyvsp[0].node), .type="SET_FORALL", .value=(yyvsp[-7].str), .nodeType = enumLeftRightMiddleBranch, .astNodeClass="ITERATION_STATEMENT FORALL" 
+      };
+      (yyval.node) = add_ast_node(astP);
+      struct setInfo *setInfoPointer;
+      setInfoPointer = getSetSymbolInfo((yyvsp[-3].node)->value);
+      if (setInfoPointer && setInfoPointer->current_size > 0) {
+        add_forall_loop_closing_to_TAC("forallLoop", setInfoPointer, &currentTempReg, (yyvsp[-5].node)->value);
+      }
+      print_parser_msg("set forall loop\n", DEBUG);
   }
-#line 2282 "compLex_syntatical.tab.c"
+#line 2313 "compLex_syntatical.tab.c"
     break;
 
-  case 45: /* expression: comparationalExpression ';'  */
-#line 447 "compLex_syntatical.y"
+  case 46: /* expression: comparationalExpression ';'  */
+#line 471 "compLex_syntatical.y"
                                         {(yyval.node)=(yyvsp[-1].node);}
-#line 2288 "compLex_syntatical.tab.c"
+#line 2319 "compLex_syntatical.tab.c"
     break;
 
-  case 46: /* expression: variableAssignment  */
-#line 448 "compLex_syntatical.y"
+  case 47: /* expression: variableAssignment  */
+#line 472 "compLex_syntatical.y"
                        {(yyval.node)=(yyvsp[0].node);}
-#line 2294 "compLex_syntatical.tab.c"
+#line 2325 "compLex_syntatical.tab.c"
     break;
 
-  case 47: /* comparationalExpression: comparationalExpression AND logicalExpression  */
-#line 451 "compLex_syntatical.y"
+  case 48: /* comparationalExpression: comparationalExpression AND logicalExpression  */
+#line 475 "compLex_syntatical.y"
                                                                        {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_AND"
@@ -2302,11 +2333,11 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical AND operation\n", DEBUG);
   }
-#line 2306 "compLex_syntatical.tab.c"
+#line 2337 "compLex_syntatical.tab.c"
     break;
 
-  case 48: /* comparationalExpression: comparationalExpression OR logicalExpression  */
-#line 458 "compLex_syntatical.y"
+  case 49: /* comparationalExpression: comparationalExpression OR logicalExpression  */
+#line 482 "compLex_syntatical.y"
                                                  {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_OR"
@@ -2314,29 +2345,29 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical OR operation\n", DEBUG);
   }
-#line 2318 "compLex_syntatical.tab.c"
+#line 2349 "compLex_syntatical.tab.c"
     break;
 
-  case 49: /* comparationalExpression: NEG logicalExpression  */
-#line 465 "compLex_syntatical.y"
+  case 50: /* comparationalExpression: NEG logicalExpression  */
+#line 489 "compLex_syntatical.y"
                           {
     astParam astP = { .leftBranch = (yyvsp[0].node), .type="NEG", .value = (yyvsp[-1].str), .nodeType = enumValueLeftBranch, .astNodeClass="LOGICAL_EXPRESSION LOGICAL_NOT" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical NOT operation\n", DEBUG);
   }
-#line 2328 "compLex_syntatical.tab.c"
+#line 2359 "compLex_syntatical.tab.c"
     break;
 
-  case 50: /* comparationalExpression: logicalExpression  */
-#line 470 "compLex_syntatical.y"
+  case 51: /* comparationalExpression: logicalExpression  */
+#line 494 "compLex_syntatical.y"
                       {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2336 "compLex_syntatical.tab.c"
+#line 2367 "compLex_syntatical.tab.c"
     break;
 
-  case 51: /* logicalExpression: logicalExpression ILT arithmeticExpression  */
-#line 475 "compLex_syntatical.y"
+  case 52: /* logicalExpression: logicalExpression ILT arithmeticExpression  */
+#line 499 "compLex_syntatical.y"
                                                               {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN"
@@ -2360,11 +2391,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is less than operation\n", DEBUG);
   }
-#line 2364 "compLex_syntatical.tab.c"
+#line 2395 "compLex_syntatical.tab.c"
     break;
 
-  case 52: /* logicalExpression: logicalExpression ILTE arithmeticExpression  */
-#line 498 "compLex_syntatical.y"
+  case 53: /* logicalExpression: logicalExpression ILTE arithmeticExpression  */
+#line 522 "compLex_syntatical.y"
                                                 {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_LESS_THAN_EQUAL"
@@ -2388,11 +2419,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
-#line 2392 "compLex_syntatical.tab.c"
+#line 2423 "compLex_syntatical.tab.c"
     break;
 
-  case 53: /* logicalExpression: logicalExpression IGT arithmeticExpression  */
-#line 521 "compLex_syntatical.y"
+  case 54: /* logicalExpression: logicalExpression IGT arithmeticExpression  */
+#line 545 "compLex_syntatical.y"
                                                {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN"
@@ -2416,11 +2447,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is greater than operation\n", DEBUG);
   }
-#line 2420 "compLex_syntatical.tab.c"
+#line 2451 "compLex_syntatical.tab.c"
     break;
 
-  case 54: /* logicalExpression: logicalExpression IGTE arithmeticExpression  */
-#line 544 "compLex_syntatical.y"
+  case 55: /* logicalExpression: logicalExpression IGTE arithmeticExpression  */
+#line 568 "compLex_syntatical.y"
                                                 {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_GREATER_THAN_EQUAL"
@@ -2444,11 +2475,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
-#line 2448 "compLex_syntatical.tab.c"
+#line 2479 "compLex_syntatical.tab.c"
     break;
 
-  case 55: /* logicalExpression: logicalExpression IDIFF arithmeticExpression  */
-#line 567 "compLex_syntatical.y"
+  case 56: /* logicalExpression: logicalExpression IDIFF arithmeticExpression  */
+#line 591 "compLex_syntatical.y"
                                                  {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_DIFFERENT_THAN"
@@ -2472,11 +2503,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is different than operation\n", DEBUG);
   }
-#line 2476 "compLex_syntatical.tab.c"
+#line 2507 "compLex_syntatical.tab.c"
     break;
 
-  case 56: /* logicalExpression: logicalExpression IEQ arithmeticExpression  */
-#line 590 "compLex_syntatical.y"
+  case 57: /* logicalExpression: logicalExpression IEQ arithmeticExpression  */
+#line 614 "compLex_syntatical.y"
                                                {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="LOGICAL_EXPRESSION IS_EQUAL"
@@ -2500,19 +2531,19 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("is equal to operation\n", DEBUG);
   }
-#line 2504 "compLex_syntatical.tab.c"
+#line 2535 "compLex_syntatical.tab.c"
     break;
 
-  case 57: /* logicalExpression: arithmeticExpression  */
-#line 613 "compLex_syntatical.y"
+  case 58: /* logicalExpression: arithmeticExpression  */
+#line 637 "compLex_syntatical.y"
                          {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2512 "compLex_syntatical.tab.c"
+#line 2543 "compLex_syntatical.tab.c"
     break;
 
-  case 58: /* arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2  */
-#line 618 "compLex_syntatical.y"
+  case 59: /* arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2  */
+#line 642 "compLex_syntatical.y"
                                                                         {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION ADD_OP"
@@ -2531,11 +2562,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("add operation\n", DEBUG);
   }
-#line 2535 "compLex_syntatical.tab.c"
+#line 2566 "compLex_syntatical.tab.c"
     break;
 
-  case 59: /* arithmeticExpression: arithmeticExpression SUB_OP arithmeticExpression2  */
-#line 636 "compLex_syntatical.y"
+  case 60: /* arithmeticExpression: arithmeticExpression SUB_OP arithmeticExpression2  */
+#line 660 "compLex_syntatical.y"
                                                       {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION SUB_OP"
@@ -2554,17 +2585,17 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("subtraction operation\n", DEBUG);
   }
-#line 2558 "compLex_syntatical.tab.c"
+#line 2589 "compLex_syntatical.tab.c"
     break;
 
-  case 60: /* arithmeticExpression: arithmeticExpression2  */
-#line 654 "compLex_syntatical.y"
+  case 61: /* arithmeticExpression: arithmeticExpression2  */
+#line 678 "compLex_syntatical.y"
                           {(yyval.node)=(yyvsp[0].node);}
-#line 2564 "compLex_syntatical.tab.c"
+#line 2595 "compLex_syntatical.tab.c"
     break;
 
-  case 61: /* arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation  */
-#line 657 "compLex_syntatical.y"
+  case 62: /* arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation  */
+#line 681 "compLex_syntatical.y"
                                                                     {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION MULT_OP"
@@ -2583,11 +2614,11 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("multiplication operation\n", DEBUG);
   }
-#line 2587 "compLex_syntatical.tab.c"
+#line 2618 "compLex_syntatical.tab.c"
     break;
 
-  case 62: /* arithmeticExpression2: arithmeticExpression2 DIV_OP unaryOperation  */
-#line 675 "compLex_syntatical.y"
+  case 63: /* arithmeticExpression2: arithmeticExpression2 DIV_OP unaryOperation  */
+#line 699 "compLex_syntatical.y"
                                                 {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="ARITHMETIC_EXPRESSION DIV_OP"
@@ -2606,94 +2637,126 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = strdup((yyvsp[-2].node)->type);
     print_parser_msg("division operation\n", DEBUG);
   }
-#line 2610 "compLex_syntatical.tab.c"
+#line 2641 "compLex_syntatical.tab.c"
     break;
 
-  case 63: /* arithmeticExpression2: unaryOperation  */
-#line 693 "compLex_syntatical.y"
+  case 64: /* arithmeticExpression2: unaryOperation  */
+#line 717 "compLex_syntatical.y"
                    {(yyval.node)=(yyvsp[0].node);}
-#line 2616 "compLex_syntatical.tab.c"
+#line 2647 "compLex_syntatical.tab.c"
     break;
 
-  case 64: /* unaryOperation: SUB_OP term  */
-#line 696 "compLex_syntatical.y"
+  case 65: /* unaryOperation: SUB_OP term  */
+#line 720 "compLex_syntatical.y"
                             {
     astParam astP = { .leftBranch = (yyvsp[0].node), .type="IDENTIFIER", .value = (yyvsp[0].node)->value, .nodeType = enumValueLeftBranch, .astNodeClass="SUB TERM" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set OP\n", DEBUG);
   }
-#line 2626 "compLex_syntatical.tab.c"
+#line 2657 "compLex_syntatical.tab.c"
     break;
 
-  case 65: /* unaryOperation: term  */
-#line 701 "compLex_syntatical.y"
+  case 66: /* unaryOperation: term  */
+#line 725 "compLex_syntatical.y"
          {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2634 "compLex_syntatical.tab.c"
+#line 2665 "compLex_syntatical.tab.c"
     break;
 
-  case 66: /* setOperationalExpression: ADD_SET_OP '(' setBody ')'  */
-#line 706 "compLex_syntatical.y"
+  case 67: /* setOperationalExpression: ADD_SET_OP '(' setBody ')'  */
+#line 730 "compLex_syntatical.y"
                                                      {
     astParam astP = { .leftBranch = (yyvsp[-1].node), .type="IDENTIFIER", .value = (yyvsp[-3].str), .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION ADD_SET_OP" };
     (yyval.node) = add_ast_node(astP);
-    if ((yyval.node)->leftBranch->rightBranch && (yyval.node)->leftBranch->rightBranch->value) {
+    if ((yyval.node)->leftBranch->rightBranch && (yyval.node)->leftBranch->rightBranch->value && strcmp((yyval.node)->leftBranch->rightBranch->astNodeClass, "IDENTIFIER") == 0) {
       struct setInfo *setInfoPointer;
       setInfoPointer = getSetSymbolInfo((yyval.node)->leftBranch->rightBranch->value);
       if (setInfoPointer) {
-        UT_string *operand_array, *sizePlusOne, *size;
-        utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
-        stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
-        stringify_integer(size, setInfoPointer->current_size);
-        tacCodeParam tacP = {.instruction="mema", .op1=setInfoPointer->pointerToSet, .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
-        add_TAC_line(tacP);
-        set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(size));
-        tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array), .op2=(yyval.node)->leftBranch->leftBranch->value, .lineType=enumTwoOp};
-        add_TAC_line(tacP1);
-        increaseSetSize(setInfoPointer->setID);
-        utstring_free(operand_array);
-        utstring_free(sizePlusOne);
-        utstring_free(size);
+        if (setInfoPointer->current_size > 0) {
+          int i, setID = setInfoPointer->setID, current_size = setInfoPointer->current_size;
+          UT_string *newSetReg, *sizePlusOne, *operand_array, *currentPos, *operand_array_dest, *tmpReg;
+          utstring_new(newSetReg); utstring_new(sizePlusOne); utstring_new(tmpReg); 
+          utstring_new(operand_array); utstring_new(operand_array_dest); utstring_new(currentPos);
+          stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
+          create_temporary_register(newSetReg, &currentTempReg);
+          create_temporary_register(tmpReg, &currentTempReg);
+          tacCodeParam tacP = {.instruction="mema", .op1=utstring_body(newSetReg), .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
+          add_TAC_line(tacP);
+          for (i=0; i<setInfoPointer->current_size; i++) {
+            utstring_clear(currentPos);utstring_clear(operand_array);utstring_clear(operand_array_dest);
+            stringify_integer(currentPos, i);
+            set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(currentPos));
+            set_operand_array(operand_array_dest, utstring_body(newSetReg), utstring_body(currentPos));
+            tacCodeParam tacP2 = {.instruction="mov", .op1=utstring_body(tmpReg), .op2=utstring_body(operand_array), .lineType=enumTwoOp};
+            add_TAC_line(tacP2);
+            tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array_dest), .op2=utstring_body(tmpReg), .lineType=enumTwoOp};
+            add_TAC_line(tacP1);
+          }
+          utstring_clear(operand_array_dest);utstring_clear(currentPos);
+          stringify_integer(currentPos, i);
+          set_operand_array(operand_array_dest, utstring_body(newSetReg), utstring_body(currentPos));
+          tacCodeParam tacP4 = {.instruction="mov", .op1=utstring_body(operand_array_dest), .op2=(yyval.node)->leftBranch->leftBranch->value, .lineType=enumTwoOp};
+          add_TAC_line(tacP4);
+          tacCodeParam tacP3 = {.instruction="memf", .op1=setInfoPointer->pointerToSet, .lineType=enumOneOp};
+          add_TAC_line(tacP3);
+          deleteSymbolSetInfo(setID);
+          addSymbolToSetInfoTable(setID, strdup(utstring_body(newSetReg)), current_size+1);
+          utstring_free(sizePlusOne);
+        } else {
+          UT_string *operand_array, *sizePlusOne, *size;
+          utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
+          stringify_integer(sizePlusOne, setInfoPointer->current_size + 1);
+          stringify_integer(size, setInfoPointer->current_size);
+          tacCodeParam tacP = {.instruction="mema", .op1=setInfoPointer->pointerToSet, .op2=utstring_body(sizePlusOne), .lineType=enumTwoOp};
+          add_TAC_line(tacP);
+          set_operand_array(operand_array, setInfoPointer->pointerToSet, utstring_body(size));
+          tacCodeParam tacP1 = {.instruction="mov", .op1=utstring_body(operand_array), .op2=(yyval.node)->leftBranch->leftBranch->value, .lineType=enumTwoOp};
+          add_TAC_line(tacP1);
+          increaseSetSize(setInfoPointer->setID);
+          utstring_free(operand_array);
+          utstring_free(sizePlusOne);
+          utstring_free(size);
+        }
       }
     }
     print_parser_msg("add to set OP\n", DEBUG);
   }
-#line 2663 "compLex_syntatical.tab.c"
+#line 2726 "compLex_syntatical.tab.c"
     break;
 
-  case 67: /* setOperationalExpression: REMOVE_SET_OP '(' setBody ')'  */
-#line 730 "compLex_syntatical.y"
+  case 68: /* setOperationalExpression: REMOVE_SET_OP '(' setBody ')'  */
+#line 786 "compLex_syntatical.y"
                                   {
     astParam astP = { .leftBranch = (yyvsp[-1].node), .type="IDENTIFIER", .value = (yyvsp[-3].str), .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION REMOVE_FROM_SET_OP" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("remove from set OP\n", DEBUG);
   }
-#line 2673 "compLex_syntatical.tab.c"
+#line 2736 "compLex_syntatical.tab.c"
     break;
 
-  case 68: /* setOperationalExpression: EXISTS_IN_SET_OP '(' setBody ')'  */
-#line 735 "compLex_syntatical.y"
+  case 69: /* setOperationalExpression: EXISTS_IN_SET_OP '(' setBody ')'  */
+#line 791 "compLex_syntatical.y"
                                      {
     astParam astP = { .leftBranch = (yyvsp[-1].node), .type="IDENTIFIER", .value = (yyvsp[-3].str), .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION EXISTS_FROM_SET_OP" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("exists el in set OP\n", DEBUG);
   }
-#line 2683 "compLex_syntatical.tab.c"
+#line 2746 "compLex_syntatical.tab.c"
     break;
 
-  case 69: /* setOperationalExpression: IS_SET '(' term ')'  */
-#line 740 "compLex_syntatical.y"
+  case 70: /* setOperationalExpression: IS_SET '(' term ')'  */
+#line 796 "compLex_syntatical.y"
                         {
     astParam astP = { .leftBranch = (yyvsp[-1].node), .type="IDENTIFIER", .value = (yyvsp[-3].str), .nodeType = enumValueLeftBranch, .astNodeClass="SET_OPERATION_EXPRESSION IS_SET" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set OP\n", DEBUG);
   }
-#line 2693 "compLex_syntatical.tab.c"
+#line 2756 "compLex_syntatical.tab.c"
     break;
 
-  case 70: /* setBody: comparationalExpression ADD_IN_OP setOperationalExpression  */
-#line 747 "compLex_syntatical.y"
+  case 71: /* setBody: comparationalExpression ADD_IN_OP setOperationalExpression  */
+#line 803 "compLex_syntatical.y"
                                                                     {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION_SET_BODY"
@@ -2701,11 +2764,11 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set body\n", DEBUG);
   }
-#line 2705 "compLex_syntatical.tab.c"
+#line 2768 "compLex_syntatical.tab.c"
     break;
 
-  case 71: /* setBody: comparationalExpression ADD_IN_OP variable  */
-#line 754 "compLex_syntatical.y"
+  case 72: /* setBody: comparationalExpression ADD_IN_OP variable  */
+#line 810 "compLex_syntatical.y"
                                                {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="SET_OPERATION_EXPRESSION_SET_BODY"
@@ -2713,11 +2776,11 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set body\n", DEBUG);
   }
-#line 2717 "compLex_syntatical.tab.c"
+#line 2780 "compLex_syntatical.tab.c"
     break;
 
-  case 72: /* variableAssignment: IDENTIFIER ASSIGN expression  */
-#line 763 "compLex_syntatical.y"
+  case 73: /* variableAssignment: IDENTIFIER ASSIGN expression  */
+#line 819 "compLex_syntatical.y"
                                                  {
     verify_declared_id((yyvsp[-2].str), running_line_count, running_column_count);
     astParam astP = { .leftBranch = (yyvsp[0].node), .type="IDENTIFIER", .value = (yyvsp[-2].str), .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_ASSIGNMENT" };
@@ -2747,17 +2810,17 @@ yyreduce:
     }
     print_parser_msg("variable assignment\n", DEBUG);
   }
-#line 2751 "compLex_syntatical.tab.c"
+#line 2814 "compLex_syntatical.tab.c"
     break;
 
-  case 73: /* $@6: %empty  */
-#line 794 "compLex_syntatical.y"
+  case 74: /* $@7: %empty  */
+#line 850 "compLex_syntatical.y"
                        {create_new_scope_level();}
-#line 2757 "compLex_syntatical.tab.c"
+#line 2820 "compLex_syntatical.tab.c"
     break;
 
-  case 74: /* localStatetements: '{' $@6 declaration statements '}'  */
-#line 795 "compLex_syntatical.y"
+  case 75: /* localStatetements: '{' $@7 declaration statements '}'  */
+#line 851 "compLex_syntatical.y"
                              {
   decrease_scope_level();
   astParam astP = {
@@ -2766,84 +2829,84 @@ yyreduce:
   (yyval.node) = add_ast_node(astP);
   print_parser_msg("local statetements\n", DEBUG);
 }
-#line 2770 "compLex_syntatical.tab.c"
+#line 2833 "compLex_syntatical.tab.c"
     break;
 
-  case 75: /* forIncrement: IDENTIFIER ASSIGN arithmeticExpression  */
-#line 805 "compLex_syntatical.y"
+  case 76: /* forIncrement: IDENTIFIER ASSIGN arithmeticExpression  */
+#line 861 "compLex_syntatical.y"
                                                      {
   astParam astP = { .leftBranch = (yyvsp[0].node), .type="IDENTIFIER", .value = (yyvsp[-2].str), .nodeType = enumValueLeftBranch, .astNodeClass="FOR_INCREMENT" };
   (yyval.node) = add_ast_node(astP);
   print_parser_msg("for loop increment\n", DEBUG);
 }
-#line 2780 "compLex_syntatical.tab.c"
+#line 2843 "compLex_syntatical.tab.c"
     break;
 
-  case 76: /* term: '(' comparationalExpression ')'  */
-#line 812 "compLex_syntatical.y"
+  case 77: /* term: '(' comparationalExpression ')'  */
+#line 868 "compLex_syntatical.y"
                                       {
     (yyval.node)=(yyvsp[-1].node);
     print_parser_msg("( operationalExp )\n", DEBUG);
   }
-#line 2789 "compLex_syntatical.tab.c"
+#line 2852 "compLex_syntatical.tab.c"
     break;
 
-  case 77: /* term: variable  */
-#line 816 "compLex_syntatical.y"
+  case 78: /* term: variable  */
+#line 872 "compLex_syntatical.y"
              {
     (yyval.node)=(yyvsp[0].node);
     print_parser_msg("variable\n", DEBUG);
   }
-#line 2798 "compLex_syntatical.tab.c"
+#line 2861 "compLex_syntatical.tab.c"
     break;
 
-  case 78: /* term: setOperationalExpression  */
-#line 820 "compLex_syntatical.y"
+  case 79: /* term: setOperationalExpression  */
+#line 876 "compLex_syntatical.y"
                              {
     (yyval.node)=(yyvsp[0].node);
     print_parser_msg("set op\n", DEBUG);
   }
-#line 2807 "compLex_syntatical.tab.c"
+#line 2870 "compLex_syntatical.tab.c"
     break;
 
-  case 79: /* term: functionCall  */
-#line 824 "compLex_syntatical.y"
+  case 80: /* term: functionCall  */
+#line 880 "compLex_syntatical.y"
                  {(yyval.node)=(yyvsp[0].node);}
-#line 2813 "compLex_syntatical.tab.c"
+#line 2876 "compLex_syntatical.tab.c"
     break;
 
-  case 80: /* term: EMPTY  */
-#line 825 "compLex_syntatical.y"
+  case 81: /* term: EMPTY  */
+#line 881 "compLex_syntatical.y"
           {
     astParam astP = { .type = "EMPTY", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("EMPTY constant value\n", DEBUG);
   }
-#line 2823 "compLex_syntatical.tab.c"
+#line 2886 "compLex_syntatical.tab.c"
     break;
 
-  case 81: /* term: FLOAT  */
-#line 830 "compLex_syntatical.y"
+  case 82: /* term: FLOAT  */
+#line 886 "compLex_syntatical.y"
           {
     astParam astP = { .type = "FLOAT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("float value\n", DEBUG);
   }
-#line 2833 "compLex_syntatical.tab.c"
+#line 2896 "compLex_syntatical.tab.c"
     break;
 
-  case 82: /* term: INT  */
-#line 835 "compLex_syntatical.y"
+  case 83: /* term: INT  */
+#line 891 "compLex_syntatical.y"
         {
     astParam astP = { .type = "INT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TERM" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("int value\n", DEBUG);
   }
-#line 2843 "compLex_syntatical.tab.c"
+#line 2906 "compLex_syntatical.tab.c"
     break;
 
-  case 83: /* functionCall: IDENTIFIER '(' functionArguments ')'  */
-#line 842 "compLex_syntatical.y"
+  case 84: /* functionCall: IDENTIFIER '(' functionArguments ')'  */
+#line 898 "compLex_syntatical.y"
                                                    {
   int symbolOK = verify_declared_id((yyvsp[-3].str), running_line_count, running_column_count);
   currentCalledFunction.name = (yyvsp[-3].str);
@@ -2870,26 +2933,26 @@ yyreduce:
   add_TAC_line(tacP);
   print_parser_msg("function call\n", DEBUG);
 }
-#line 2874 "compLex_syntatical.tab.c"
+#line 2937 "compLex_syntatical.tab.c"
     break;
 
-  case 84: /* functionArguments: callArguments  */
-#line 870 "compLex_syntatical.y"
+  case 85: /* functionArguments: callArguments  */
+#line 926 "compLex_syntatical.y"
                                  {(yyval.node)=(yyvsp[0].node);}
-#line 2880 "compLex_syntatical.tab.c"
+#line 2943 "compLex_syntatical.tab.c"
     break;
 
-  case 85: /* functionArguments: %empty  */
-#line 871 "compLex_syntatical.y"
+  case 86: /* functionArguments: %empty  */
+#line 927 "compLex_syntatical.y"
            {
     (yyval.node) = NULL;
     print_parser_msg("empty function argument\n", DEBUG);
   }
-#line 2889 "compLex_syntatical.tab.c"
+#line 2952 "compLex_syntatical.tab.c"
     break;
 
-  case 86: /* callArguments: callArguments ',' comparationalExpression  */
-#line 877 "compLex_syntatical.y"
+  case 87: /* callArguments: callArguments ',' comparationalExpression  */
+#line 933 "compLex_syntatical.y"
                                                          {
     astParam astP = {
       .leftBranch = (yyvsp[-2].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="CALL_ARGUMENTS MULTIPLE_ARGUMENTS"
@@ -2911,11 +2974,11 @@ yyreduce:
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
-#line 2915 "compLex_syntatical.tab.c"
+#line 2978 "compLex_syntatical.tab.c"
     break;
 
-  case 87: /* callArguments: comparationalExpression  */
-#line 898 "compLex_syntatical.y"
+  case 88: /* callArguments: comparationalExpression  */
+#line 954 "compLex_syntatical.y"
                             {
     (yyval.node) = (yyvsp[0].node);
     if (strcmp((yyvsp[0].node)->astNodeClass,"IDENTIFIER") == 0) {
@@ -2936,11 +2999,11 @@ yyreduce:
 
     print_parser_msg("function callarguments\n", DEBUG);
   }
-#line 2940 "compLex_syntatical.tab.c"
+#line 3003 "compLex_syntatical.tab.c"
     break;
 
-  case 88: /* variableInit: typeSpecifier IDENTIFIER ';'  */
-#line 920 "compLex_syntatical.y"
+  case 89: /* variableInit: typeSpecifier IDENTIFIER ';'  */
+#line 976 "compLex_syntatical.y"
                                            {
   astParam astP = { .leftBranch = (yyvsp[-2].node), .type="IDENTIFIER", .value = (yyvsp[-1].str), .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   (yyval.node) = add_ast_node(astP);
@@ -2949,20 +3012,21 @@ yyreduce:
   symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = (yyval.node)->leftBranch->value, .name = (yyvsp[-1].str), .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   if ((yyval.node)->leftBranch && (yyval.node)->leftBranch->type && strcmp((yyval.node)->leftBranch->type, "T_SET") == 0) {
+    UT_string *currentPos;
+    utstring_new(currentPos);utstring_new(currentPos);
+    create_temporary_register(currentPos, &currentTempReg);
     set_temporary_register((yyval.node), &currentTempReg);
-    UT_string *tmp; utstring_new(tmp);
-    utstring_printf(tmp, "$%d", currentTempReg);
-    addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(tmp)), 0);
-    utstring_free(tmp);
+    addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(currentPos)), 0);
+    utstring_free(currentPos);
   }
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
 }
-#line 2962 "compLex_syntatical.tab.c"
+#line 3026 "compLex_syntatical.tab.c"
     break;
 
-  case 89: /* variable: IDENTIFIER  */
-#line 939 "compLex_syntatical.y"
+  case 90: /* variable: IDENTIFIER  */
+#line 996 "compLex_syntatical.y"
                      {
   astParam astP = { .type = "IDENTIFIER", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="IDENTIFIER" };
   (yyval.node) = add_ast_node(astP);
@@ -2980,51 +3044,51 @@ yyreduce:
   }
   print_parser_msg("variable\n", DEBUG);
 }
-#line 2984 "compLex_syntatical.tab.c"
+#line 3048 "compLex_syntatical.tab.c"
     break;
 
-  case 90: /* typeSpecifier: T_INT  */
-#line 958 "compLex_syntatical.y"
+  case 91: /* typeSpecifier: T_INT  */
+#line 1015 "compLex_syntatical.y"
                      {
     astParam astP = { .type = "T_INT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("integer type\n", DEBUG);
   }
-#line 2994 "compLex_syntatical.tab.c"
+#line 3058 "compLex_syntatical.tab.c"
     break;
 
-  case 91: /* typeSpecifier: T_FLOAT  */
-#line 963 "compLex_syntatical.y"
+  case 92: /* typeSpecifier: T_FLOAT  */
+#line 1020 "compLex_syntatical.y"
             {
     astParam astP = { .type = "T_FLOAT", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("float type\n", DEBUG);
   }
-#line 3004 "compLex_syntatical.tab.c"
+#line 3068 "compLex_syntatical.tab.c"
     break;
 
-  case 92: /* typeSpecifier: T_ELEM  */
-#line 968 "compLex_syntatical.y"
+  case 93: /* typeSpecifier: T_ELEM  */
+#line 1025 "compLex_syntatical.y"
            {
     astParam astP = { .type = "T_ELEM", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("elem type\n", DEBUG);
   }
-#line 3014 "compLex_syntatical.tab.c"
+#line 3078 "compLex_syntatical.tab.c"
     break;
 
-  case 93: /* typeSpecifier: T_SET  */
-#line 973 "compLex_syntatical.y"
+  case 94: /* typeSpecifier: T_SET  */
+#line 1030 "compLex_syntatical.y"
           {
     astParam astP = { .type = "T_SET", .value = (yyvsp[0].str), .nodeType = enumValueTypeOnly, .astNodeClass="TYPE_SPECIFIER" };
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("set type\n", DEBUG);
   }
-#line 3024 "compLex_syntatical.tab.c"
+#line 3088 "compLex_syntatical.tab.c"
     break;
 
 
-#line 3028 "compLex_syntatical.tab.c"
+#line 3092 "compLex_syntatical.tab.c"
 
       default: break;
     }
@@ -3254,7 +3318,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 980 "compLex_syntatical.y"
+#line 1037 "compLex_syntatical.y"
 
 
 int main(int argc, char **argv) {

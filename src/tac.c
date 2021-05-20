@@ -26,6 +26,17 @@ void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize) {
   }
 }
 
+void deleteSymbolSetInfo(int setID) {
+  struct setInfo *symbolPointer;
+  /* attempts to find entry on symbol table */
+  HASH_FIND_INT(setInfoTable, &setID, symbolPointer);
+  if (symbolPointer != NULL) {
+      HASH_DEL(setInfoTable, symbolPointer);
+  } else {
+    printf("set symbol %d already declared!\n", setID);
+  }
+}
+
 void increaseSetSize(int setID) {
   struct setInfo *symbolPointer;
   int backupCurrentSize;
@@ -57,7 +68,6 @@ setInfo* getSetSymbolInfo(char *name) {
       setInfoKey = &(symbol->symbolID);
       HASH_FIND_INT(setInfoTable, setInfoKey, setInfoPointer);
       if (setInfoPointer != NULL) {
-        printf("found symbol %d\n", symbol->symbolID);
         return setInfoPointer;
       }
     }
@@ -76,6 +86,7 @@ void addSymbolsToTable(FILE *fp) {
   for (s = symbolTable; s != nullC; s = (struct symbolNode*)(s -> hh.next)) {
     if ((s->symbolType == enumVariable || s->symbolType == enumParameter) && hasAtLeastOneVar == 1) {
       if (strcmp(s->type, "set") == 0) utstring_printf(lineOfCode, "int %s\n", s->name);
+      if (strcmp(s->type, "elem") == 0) utstring_printf(lineOfCode, "int %s\n", s->name);
       else utstring_printf(lineOfCode, "%s %s\n", s->type, s->name);
       fputs(utstring_body(lineOfCode), fp);
       utstring_clear(lineOfCode);
@@ -213,6 +224,38 @@ void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *
   utstring_free(labelFinish);
 }
 
+void add_forall_loop_closing_to_TAC(char *string, setInfo *setInfoPointer, int *currentTempReg, char* varName) {
+  UT_string *labelFinish, *cmprTemp, *setSize, *operand_array;
+  codeLabelStack *loopLabel;
+  setForallStack *tmpForallStack;
+  utstring_new(operand_array);
+  STACK_POP(setForall, tmpForallStack);
+  utstring_new(labelFinish);utstring_new(cmprTemp);
+  utstring_new(setSize);
+  stringify_integer(setSize, setInfoPointer->current_size);
+  create_temporary_register(cmprTemp, currentTempReg);
+  STACK_POP(codeStackHead, loopLabel);
+  utstring_printf(labelFinish, "%sFinish", loopLabel->name);
+  set_operand_array(operand_array, setInfoPointer->pointerToSet, tmpForallStack->name);
+  tacCodeParam tacP0 = { .instruction = "add", .dst=tmpForallStack->name,.op1=tmpForallStack->name, .op2 = "1", .lineType=enumThreeOp};
+  add_TAC_line(tacP0);
+  tacCodeParam tacP1 = { .instruction = "slt", .dst=utstring_body(cmprTemp), .op1=tmpForallStack->name, .op2=utstring_body(setSize), .lineType=enumThreeOp};
+  add_TAC_line(tacP1);
+  tacCodeParam tac3 = { .instruction = "brz", .op1 = utstring_body(labelFinish), .op2=utstring_body(cmprTemp), .lineType=enumTwoOp};
+  add_TAC_line(tac3);
+  tacCodeParam tac4 = { .instruction = "mov", .op1 = varName, .op2=utstring_body(operand_array), .lineType=enumTwoOp};
+  add_TAC_line(tac4);
+  tacCodeParam tac5 = { .instruction = "jump", .op1 = loopLabel->name, .lineType=enumOneOp};
+  add_TAC_line(tac5);
+  insertTACLabel(utstring_body(labelFinish));
+
+  free(tmpForallStack->name);
+  free(tmpForallStack);
+  free(loopLabel->name);
+  free(loopLabel);
+  utstring_free(labelFinish);
+}
+
 char * get_TAC_op_from_node_class(char *node) {
   UT_string *operation;
   utstring_new(operation);
@@ -285,10 +328,12 @@ void add_if_finish_to_TAC() {
   UT_string *label;
   utstring_new(label);
   codeLabelStack *ifLabel;
-  ifLabel = STACK_TOP(codeStackHead);
+  STACK_POP(codeStackHead, ifLabel);
   utstring_printf(label, "%sFinish", ifLabel->name);
   insertTACLabel(utstring_body(label));
-  utstring_free(label);
+  free(ifLabel->name);
+  free(ifLabel);
+  free(label);
 }
 
 void set_operand_array(UT_string *tmp, char *string, char *arrayPosition) {
