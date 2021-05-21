@@ -452,7 +452,7 @@ iterationStatement: FOR '(' expression {
         tmpForallStack->name = strdup(utstring_body(currentPos));
         STACK_PUSH(setForall, tmpForallStack);
         forIncrementCounter++;
-        utstring_free(operand_array);
+        utstring_free(operand_array);utstring_free(currentPos);
       }
     } ')' localStatetements {
       astParam astP = {
@@ -763,7 +763,8 @@ setOperationalExpression: ADD_SET_OP '(' setBody ')' {
           add_TAC_line(tacP3);
           deleteSymbolSetInfo(setID);
           addSymbolToSetInfoTable(setID, strdup(utstring_body(newSetReg)), current_size+1);
-          utstring_free(sizePlusOne);
+          utstring_free(sizePlusOne);utstring_free(operand_array_dest);utstring_free(currentPos);
+          utstring_free(operand_array);utstring_free(newSetReg);
         } else {
           UT_string *operand_array, *sizePlusOne, *size;
           utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
@@ -982,7 +983,7 @@ variableInit: typeSpecifier IDENTIFIER ';' {
   add_symbol_node(symbol);
   if ($$->leftBranch && $$->leftBranch->type && strcmp($$->leftBranch->type, "T_SET") == 0) {
     UT_string *currentPos;
-    utstring_new(currentPos);utstring_new(currentPos);
+    utstring_new(currentPos);
     create_temporary_register(currentPos, &currentTempReg);
     set_temporary_register($$, &currentTempReg);
     addSymbolToSetInfoTable(globalCounterOfSymbols, strdup(utstring_body(currentPos)), 0);

@@ -250,11 +250,8 @@ void add_forall_loop_closing_to_TAC(char *string, setInfo *setInfoPointer, int *
   add_TAC_line(tac5);
   insertTACLabel(utstring_body(labelFinish));
 
-  free(tmpForallStack->name);
-  free(tmpForallStack);
-  free(loopLabel->name);
-  free(loopLabel);
-  utstring_free(labelFinish);
+  free(tmpForallStack->name);free(tmpForallStack);free(loopLabel->name);free(loopLabel);
+  utstring_free(labelFinish);utstring_free(operand_array);utstring_free(cmprTemp);
 }
 
 char * get_TAC_op_from_node_class(char *node) {
