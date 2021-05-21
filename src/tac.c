@@ -58,6 +58,7 @@ setInfo* getSetSymbolInfo(char *name) {
   int *symbolkey, symbolID;
   struct symbolNode *symbol;
   struct setInfo *setInfoPointer;
+  setInfoPointer = NULL;
   scopeInfo current_scope = get_current_scope();
   symbolID = get_symbolID_by_name_and_current_scope(name, current_scope.scopeID, current_scope.level);
   if (symbolID != -1) {
