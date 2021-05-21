@@ -516,7 +516,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is less than operation\n", DEBUG);
   }
   | logicalExpression ILTE arithmeticExpression {
@@ -539,7 +539,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
   | logicalExpression IGT arithmeticExpression {
@@ -562,7 +562,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is greater than operation\n", DEBUG);
   }
   | logicalExpression IGTE arithmeticExpression {
@@ -585,7 +585,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
   | logicalExpression IDIFF arithmeticExpression {
@@ -608,7 +608,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is different than operation\n", DEBUG);
   }
   | logicalExpression IEQ arithmeticExpression {
@@ -631,7 +631,7 @@ logicalExpression: logicalExpression ILT arithmeticExpression {
       add_TAC_line(tacP1);
       utstring_free(label);
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("is equal to operation\n", DEBUG);
   }
   | arithmeticExpression {
@@ -654,7 +654,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     else if (symbolOK == 0 && forIncrementCounter > 0) {
       forIncrementCounter--;
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("add operation\n", DEBUG);
   }
   | arithmeticExpression SUB_OP arithmeticExpression2 {
@@ -672,7 +672,7 @@ arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2 {
     else if (symbolOK == 0 && forIncrementCounter > 0) {
       forIncrementCounter--;
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("subtraction operation\n", DEBUG);
   }
   | arithmeticExpression2 {$$=$1;}
@@ -693,7 +693,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     else if (symbolOK == 0 && forIncrementCounter > 0) {
       forIncrementCounter--;
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("multiplication operation\n", DEBUG);
   }
   | arithmeticExpression2 DIV_OP unaryOperation {
@@ -711,7 +711,7 @@ arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation {
     else if (symbolOK == 0 && forIncrementCounter > 0) {
       forIncrementCounter--;
     }
-    if($1->type) $$->type = strdup($1->type);
+    if($1->type) $$->type = $1->type;
     print_parser_msg("division operation\n", DEBUG);
   }
   | unaryOperation {$$=$1;}
@@ -764,7 +764,7 @@ setOperationalExpression: ADD_SET_OP '(' setBody ')' {
           deleteSymbolSetInfo(setID);
           addSymbolToSetInfoTable(setID, strdup(utstring_body(newSetReg)), current_size+1);
           utstring_free(sizePlusOne);utstring_free(operand_array_dest);utstring_free(currentPos);
-          utstring_free(operand_array);utstring_free(newSetReg);
+          utstring_free(operand_array);utstring_free(newSetReg);utstring_free(tmpReg);
         } else {
           UT_string *operand_array, *sizePlusOne, *size;
           utstring_new(operand_array); utstring_new(sizePlusOne); utstring_new(size);
@@ -976,9 +976,10 @@ callArguments: callArguments ',' comparationalExpression {
 
 variableInit: typeSpecifier IDENTIFIER ';' {
   astParam astP = { .leftBranch = $1, .type="IDENTIFIER", .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
-  $$ = add_ast_node(astP);
-  astParam astP2 = { .leftBranch = $1, .type=$$->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
+  parserNode *node = add_ast_node(astP);
+  astParam astP2 = { .leftBranch = $1, .type=node->leftBranch->value, .value = $2, .nodeType = enumValueLeftBranch, .astNodeClass="VARIABLE_INIT" };
   $$ = add_ast_node(astP2);
+  free(node);
   symbolParam symbol = { .symbolID = globalCounterOfSymbols, .symbolType=enumVariable, .type = $$->leftBranch->value, .name = $2, .line= running_line_count, .column= running_column_count};
   add_symbol_node(symbol);
   if ($$->leftBranch && $$->leftBranch->type && strcmp($$->leftBranch->type, "T_SET") == 0) {

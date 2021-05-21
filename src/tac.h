@@ -122,7 +122,7 @@ void add_if_else_closing_to_TAC();
 
 void add_if_finish_to_TAC();
 
-char * get_TAC_op_from_node_class(char *node);
+void get_TAC_op_from_node_class(UT_string *operation, char *node);
 
 /* creates a string that is in the format of array access */
 void set_operand_array(UT_string *, char *, char *);

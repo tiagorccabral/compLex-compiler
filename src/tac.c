@@ -9,6 +9,8 @@ tacLine *tacFileTableHead = NULL;
 
 codeLabelStack *codeStackHead = NULL;
 
+setInfo *setInfoTable = NULL;
+
 int forLoopsCounter = 0;
 
 void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize) {
@@ -48,7 +50,10 @@ void increaseSetSize(int setID) {
       utstring_printf(bckupPointerToSet, "%s", symbolPointer->pointerToSet);
       backupCurrentSize = symbolPointer->current_size;
       HASH_DEL(setInfoTable, symbolPointer);
+      free(symbolPointer->pointerToSet);
+      free(symbolPointer);
       addSymbolToSetInfoTable(setID, strdup(utstring_body(bckupPointerToSet)), backupCurrentSize+1);
+      utstring_free(bckupPointerToSet);
   } else {
     printf("set symbol not found!\n");
   }
@@ -140,9 +145,7 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   UT_string *stringPosition, *stringPointer, *stringValue, *comprTmp;
   UT_string *stringLen, *tmp, *labelStart, *labelFinish, *operand_array, *stringVar;
   utstring_new(stringPosition);utstring_new(stringPointer);
-  utstring_new(stringValue);
-  utstring_new(comprTmp);
-  utstring_new(stringLen);
+  utstring_new(stringValue);utstring_new(comprTmp);utstring_new(stringLen);
   utstring_new(operand_array);
   utstring_new(stringVar);
   create_temporary_register(stringPosition, currentTempReg);
@@ -151,7 +154,7 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   create_temporary_register(comprTmp, currentTempReg);
   create_temporary_register(stringLen, currentTempReg);
   set_operand_array(operand_array, utstring_body(stringPointer), utstring_body(stringPosition));
-  utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);utstring_new(stringVar);
+  utstring_new(tmp);utstring_new(labelStart);utstring_new(labelFinish);
   utstring_printf(tmp, "%lu", strlen(string)-1);
   utstring_printf(labelStart, "whileWritelnStart%d", *currentTableCounter);
   utstring_printf(labelFinish, "endWhileWriteln%d", *currentTableCounter);
@@ -185,7 +188,8 @@ void add_string_to_TAC(char *string, int writeLn, int *currentTempReg, int *curr
   }
   utstring_free(operand_array); utstring_free(stringPosition); utstring_free(stringPointer);
   utstring_free(stringValue); utstring_free(stringLen); utstring_free(comprTmp);
-  utstring_free(tmp); utstring_free(labelStart); utstring_free(labelFinish); utstring_free(stringVar);
+  utstring_free(tmp); utstring_free(labelStart); 
+  utstring_free(labelFinish); utstring_free(stringVar);
 }
 
 void add_for_or_if_entry_to_TAC(char *string) {
@@ -197,22 +201,23 @@ void add_for_or_if_entry_to_TAC(char *string) {
   utstring_new(labelStart);
   utstring_printf(labelStart, "%s%d%d", string, stackSize, forLoopsCounter);
   forLoopsCounter++;
-  insertTACLabel(utstring_body(labelStart));
-  codeLabel->name = utstring_body(labelStart);
+  insertTACLabel(strdup(utstring_body(labelStart)));
+  codeLabel->name = strdup(utstring_body(labelStart));
   STACK_PUSH(codeStackHead, codeLabel);
+  utstring_free(labelStart);
 }
 
 void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *middle1Branch, parserNode *middle2Branch){
-  UT_string *labelFinish;
+  UT_string *labelFinish, *forIncrementOp;
   codeLabelStack *loopLabel;
   STACK_POP(codeStackHead, loopLabel);
-  utstring_new(labelFinish);
-  char *forIncrementOp = get_TAC_op_from_node_class(middle2Branch->leftBranch->astNodeClass);
+  utstring_new(labelFinish); utstring_new(forIncrementOp);
+  get_TAC_op_from_node_class(forIncrementOp, middle2Branch->leftBranch->astNodeClass);
   if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->tempReg) {
-    tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
+    tacCodeParam tacP0 = { .instruction = utstring_body(forIncrementOp), .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->tempReg, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
   } else if (middle2Branch->leftBranch && middle2Branch->leftBranch->rightBranch && middle2Branch->leftBranch->rightBranch->value) {
-    tacCodeParam tacP0 = { .instruction = forIncrementOp, .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->value, .lineType=enumThreeOp};
+    tacCodeParam tacP0 = { .instruction = utstring_body(forIncrementOp), .dst= middle2Branch->value,.op1 = middle2Branch->value, .op2 = middle2Branch->leftBranch->rightBranch->value, .lineType=enumThreeOp};
     add_TAC_line(tacP0);
   }
   tacCodeParam tac1 = { .instruction = "jump", .op1 = loopLabel->name, .lineType=enumOneOp};
@@ -220,8 +225,8 @@ void add_for_loop_closing_to_TAC(char *string, int *currentTempReg, parserNode *
   utstring_printf(labelFinish, "%sFinish", loopLabel->name);
   insertTACLabel(utstring_body(labelFinish));
   free(loopLabel->name);
-  free(forIncrementOp);
   free(loopLabel);
+  utstring_free(forIncrementOp);
   utstring_free(labelFinish);
 }
 
@@ -252,11 +257,10 @@ void add_forall_loop_closing_to_TAC(char *string, setInfo *setInfoPointer, int *
 
   free(tmpForallStack->name);free(tmpForallStack);free(loopLabel->name);free(loopLabel);
   utstring_free(labelFinish);utstring_free(operand_array);utstring_free(cmprTemp);
+  utstring_free(setSize);
 }
 
-char * get_TAC_op_from_node_class(char *node) {
-  UT_string *operation;
-  utstring_new(operation);
+void get_TAC_op_from_node_class(UT_string *operation, char *node) {
   if (strcmp(node, "ARITHMETIC_EXPRESSION ADD_OP") == 0) {
     utstring_printf(operation, "add");
   } else if (strcmp(node, "ARITHMETIC_EXPRESSION SUB_OP") == 0) {
@@ -266,7 +270,6 @@ char * get_TAC_op_from_node_class(char *node) {
   } else if (strcmp(node, "ARITHMETIC_EXPRESSION DIV_OP") == 0) {
     utstring_printf(operation, "div");
   }
-  return utstring_body(operation);
 }
 
 void add_right_logical_loop_OP_to_TAC(char* op, parserNode *dst, parserNode *left, parserNode *right,int *currentTempReg, int *currentForLoop) {
@@ -331,7 +334,7 @@ void add_if_finish_to_TAC() {
   insertTACLabel(utstring_body(label));
   free(ifLabel->name);
   free(ifLabel);
-  free(label);
+  utstring_free(label);
 }
 
 void set_operand_array(UT_string *tmp, char *string, char *arrayPosition) {
@@ -477,6 +480,7 @@ void free_setInfo_table() {
   setInfo *s, *tmp;
   HASH_ITER(hh, setInfoTable, s, tmp) {
     HASH_DEL(setInfoTable, s);
+    free(s->pointerToSet);
     free(s);
   }
 }
