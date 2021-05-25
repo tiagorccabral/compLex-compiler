@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.7.6.  */
+/* A Bison parser, made by GNU Bison 3.7.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -46,10 +46,10 @@
    USER NAME SPACE" below.  */
 
 /* Identify Bison output, and Bison version.  */
-#define YYBISON 30706
+#define YYBISON 30704
 
 /* Bison version string.  */
-#define YYBISON_VERSION "3.7.6"
+#define YYBISON_VERSION "3.7.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -303,18 +303,6 @@ typedef int_least16_t yytype_int16;
 typedef short yytype_int16;
 #endif
 
-/* Work around bug in HP-UX 11.23, which defines these macros
-   incorrectly for preprocessor constants.  This workaround can likely
-   be removed in 2023, as HPE has promised support for HP-UX 11.23
-   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
-   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
-#ifdef __hpux
-# undef UINT_LEAST8_MAX
-# undef UINT_LEAST16_MAX
-# define UINT_LEAST8_MAX 255
-# define UINT_LEAST16_MAX 65535
-#endif
-
 #if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
 typedef __UINT_LEAST8_TYPE__ yytype_uint8;
 #elif (!defined __UINT_LEAST8_MAX__ && defined YY_STDINT_H \
@@ -412,9 +400,9 @@ typedef int yy_state_fast_t;
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YY_USE(E) ((void) (E))
+# define YYUSE(E) ((void) (E))
 #else
-# define YY_USE(E) /* empty */
+# define YYUSE(E) /* empty */
 #endif
 
 #if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
@@ -780,9 +768,9 @@ static const yytype_int16 yypgoto[] =
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_uint8 yydefgoto[] =
+static const yytype_int16 yydefgoto[] =
 {
-       0,     6,     7,     8,    17,    18,    22,    23,    31,    34,
+      -1,     6,     7,     8,    17,    18,    22,    23,    31,    34,
       37,    60,    61,    62,   176,    63,    64,   155,   173,   174,
       65,    66,    67,    68,    69,    70,    71,   115,    72,    73,
       95,   178,    74,    75,   112,   113,    38,    76,    10
@@ -1075,8 +1063,8 @@ yy_symbol_value_print (FILE *yyo,
                        yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   FILE *yyoutput = yyo;
-  YY_USE (yyoutput);
-  YY_USE (yylocationp);
+  YYUSE (yyoutput);
+  YYUSE (yylocationp);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
@@ -1084,7 +1072,7 @@ yy_symbol_value_print (FILE *yyo,
     YYPRINT (yyo, yytoknum[yykind], *yyvaluep);
 # endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YY_USE (yykind);
+  YYUSE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1469,14 +1457,14 @@ static void
 yydestruct (const char *yymsg,
             yysymbol_kind_t yykind, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 {
-  YY_USE (yyvaluep);
-  YY_USE (yylocationp);
+  YYUSE (yyvaluep);
+  YYUSE (yylocationp);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YY_USE (yykind);
+  YYUSE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1770,7 +1758,7 @@ yyreduce:
   parser_ast = (yyvsp[0].node);
   print_parser_msg("Program entry point\n", DEBUG);
 }
-#line 1774 "compLex_syntatical.tab.c"
+#line 1762 "compLex_syntatical.tab.c"
     break;
 
   case 3: /* programEntries: programEntries variableInit  */
@@ -1781,13 +1769,13 @@ yyreduce:
     };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1785 "compLex_syntatical.tab.c"
+#line 1773 "compLex_syntatical.tab.c"
     break;
 
   case 4: /* programEntries: variableInit  */
 #line 135 "compLex_syntatical.y"
                  {(yyval.node)=(yyvsp[0].node);}
-#line 1791 "compLex_syntatical.tab.c"
+#line 1779 "compLex_syntatical.tab.c"
     break;
 
   case 5: /* programEntries: programEntries functionDefinition  */
@@ -1796,13 +1784,13 @@ yyreduce:
     astParam astP = { .leftBranch = (yyvsp[-1].node), .rightBranch = (yyvsp[0].node), .nodeType = enumLeftRightBranch, .astNodeClass="PROGRAM_ENTRIES FUNCTION_DEFINITION" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1800 "compLex_syntatical.tab.c"
+#line 1788 "compLex_syntatical.tab.c"
     break;
 
   case 6: /* programEntries: functionDefinition  */
 #line 140 "compLex_syntatical.y"
                        {(yyval.node)=(yyvsp[0].node);}
-#line 1806 "compLex_syntatical.tab.c"
+#line 1794 "compLex_syntatical.tab.c"
     break;
 
   case 7: /* programEntries: error  */
@@ -1811,7 +1799,7 @@ yyreduce:
       astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
       (yyval.node) = add_ast_node(astP);
   }
-#line 1815 "compLex_syntatical.tab.c"
+#line 1803 "compLex_syntatical.tab.c"
     break;
 
   case 8: /* $@1: %empty  */
@@ -1829,7 +1817,7 @@ yyreduce:
     return_statement_type = strdup((yyvsp[-1].node)->type);
     insertTACLabel((yyvsp[0].str));
   }
-#line 1833 "compLex_syntatical.tab.c"
+#line 1821 "compLex_syntatical.tab.c"
     break;
 
   case 9: /* functionDefinition: typeSpecifier IDENTIFIER $@1 '(' parameters ')' compoundStatement  */
@@ -1849,7 +1837,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Function definition \n", DEBUG);
   }
-#line 1853 "compLex_syntatical.tab.c"
+#line 1841 "compLex_syntatical.tab.c"
     break;
 
   case 10: /* $@2: %empty  */
@@ -1865,7 +1853,7 @@ yyreduce:
       return_statement_type = strdup((yyvsp[-1].node)->type);
       insertTACLabel("fmain");
   }
-#line 1869 "compLex_syntatical.tab.c"
+#line 1857 "compLex_syntatical.tab.c"
     break;
 
   case 11: /* functionDefinition: typeSpecifier MAIN_FUNC $@2 '(' parameters ')' compoundStatement  */
@@ -1885,7 +1873,7 @@ yyreduce:
     currentReturnLine = -1;
     print_parser_msg("Main function definition \n", DEBUG);
   }
-#line 1889 "compLex_syntatical.tab.c"
+#line 1877 "compLex_syntatical.tab.c"
     break;
 
   case 12: /* parameters: parameter  */
@@ -1894,7 +1882,7 @@ yyreduce:
     (yyval.node) = (yyvsp[0].node);
     print_parser_msg("Parameter\n", DEBUG);
   }
-#line 1898 "compLex_syntatical.tab.c"
+#line 1886 "compLex_syntatical.tab.c"
     break;
 
   case 13: /* parameters: %empty  */
@@ -1903,7 +1891,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty parameters\n", DEBUG);
   }
-#line 1907 "compLex_syntatical.tab.c"
+#line 1895 "compLex_syntatical.tab.c"
     break;
 
   case 14: /* parameters: error  */
@@ -1912,7 +1900,7 @@ yyreduce:
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 1916 "compLex_syntatical.tab.c"
+#line 1904 "compLex_syntatical.tab.c"
     break;
 
   case 15: /* parameter: parameters ',' typeSpecifier IDENTIFIER  */
@@ -1942,7 +1930,7 @@ yyreduce:
     globalCounterOfSymbols++;
     print_parser_msg("Parameter, type and identifier\n", DEBUG);
   }
-#line 1946 "compLex_syntatical.tab.c"
+#line 1934 "compLex_syntatical.tab.c"
     break;
 
   case 16: /* parameter: typeSpecifier IDENTIFIER  */
@@ -1968,7 +1956,7 @@ yyreduce:
     globalCounterOfSymbols++;
     print_parser_msg("Parameter and identifier\n", DEBUG);
   }
-#line 1972 "compLex_syntatical.tab.c"
+#line 1960 "compLex_syntatical.tab.c"
     break;
 
   case 17: /* compoundStatement: '{' declaration statements '}'  */
@@ -1981,7 +1969,7 @@ yyreduce:
   decrease_scope_level();
   print_parser_msg("Compound statement\n", DEBUG);
 }
-#line 1985 "compLex_syntatical.tab.c"
+#line 1973 "compLex_syntatical.tab.c"
     break;
 
   case 18: /* declaration: declaration variableInit  */
@@ -1993,7 +1981,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Declaration\n", DEBUG);
   }
-#line 1997 "compLex_syntatical.tab.c"
+#line 1985 "compLex_syntatical.tab.c"
     break;
 
   case 19: /* declaration: %empty  */
@@ -2002,7 +1990,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty declaration\n", DEBUG);
   }
-#line 2006 "compLex_syntatical.tab.c"
+#line 1994 "compLex_syntatical.tab.c"
     break;
 
   case 20: /* statements: statements statement  */
@@ -2014,7 +2002,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("Statements, statement\n", DEBUG);
   }
-#line 2018 "compLex_syntatical.tab.c"
+#line 2006 "compLex_syntatical.tab.c"
     break;
 
   case 21: /* statements: %empty  */
@@ -2023,7 +2011,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("Empty statement\n", DEBUG);
   }
-#line 2027 "compLex_syntatical.tab.c"
+#line 2015 "compLex_syntatical.tab.c"
     break;
 
   case 22: /* statements: error  */
@@ -2032,37 +2020,37 @@ yyreduce:
     astParam astP = { .type = "ERROR", .value = "ERROR", .nodeType = enumValueTypeOnly, .astNodeClass="ERROR" };
     (yyval.node) = add_ast_node(astP);
   }
-#line 2036 "compLex_syntatical.tab.c"
+#line 2024 "compLex_syntatical.tab.c"
     break;
 
   case 23: /* statement: expression  */
 #line 303 "compLex_syntatical.y"
                       {(yyval.node) = (yyvsp[0].node);}
-#line 2042 "compLex_syntatical.tab.c"
+#line 2030 "compLex_syntatical.tab.c"
     break;
 
   case 24: /* statement: inOutStatement  */
 #line 304 "compLex_syntatical.y"
                    {(yyval.node) = (yyvsp[0].node);}
-#line 2048 "compLex_syntatical.tab.c"
+#line 2036 "compLex_syntatical.tab.c"
     break;
 
   case 25: /* statement: fluxControlstatement  */
 #line 305 "compLex_syntatical.y"
                          {(yyval.node) = (yyvsp[0].node);}
-#line 2054 "compLex_syntatical.tab.c"
+#line 2042 "compLex_syntatical.tab.c"
     break;
 
   case 26: /* statement: iterationStatement  */
 #line 306 "compLex_syntatical.y"
                        {(yyval.node) = (yyvsp[0].node);}
-#line 2060 "compLex_syntatical.tab.c"
+#line 2048 "compLex_syntatical.tab.c"
     break;
 
   case 27: /* statement: localStatetements  */
 #line 307 "compLex_syntatical.y"
                       {(yyval.node) = (yyvsp[0].node);}
-#line 2066 "compLex_syntatical.tab.c"
+#line 2054 "compLex_syntatical.tab.c"
     break;
 
   case 28: /* inOutStatement: WRITE '(' STR ')' ';'  */
@@ -2073,7 +2061,7 @@ yyreduce:
     add_string_to_TAC((yyvsp[-2].str), 0, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: write string\n", DEBUG);
   }
-#line 2077 "compLex_syntatical.tab.c"
+#line 2065 "compLex_syntatical.tab.c"
     break;
 
   case 29: /* inOutStatement: WRITE '(' comparationalExpression ')' ';'  */
@@ -2090,7 +2078,7 @@ yyreduce:
     }
     print_parser_msg("IO: write identifier\n", DEBUG);
   }
-#line 2094 "compLex_syntatical.tab.c"
+#line 2082 "compLex_syntatical.tab.c"
     break;
 
   case 30: /* inOutStatement: WRITELN '(' STR ')' ';'  */
@@ -2101,7 +2089,7 @@ yyreduce:
     add_string_to_TAC((yyvsp[-2].str), 1, &currentTempReg, &currentTableCounter);
     print_parser_msg("IO: writeln string\n", DEBUG);
   }
-#line 2105 "compLex_syntatical.tab.c"
+#line 2093 "compLex_syntatical.tab.c"
     break;
 
   case 31: /* inOutStatement: WRITELN '(' comparationalExpression ')' ';'  */
@@ -2118,7 +2106,7 @@ yyreduce:
     }
     print_parser_msg("IO: writeln identifier\n", DEBUG);
   }
-#line 2122 "compLex_syntatical.tab.c"
+#line 2110 "compLex_syntatical.tab.c"
     break;
 
   case 32: /* inOutStatement: READ '(' variable ')' ';'  */
@@ -2145,7 +2133,7 @@ yyreduce:
     }
     print_parser_msg("IO: read identifier\n", DEBUG);
   }
-#line 2149 "compLex_syntatical.tab.c"
+#line 2137 "compLex_syntatical.tab.c"
     break;
 
   case 33: /* fluxControlstatement: RETURN comparationalExpression ';'  */
@@ -2168,7 +2156,7 @@ yyreduce:
     }
     print_parser_msg("return expression\n", DEBUG);
   }
-#line 2172 "compLex_syntatical.tab.c"
+#line 2160 "compLex_syntatical.tab.c"
     break;
 
   case 34: /* fluxControlstatement: RETURN ';'  */
@@ -2181,7 +2169,7 @@ yyreduce:
     add_TAC_line(tacP);
     print_parser_msg("return null\n", DEBUG);
   }
-#line 2185 "compLex_syntatical.tab.c"
+#line 2173 "compLex_syntatical.tab.c"
     break;
 
   case 35: /* fluxControlstatement: ifStart '(' comparationalExpression ')' expression  */
@@ -2193,7 +2181,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2197 "compLex_syntatical.tab.c"
+#line 2185 "compLex_syntatical.tab.c"
     break;
 
   case 36: /* fluxControlstatement: ifStart '(' comparationalExpression ')' RETURN expression  */
@@ -2205,7 +2193,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2209 "compLex_syntatical.tab.c"
+#line 2197 "compLex_syntatical.tab.c"
     break;
 
   case 37: /* fluxControlstatement: ifStart '(' comparationalExpression ')' localStatetements  */
@@ -2220,7 +2208,7 @@ yyreduce:
     }
     print_parser_msg("if statement\n", DEBUG);
   }
-#line 2224 "compLex_syntatical.tab.c"
+#line 2212 "compLex_syntatical.tab.c"
     break;
 
   case 38: /* $@3: %empty  */
@@ -2228,7 +2216,7 @@ yyreduce:
                                                               {
     add_if_else_entry_to_TAC();
   }
-#line 2232 "compLex_syntatical.tab.c"
+#line 2220 "compLex_syntatical.tab.c"
     break;
 
   case 39: /* fluxControlstatement: ifStart '(' comparationalExpression ')' localStatetements $@3 ELSE localStatetements  */
@@ -2241,7 +2229,7 @@ yyreduce:
     add_if_else_closing_to_TAC();
     print_parser_msg("if/else statement\n", DEBUG);
   }
-#line 2245 "compLex_syntatical.tab.c"
+#line 2233 "compLex_syntatical.tab.c"
     break;
 
   case 40: /* ifStart: IF  */
@@ -2249,7 +2237,7 @@ yyreduce:
             {
   add_for_or_if_entry_to_TAC("ifStart");
 }
-#line 2253 "compLex_syntatical.tab.c"
+#line 2241 "compLex_syntatical.tab.c"
     break;
 
   case 41: /* $@4: %empty  */
@@ -2258,13 +2246,13 @@ yyreduce:
       add_for_or_if_entry_to_TAC("forLoop");
       forIncrementCounter++; 
     }
-#line 2262 "compLex_syntatical.tab.c"
+#line 2250 "compLex_syntatical.tab.c"
     break;
 
   case 42: /* $@5: %empty  */
 #line 440 "compLex_syntatical.y"
                  {;}
-#line 2268 "compLex_syntatical.tab.c"
+#line 2256 "compLex_syntatical.tab.c"
     break;
 
   case 43: /* iterationStatement: FOR '(' expression $@4 expression $@5 forIncrement ')' localStatetements  */
@@ -2277,7 +2265,7 @@ yyreduce:
       add_for_loop_closing_to_TAC("forLoop", &currentTempReg, (yyval.node)->middle1Branch, (yyval.node)->middle2Branch);
       print_parser_msg("for loop three arguments\n", DEBUG);
   }
-#line 2281 "compLex_syntatical.tab.c"
+#line 2269 "compLex_syntatical.tab.c"
     break;
 
   case 44: /* $@6: %empty  */
@@ -2302,7 +2290,7 @@ yyreduce:
         utstring_free(operand_array);utstring_free(currentPos);
       }
     }
-#line 2306 "compLex_syntatical.tab.c"
+#line 2294 "compLex_syntatical.tab.c"
     break;
 
   case 45: /* iterationStatement: SET_FORALL '(' term ADD_IN_OP comparationalExpression $@6 ')' localStatetements  */
@@ -2319,19 +2307,19 @@ yyreduce:
       }
       print_parser_msg("set forall loop\n", DEBUG);
   }
-#line 2323 "compLex_syntatical.tab.c"
+#line 2311 "compLex_syntatical.tab.c"
     break;
 
   case 46: /* expression: comparationalExpression ';'  */
 #line 481 "compLex_syntatical.y"
                                         {(yyval.node)=(yyvsp[-1].node);}
-#line 2329 "compLex_syntatical.tab.c"
+#line 2317 "compLex_syntatical.tab.c"
     break;
 
   case 47: /* expression: variableAssignment  */
 #line 482 "compLex_syntatical.y"
                        {(yyval.node)=(yyvsp[0].node);}
-#line 2335 "compLex_syntatical.tab.c"
+#line 2323 "compLex_syntatical.tab.c"
     break;
 
   case 48: /* comparationalExpression: comparationalExpression AND logicalExpression  */
@@ -2343,7 +2331,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical AND operation\n", DEBUG);
   }
-#line 2347 "compLex_syntatical.tab.c"
+#line 2335 "compLex_syntatical.tab.c"
     break;
 
   case 49: /* comparationalExpression: comparationalExpression OR logicalExpression  */
@@ -2355,7 +2343,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical OR operation\n", DEBUG);
   }
-#line 2359 "compLex_syntatical.tab.c"
+#line 2347 "compLex_syntatical.tab.c"
     break;
 
   case 50: /* comparationalExpression: NEG logicalExpression  */
@@ -2365,7 +2353,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("logical NOT operation\n", DEBUG);
   }
-#line 2369 "compLex_syntatical.tab.c"
+#line 2357 "compLex_syntatical.tab.c"
     break;
 
   case 51: /* comparationalExpression: logicalExpression  */
@@ -2373,7 +2361,7 @@ yyreduce:
                       {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2377 "compLex_syntatical.tab.c"
+#line 2365 "compLex_syntatical.tab.c"
     break;
 
   case 52: /* logicalExpression: logicalExpression ILT arithmeticExpression  */
@@ -2401,7 +2389,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is less than operation\n", DEBUG);
   }
-#line 2405 "compLex_syntatical.tab.c"
+#line 2393 "compLex_syntatical.tab.c"
     break;
 
   case 53: /* logicalExpression: logicalExpression ILTE arithmeticExpression  */
@@ -2429,7 +2417,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is less or equal operation\n", DEBUG);
   }
-#line 2433 "compLex_syntatical.tab.c"
+#line 2421 "compLex_syntatical.tab.c"
     break;
 
   case 54: /* logicalExpression: logicalExpression IGT arithmeticExpression  */
@@ -2457,7 +2445,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is greater than operation\n", DEBUG);
   }
-#line 2461 "compLex_syntatical.tab.c"
+#line 2449 "compLex_syntatical.tab.c"
     break;
 
   case 55: /* logicalExpression: logicalExpression IGTE arithmeticExpression  */
@@ -2485,7 +2473,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is greater than or equal operation\n", DEBUG);
   }
-#line 2489 "compLex_syntatical.tab.c"
+#line 2477 "compLex_syntatical.tab.c"
     break;
 
   case 56: /* logicalExpression: logicalExpression IDIFF arithmeticExpression  */
@@ -2513,7 +2501,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is different than operation\n", DEBUG);
   }
-#line 2517 "compLex_syntatical.tab.c"
+#line 2505 "compLex_syntatical.tab.c"
     break;
 
   case 57: /* logicalExpression: logicalExpression IEQ arithmeticExpression  */
@@ -2541,7 +2529,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("is equal to operation\n", DEBUG);
   }
-#line 2545 "compLex_syntatical.tab.c"
+#line 2533 "compLex_syntatical.tab.c"
     break;
 
   case 58: /* logicalExpression: arithmeticExpression  */
@@ -2549,7 +2537,7 @@ yyreduce:
                          {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2553 "compLex_syntatical.tab.c"
+#line 2541 "compLex_syntatical.tab.c"
     break;
 
   case 59: /* arithmeticExpression: arithmeticExpression ADD_OP arithmeticExpression2  */
@@ -2572,7 +2560,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("add operation\n", DEBUG);
   }
-#line 2576 "compLex_syntatical.tab.c"
+#line 2564 "compLex_syntatical.tab.c"
     break;
 
   case 60: /* arithmeticExpression: arithmeticExpression SUB_OP arithmeticExpression2  */
@@ -2595,13 +2583,13 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("subtraction operation\n", DEBUG);
   }
-#line 2599 "compLex_syntatical.tab.c"
+#line 2587 "compLex_syntatical.tab.c"
     break;
 
   case 61: /* arithmeticExpression: arithmeticExpression2  */
 #line 688 "compLex_syntatical.y"
                           {(yyval.node)=(yyvsp[0].node);}
-#line 2605 "compLex_syntatical.tab.c"
+#line 2593 "compLex_syntatical.tab.c"
     break;
 
   case 62: /* arithmeticExpression2: arithmeticExpression2 MULT_OP unaryOperation  */
@@ -2624,7 +2612,7 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("multiplication operation\n", DEBUG);
   }
-#line 2628 "compLex_syntatical.tab.c"
+#line 2616 "compLex_syntatical.tab.c"
     break;
 
   case 63: /* arithmeticExpression2: arithmeticExpression2 DIV_OP unaryOperation  */
@@ -2647,13 +2635,13 @@ yyreduce:
     if((yyvsp[-2].node)->type) (yyval.node)->type = (yyvsp[-2].node)->type;
     print_parser_msg("division operation\n", DEBUG);
   }
-#line 2651 "compLex_syntatical.tab.c"
+#line 2639 "compLex_syntatical.tab.c"
     break;
 
   case 64: /* arithmeticExpression2: unaryOperation  */
 #line 727 "compLex_syntatical.y"
                    {(yyval.node)=(yyvsp[0].node);}
-#line 2657 "compLex_syntatical.tab.c"
+#line 2645 "compLex_syntatical.tab.c"
     break;
 
   case 65: /* unaryOperation: SUB_OP term  */
@@ -2663,7 +2651,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set OP\n", DEBUG);
   }
-#line 2667 "compLex_syntatical.tab.c"
+#line 2655 "compLex_syntatical.tab.c"
     break;
 
   case 66: /* unaryOperation: term  */
@@ -2671,7 +2659,7 @@ yyreduce:
          {
     (yyval.node) = (yyvsp[0].node);
   }
-#line 2675 "compLex_syntatical.tab.c"
+#line 2663 "compLex_syntatical.tab.c"
     break;
 
   case 67: /* setOperationalExpression: ADD_SET_OP '(' setBody ')'  */
@@ -2733,7 +2721,7 @@ yyreduce:
     }
     print_parser_msg("add to set OP\n", DEBUG);
   }
-#line 2737 "compLex_syntatical.tab.c"
+#line 2725 "compLex_syntatical.tab.c"
     break;
 
   case 68: /* setOperationalExpression: REMOVE_SET_OP '(' setBody ')'  */
@@ -2743,7 +2731,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("remove from set OP\n", DEBUG);
   }
-#line 2747 "compLex_syntatical.tab.c"
+#line 2735 "compLex_syntatical.tab.c"
     break;
 
   case 69: /* setOperationalExpression: EXISTS_IN_SET_OP '(' setBody ')'  */
@@ -2753,7 +2741,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("exists el in set OP\n", DEBUG);
   }
-#line 2757 "compLex_syntatical.tab.c"
+#line 2745 "compLex_syntatical.tab.c"
     break;
 
   case 70: /* setOperationalExpression: IS_SET '(' term ')'  */
@@ -2763,7 +2751,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set OP\n", DEBUG);
   }
-#line 2767 "compLex_syntatical.tab.c"
+#line 2755 "compLex_syntatical.tab.c"
     break;
 
   case 71: /* setBody: comparationalExpression ADD_IN_OP setOperationalExpression  */
@@ -2775,7 +2763,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set body\n", DEBUG);
   }
-#line 2779 "compLex_syntatical.tab.c"
+#line 2767 "compLex_syntatical.tab.c"
     break;
 
   case 72: /* setBody: comparationalExpression ADD_IN_OP variable  */
@@ -2787,7 +2775,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("is_set body\n", DEBUG);
   }
-#line 2791 "compLex_syntatical.tab.c"
+#line 2779 "compLex_syntatical.tab.c"
     break;
 
   case 73: /* variableAssignment: IDENTIFIER ASSIGN expression  */
@@ -2821,13 +2809,13 @@ yyreduce:
     }
     print_parser_msg("variable assignment\n", DEBUG);
   }
-#line 2825 "compLex_syntatical.tab.c"
+#line 2813 "compLex_syntatical.tab.c"
     break;
 
   case 74: /* $@7: %empty  */
 #line 861 "compLex_syntatical.y"
                        {create_new_scope_level();}
-#line 2831 "compLex_syntatical.tab.c"
+#line 2819 "compLex_syntatical.tab.c"
     break;
 
   case 75: /* localStatetements: '{' $@7 declaration statements '}'  */
@@ -2840,7 +2828,7 @@ yyreduce:
   (yyval.node) = add_ast_node(astP);
   print_parser_msg("local statetements\n", DEBUG);
 }
-#line 2844 "compLex_syntatical.tab.c"
+#line 2832 "compLex_syntatical.tab.c"
     break;
 
   case 76: /* forIncrement: IDENTIFIER ASSIGN arithmeticExpression  */
@@ -2850,7 +2838,7 @@ yyreduce:
   (yyval.node) = add_ast_node(astP);
   print_parser_msg("for loop increment\n", DEBUG);
 }
-#line 2854 "compLex_syntatical.tab.c"
+#line 2842 "compLex_syntatical.tab.c"
     break;
 
   case 77: /* term: '(' comparationalExpression ')'  */
@@ -2859,7 +2847,7 @@ yyreduce:
     (yyval.node)=(yyvsp[-1].node);
     print_parser_msg("( operationalExp )\n", DEBUG);
   }
-#line 2863 "compLex_syntatical.tab.c"
+#line 2851 "compLex_syntatical.tab.c"
     break;
 
   case 78: /* term: variable  */
@@ -2868,7 +2856,7 @@ yyreduce:
     (yyval.node)=(yyvsp[0].node);
     print_parser_msg("variable\n", DEBUG);
   }
-#line 2872 "compLex_syntatical.tab.c"
+#line 2860 "compLex_syntatical.tab.c"
     break;
 
   case 79: /* term: setOperationalExpression  */
@@ -2877,13 +2865,13 @@ yyreduce:
     (yyval.node)=(yyvsp[0].node);
     print_parser_msg("set op\n", DEBUG);
   }
-#line 2881 "compLex_syntatical.tab.c"
+#line 2869 "compLex_syntatical.tab.c"
     break;
 
   case 80: /* term: functionCall  */
 #line 891 "compLex_syntatical.y"
                  {(yyval.node)=(yyvsp[0].node);}
-#line 2887 "compLex_syntatical.tab.c"
+#line 2875 "compLex_syntatical.tab.c"
     break;
 
   case 81: /* term: EMPTY  */
@@ -2893,7 +2881,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("EMPTY constant value\n", DEBUG);
   }
-#line 2897 "compLex_syntatical.tab.c"
+#line 2885 "compLex_syntatical.tab.c"
     break;
 
   case 82: /* term: FLOAT  */
@@ -2903,7 +2891,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("float value\n", DEBUG);
   }
-#line 2907 "compLex_syntatical.tab.c"
+#line 2895 "compLex_syntatical.tab.c"
     break;
 
   case 83: /* term: INT  */
@@ -2913,7 +2901,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("int value\n", DEBUG);
   }
-#line 2917 "compLex_syntatical.tab.c"
+#line 2905 "compLex_syntatical.tab.c"
     break;
 
   case 84: /* functionCall: IDENTIFIER '(' functionArguments ')'  */
@@ -2944,13 +2932,13 @@ yyreduce:
   add_TAC_line(tacP);
   print_parser_msg("function call\n", DEBUG);
 }
-#line 2948 "compLex_syntatical.tab.c"
+#line 2936 "compLex_syntatical.tab.c"
     break;
 
   case 85: /* functionArguments: callArguments  */
 #line 937 "compLex_syntatical.y"
                                  {(yyval.node)=(yyvsp[0].node);}
-#line 2954 "compLex_syntatical.tab.c"
+#line 2942 "compLex_syntatical.tab.c"
     break;
 
   case 86: /* functionArguments: %empty  */
@@ -2959,7 +2947,7 @@ yyreduce:
     (yyval.node) = NULL;
     print_parser_msg("empty function argument\n", DEBUG);
   }
-#line 2963 "compLex_syntatical.tab.c"
+#line 2951 "compLex_syntatical.tab.c"
     break;
 
   case 87: /* callArguments: callArguments ',' comparationalExpression  */
@@ -2985,7 +2973,7 @@ yyreduce:
     currentCalledFunction.amountOfParamsCalled = currentCalledFunction.amountOfParamsCalled + 1;
     print_parser_msg("function callarguments, opExpression\n", DEBUG);
   }
-#line 2989 "compLex_syntatical.tab.c"
+#line 2977 "compLex_syntatical.tab.c"
     break;
 
   case 88: /* callArguments: comparationalExpression  */
@@ -3010,7 +2998,7 @@ yyreduce:
 
     print_parser_msg("function callarguments\n", DEBUG);
   }
-#line 3014 "compLex_syntatical.tab.c"
+#line 3002 "compLex_syntatical.tab.c"
     break;
 
   case 89: /* variableInit: typeSpecifier IDENTIFIER ';'  */
@@ -3034,7 +3022,7 @@ yyreduce:
   globalCounterOfSymbols++;
   print_parser_msg("variable initialization\n", DEBUG);
 }
-#line 3038 "compLex_syntatical.tab.c"
+#line 3026 "compLex_syntatical.tab.c"
     break;
 
   case 90: /* variable: IDENTIFIER  */
@@ -3056,7 +3044,7 @@ yyreduce:
   }
   print_parser_msg("variable\n", DEBUG);
 }
-#line 3060 "compLex_syntatical.tab.c"
+#line 3048 "compLex_syntatical.tab.c"
     break;
 
   case 91: /* typeSpecifier: T_INT  */
@@ -3066,7 +3054,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("integer type\n", DEBUG);
   }
-#line 3070 "compLex_syntatical.tab.c"
+#line 3058 "compLex_syntatical.tab.c"
     break;
 
   case 92: /* typeSpecifier: T_FLOAT  */
@@ -3076,7 +3064,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("float type\n", DEBUG);
   }
-#line 3080 "compLex_syntatical.tab.c"
+#line 3068 "compLex_syntatical.tab.c"
     break;
 
   case 93: /* typeSpecifier: T_ELEM  */
@@ -3086,7 +3074,7 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("elem type\n", DEBUG);
   }
-#line 3090 "compLex_syntatical.tab.c"
+#line 3078 "compLex_syntatical.tab.c"
     break;
 
   case 94: /* typeSpecifier: T_SET  */
@@ -3096,11 +3084,11 @@ yyreduce:
     (yyval.node) = add_ast_node(astP);
     print_parser_msg("set type\n", DEBUG);
   }
-#line 3100 "compLex_syntatical.tab.c"
+#line 3088 "compLex_syntatical.tab.c"
     break;
 
 
-#line 3104 "compLex_syntatical.tab.c"
+#line 3092 "compLex_syntatical.tab.c"
 
       default: break;
     }

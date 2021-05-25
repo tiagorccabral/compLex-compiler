@@ -34,16 +34,6 @@ typedef struct setInfo {
   UT_hash_handle hh; /* makes this structure hashable */
 } setInfo;
 
-setInfo *setInfoTable; /* pointer to set info table */
-
-setForallStack *setForall;
-
-codeLabelStack *codeStackHead; /* pointer to the head of the stack of labels of loops and ifs */
-
-tacLine *tacFileHead; /* pointer to the head of the DLList that represents the TAC file */
-
-tacLine *tacFileTableHead; /* pointer to the head of the DLList that represents the .table section of the TAC file */
-
 enum tacCodeType {
   enumNoOp, /* 0 operand instruction, e.g: nop */   
   enumOneOp, /* one operand instruction, e.g: jump <op1> */   
@@ -68,8 +58,6 @@ typedef struct tacCodeValidationParams {
   struct parserNode* op2;
   enum tacCodeType lineType;
 } tacCodeValidationParams;
-
-int forLoopsCounter;
 
 /* add set to set info table */
 void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize);
