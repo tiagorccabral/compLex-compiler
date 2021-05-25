@@ -4,9 +4,11 @@
 #include "semantic_analyzer.h"
 #include "symbol_table.h"
 
+extern symbolNode *symbolTable;
+
 int semantic_errors = 0;
 
-int found_return_statement = 0;
+int found_return_statement = 0; /* aux vars to verify presence of return statements*/
 
 extern void yyerror(const char *msg);
 

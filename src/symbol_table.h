@@ -28,8 +28,6 @@ typedef struct symbolNode {
   UT_hash_handle hh; /* makes this structure hashable */
 } symbolNode;
 
-symbolNode *symbolTable;
-
 typedef struct symbolParam {
   int symbolID;
   int symbolType; /* could be F, V, P */
@@ -55,8 +53,6 @@ typedef struct scopeInfo {
   int level; /* numeric representation of scope level */
   int scopeID; /* unique ID of scope */
 }scopeInfo;
-
-scopeStack *scopeStackHead; /* pointer to beginning of scope el stack */
 
 /* adds one entry (symbol node struct) to symbol table */
 void add_symbol_node(symbolParam symbol);

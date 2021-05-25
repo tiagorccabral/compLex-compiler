@@ -36,6 +36,16 @@ extern void free_parser_ast(parserNode *node);
 // Utils functions
 extern void print_parser_msg(char* msg, int debug);
 
+extern symbolNode *symbolTable;
+
+extern int semantic_errors;
+extern int found_return_statement;
+
+extern setForallStack *setForall;
+extern codeLabelStack *codeStackHead;
+extern tacLine *tacFileHead;
+extern tacLine *tacFileTableHead;
+
 parserNode* parser_ast = NULL;
 
 typedef struct currentParsedFunction {

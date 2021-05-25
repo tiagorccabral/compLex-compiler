@@ -4,7 +4,7 @@
 
 symbolNode *symbolTable = NULL;
 
-scopeStack *scopeStackHead = NULL;
+scopeStack *scopeStackHead = NULL; /* pointer to beginning of scope el stack */
 
 void create_new_scope_level() {
   scopeStack *tmpScope;

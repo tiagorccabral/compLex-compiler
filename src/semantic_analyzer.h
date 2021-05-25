@@ -4,10 +4,6 @@
 #include "parser_ast.h"
 #include "symbol_table.h"
 
-int semantic_errors;
-
-int found_return_statement; /* aux vars to verify presence of return statements*/
-
 /* verify if there is a function main, and if it is unique */
 void semantic_verify_main();
 

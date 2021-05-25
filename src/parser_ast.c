@@ -2,6 +2,10 @@
 #include "symbol_table.h"
 #include "semantic_analyzer.h"
 
+extern symbolNode *symbolTable;
+
+extern int semantic_errors;
+
 parserNode* add_ast_node(astParam astParam) {
   parserNode *node = (parserNode *)calloc(1, sizeof(parserNode));
 

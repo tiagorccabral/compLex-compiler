@@ -3,15 +3,19 @@
 #include "utlist.h"
 #include "utstring.h"
 
-tacLine *tacFileHead = NULL;
+tacLine *tacFileHead = NULL; /* pointer to the head of the DLList that represents the TAC file */
 
-tacLine *tacFileTableHead = NULL;
+tacLine *tacFileTableHead = NULL; /* pointer to the head of the DLList that represents the .table section of the TAC file */
 
-codeLabelStack *codeStackHead = NULL;
+codeLabelStack *codeStackHead = NULL; /* pointer to the head of the stack of labels of loops and ifs */
 
-setInfo *setInfoTable = NULL;
+setInfo *setInfoTable = NULL; /* pointer to set info table */
+
+setForallStack *setForall = NULL;
 
 int forLoopsCounter = 0;
+
+extern symbolNode *symbolTable;
 
 void addSymbolToSetInfoTable(int setID, char *pointerToSet, int currentSize) {
   struct setInfo *symbolPointer;
